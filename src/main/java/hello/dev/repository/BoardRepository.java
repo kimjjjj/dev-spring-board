@@ -502,6 +502,88 @@ public class BoardRepository {
         }
     }
 
+    // 마이페이지 내가 쓴 글 조회
+    public List<Board> mypagePost(String userId) throws SQLException {
+        log.info("<=====BoardRepository.mypagePost=====>");
+
+        String sql = "SELECT * FROM BOARD WHERE INSID = ? ORDER BY INSDT";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setString(1, userId);
+
+            rs = pstmt.executeQuery();
+
+            List<Board> boards = new ArrayList<>();
+
+            while (rs.next()) {
+                Board board = new Board();
+
+                board.setSeq(rs.getInt("SEQ"));
+                board.setTxtName(rs.getString("TXTNAME"));
+                board.setInsDt(rs.getString("INSDT"));
+
+                boards.add(board);
+            }
+
+            return boards;
+
+        } catch (SQLException e) {
+            log.error("<=====db error=====>", e);
+            throw e;
+        }
+    }
+
+    // 마이페이지 좋아요 한 글 조회
+    public List<Board> mypageLikePost(String userId) throws SQLException {
+        log.info("<=====BoardRepository.mypageLikePost=====>");
+
+        String sql = "SELECT A.PARENT_SEQ AS SEQ, B.TXTNAME, B.INSID, B.INSDT " +
+                "FROM LIKE_POST A " +
+                "LEFT JOIN BOARD B " +
+                "ON A.PARENT_SEQ = B.SEQ " +
+                "WHERE A.ID = ? " +
+                "ORDER BY B.INSDT";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setString(1, userId);
+
+            rs = pstmt.executeQuery();
+
+            List<Board> boards = new ArrayList<>();
+
+            while (rs.next()) {
+                Board board = new Board();
+
+                board.setSeq(rs.getInt("SEQ"));
+                board.setTxtName(rs.getString("TXTNAME"));
+                board.setInsId(rs.getString("INSID"));
+                board.setInsDt(rs.getString("INSDT"));
+
+                boards.add(board);
+            }
+
+            return boards;
+
+        } catch (SQLException e) {
+            log.error("<=====db error=====>", e);
+            throw e;
+        }
+    }
+
     private void close(Connection con, Statement stmt, ResultSet rs) {
         JdbcUtils.closeResultSet(rs);
         JdbcUtils.closeStatement(stmt);

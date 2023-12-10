@@ -356,39 +356,4 @@ public class MemberService {
 
         memberRepository.delete(userId);
     }
-
-    // 마이페이지 제목
-    public String mypageTitle(String mypageTitle) {
-        log.info("<=====MemberService.mypageTitle=====>");
-
-        Map<String, String> map = new HashMap<>();
-        map.put("post", "내가 쓴 글");
-        map.put("comment", "내가 쓴 댓글");
-        map.put("likePost", "좋아요 한 글");
-        map.put("likeComment", "좋아요 한 댓글");
-
-        return map.get(mypageTitle);
-    }
-
-    // 마이페이지 조회
-    public List<Board> mywrite(String userId, String mypageTitle) throws SQLException {
-        log.info("<=====MemberService.mywrite=====>");
-
-        List<Board> boards = new ArrayList<>();
-
-        if ("post".equals(mypageTitle)) {
-            boards = memberRepository.mypagePost(userId);
-        } else if ("comment".equals(mypageTitle)) {
-
-        } else if ("likePost".equals(mypageTitle)) {
-            boards = memberRepository.mypageLikePost(userId);
-        } else if ("likeComment".equals(mypageTitle)) {
-        }
-
-        for (int i=0; i<boards.size(); i++) {
-            boards.get(i).setInsDt(boards.get(i).getInsDt().substring(5, 7) + "." + boards.get(i).getInsDt().substring(8, 10));
-        }
-
-        return boards;
-    }
 }

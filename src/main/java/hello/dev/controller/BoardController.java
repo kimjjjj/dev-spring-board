@@ -297,6 +297,31 @@ public class BoardController {
         return "searchForm";
     }
 
+    // 마이페이지 조회
+    @GetMapping("/mypage/{mypageTitle}")
+    public String mywrite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , @ModelAttribute Board board, @PathVariable String mypageTitle, Model model, HttpServletRequest request) throws SQLException {
+        log.info("<=====BoardController.mywrite=====>");
+
+        // 계정 포인트 조회
+        member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
+        model.addAttribute("member", member);
+
+        // 최근방문 게시판 조회
+        board = boardService.getCookie(board, request, null);
+
+        // 마이페이지 제목
+        board.setMypageTitle(boardService.mypageTitle(mypageTitle));
+
+        model.addAttribute("board", board);
+
+        // 조회
+        List<Board> boards = boardService.mywrite(member.getUserId(), mypageTitle);
+        model.addAttribute("boards", boards);
+
+        return "mywriteForm";
+    }
+
     // 게시판 select박스
     @ModelAttribute("boardCodes")
     public List<BoardCode> boardCodes() {
@@ -313,71 +338,8 @@ public class BoardController {
         boardCodes.add(new BoardCode("make_short", codeMap.get("make_short")));
         boardCodes.add(new BoardCode("favorite_chimtubu", codeMap.get("favorite_chimtubu")));
 
-//        boardCodes.add(new BoardCode(1, "\uD83D\uDE0A침착맨"));
-//        boardCodes.add(new BoardCode(2, "\uD83C\uDF83침착맨 짤"));
-//        boardCodes.add(new BoardCode(3, "\uD83C\uDFA8침착맨 팬아트"));
-//        boardCodes.add(new BoardCode(4, "\uD83D\uDCE3방송 해줘요"));
-//        boardCodes.add(new BoardCode(5, "\uD83C\uDF73침투부 찾아요"));
-//        boardCodes.add(new BoardCode(6, "\uD83C\uDFAC쇼츠 만들어줘요"));
-//        boardCodes.add(new BoardCode(7, "\uD83D\uDC53재밌게 본 침투부"));
-
         return boardCodes;
     }
-
-//    @ModelAttribute("categoryCodes")
-//    public List<CategoryCode> categoryCodes() {
-//        log.info("<=====BoardController.categoryCodes=====>");
-//        List<CategoryCode> categoryCodes = new ArrayList<>();
-//
-//        Map<Integer, String> codeMap = boardService.categoryCodeSet();
-//
-////        categoryCodes.add(new CategoryCode(1, codeMap.get(1), "chim"));
-////        categoryCodes.add(new CategoryCode(2, codeMap.get(2), "chim"));
-////        categoryCodes.add(new CategoryCode(3, codeMap.get(3), "chim_jjal"));
-////        categoryCodes.add(new CategoryCode(4, codeMap.get(4), "chim_fanart"));
-////        categoryCodes.add(new CategoryCode(5, codeMap.get(5), "chim_fanart"));
-////        categoryCodes.add(new CategoryCode(6, codeMap.get(6), "chim_fanart"));
-////        categoryCodes.add(new CategoryCode(7, codeMap.get(7), "chim_fanart"));
-////        categoryCodes.add(new CategoryCode(8, codeMap.get(8), "request_stream"));
-////        categoryCodes.add(new CategoryCode(9, codeMap.get(9), "request_stream"));
-////        categoryCodes.add(new CategoryCode(10, codeMap.get(10), "request_stream"));
-////        categoryCodes.add(new CategoryCode(11, codeMap.get(11), "request_stream"));
-////        categoryCodes.add(new CategoryCode(12, codeMap.get(12), "find_chimtube"));
-////        categoryCodes.add(new CategoryCode(13, codeMap.get(13), "make_short"));
-////        categoryCodes.add(new CategoryCode(14, codeMap.get(14), "favorite_chimtubu"));
-//
-//        categoryCodes.add(new CategoryCode(1, codeMap.get(1)));
-//        categoryCodes.add(new CategoryCode(2, codeMap.get(2)));
-//        categoryCodes.add(new CategoryCode(3, codeMap.get(3)));
-//        categoryCodes.add(new CategoryCode(4, codeMap.get(4)));
-//        categoryCodes.add(new CategoryCode(5, codeMap.get(5)));
-//        categoryCodes.add(new CategoryCode(6, codeMap.get(6)));
-//        categoryCodes.add(new CategoryCode(7, codeMap.get(7)));
-//        categoryCodes.add(new CategoryCode(8, codeMap.get(8)));
-//        categoryCodes.add(new CategoryCode(9, codeMap.get(9)));
-//        categoryCodes.add(new CategoryCode(10, codeMap.get(10)));
-//        categoryCodes.add(new CategoryCode(11, codeMap.get(11)));
-//        categoryCodes.add(new CategoryCode(12, codeMap.get(12)));
-//        categoryCodes.add(new CategoryCode(13, codeMap.get(13)));
-//        categoryCodes.add(new CategoryCode(14, codeMap.get(14)));
-//
-////        categoryCodes.add(new CategoryCode(1, "침착맨"));
-////        categoryCodes.add(new CategoryCode(2, "생중계"));
-////        categoryCodes.add(new CategoryCode(3, "침착맨 짤"));
-////        categoryCodes.add(new CategoryCode(4, "팬아트"));
-////        categoryCodes.add(new CategoryCode(5, "팬무비"));
-////        categoryCodes.add(new CategoryCode(6, "팬픽션"));
-////        categoryCodes.add(new CategoryCode(7, "팬게임"));
-////        categoryCodes.add(new CategoryCode(8, "게임"));
-////        categoryCodes.add(new CategoryCode(9, "합방"));
-////        categoryCodes.add(new CategoryCode(10, "개인컨텐츠"));
-////        categoryCodes.add(new CategoryCode(11, "해줘요"));
-////        categoryCodes.add(new CategoryCode(12, "찾아요"));
-////        categoryCodes.add(new CategoryCode(13, "쇼츠"));
-////        categoryCodes.add(new CategoryCode(14, "추천영상"));
-//
-//        return categoryCodes;
-//    }
 
     // 카테고리 select박스
     @GetMapping("/categoryCode")
@@ -388,21 +350,6 @@ public class BoardController {
         List<CategoryCode> categoryCodes = new ArrayList<>();
 
         Map<Integer, String> codeMap = boardService.categoryCodeSet();
-
-//        categoryCodes.add(new CategoryCode(1, codeMap.get(1), "chim"));
-//        categoryCodes.add(new CategoryCode(2, codeMap.get(2), "chim"));
-//        categoryCodes.add(new CategoryCode(3, codeMap.get(3), "chim_jjal"));
-//        categoryCodes.add(new CategoryCode(4, codeMap.get(4), "chim_fanart"));
-//        categoryCodes.add(new CategoryCode(5, codeMap.get(5), "chim_fanart"));
-//        categoryCodes.add(new CategoryCode(6, codeMap.get(6), "chim_fanart"));
-//        categoryCodes.add(new CategoryCode(7, codeMap.get(7), "chim_fanart"));
-//        categoryCodes.add(new CategoryCode(8, codeMap.get(8), "request_stream"));
-//        categoryCodes.add(new CategoryCode(9, codeMap.get(9), "request_stream"));
-//        categoryCodes.add(new CategoryCode(10, codeMap.get(10), "request_stream"));
-//        categoryCodes.add(new CategoryCode(11, codeMap.get(11), "request_stream"));
-//        categoryCodes.add(new CategoryCode(12, codeMap.get(12), "find_chimtube"));
-//        categoryCodes.add(new CategoryCode(13, codeMap.get(13), "make_short"));
-//        categoryCodes.add(new CategoryCode(14, codeMap.get(14), "favorite_chimtubu"));
 
         if ("chim".equals(boardCode)) {
             categoryCodes.add(new CategoryCode(1, codeMap.get(1)));
@@ -426,21 +373,6 @@ public class BoardController {
         } else if ("favorite_chimtubu".equals(boardCode)) {
             categoryCodes.add(new CategoryCode(14, codeMap.get(14)));
         }
-
-//        categoryCodes.add(new CategoryCode(1, "침착맨"));
-//        categoryCodes.add(new CategoryCode(2, "생중계"));
-//        categoryCodes.add(new CategoryCode(3, "침착맨 짤"));
-//        categoryCodes.add(new CategoryCode(4, "팬아트"));
-//        categoryCodes.add(new CategoryCode(5, "팬무비"));
-//        categoryCodes.add(new CategoryCode(6, "팬픽션"));
-//        categoryCodes.add(new CategoryCode(7, "팬게임"));
-//        categoryCodes.add(new CategoryCode(8, "게임"));
-//        categoryCodes.add(new CategoryCode(9, "합방"));
-//        categoryCodes.add(new CategoryCode(10, "개인컨텐츠"));
-//        categoryCodes.add(new CategoryCode(11, "해줘요"));
-//        categoryCodes.add(new CategoryCode(12, "찾아요"));
-//        categoryCodes.add(new CategoryCode(13, "쇼츠"));
-//        categoryCodes.add(new CategoryCode(14, "추천영상"));
 
         return categoryCodes;
     }

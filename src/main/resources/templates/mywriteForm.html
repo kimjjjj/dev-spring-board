@@ -11,7 +11,7 @@
             <section th:each="board : ${boards}">
                 <div class="write-div">
                     <div class="write-txtName-div">
-                        <a href="" th:text="${board.txtName}"></a>
+                        <a th:href="'/' + ${board.seq}" th:text="${board.txtName}"></a>
                     </div>
                     <div class="write-id-div">
                         <p th:text="${board.insId}"></p>

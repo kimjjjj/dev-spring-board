@@ -201,29 +201,4 @@ public class MemberController {
 
         return "redirect:/";
     }
-
-    // 마이페이지 조회
-    @GetMapping("/mypage/{mypageTitle}")
-    public String mywrite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
-            , @ModelAttribute Board board, @PathVariable String mypageTitle, Model model, HttpServletRequest request) throws SQLException {
-        log.info("<=====MemberController.mywrite=====>");
-
-        // 계정 포인트 조회
-        member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
-        model.addAttribute("member", member);
-
-        // 최근방문 게시판 조회
-        board = boardService.getCookie(board, request, null);
-
-        // 마이페이지 제목
-        board.setMypageTitle(memberService.mypageTitle(mypageTitle));
-
-        model.addAttribute("board", board);
-
-        // 조회
-        List<Board> boards = memberService.mywrite(member.getUserId(), mypageTitle);
-        model.addAttribute("boards", boards);
-
-        return "mywriteForm";
-    }
 }

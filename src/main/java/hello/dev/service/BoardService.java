@@ -10,6 +10,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -299,34 +300,50 @@ public class BoardService {
         return board;
     }
 
+    // 마이페이지 제목
+    public String mypageTitle(String mypageTitle) {
+        log.info("<=====BoardService.mypageTitle=====>");
+
+        Map<String, String> map = new HashMap<>();
+        map.put("post", "내가 쓴 글");
+        map.put("comment", "내가 쓴 댓글");
+        map.put("likePost", "좋아요 한 글");
+        map.put("likeComment", "좋아요 한 댓글");
+
+        return map.get(mypageTitle);
+    }
+
+    // 마이페이지 조회
+    public List<Board> mywrite(String userId, String mypageTitle) throws SQLException {
+        log.info("<=====BoardService.mywrite=====>");
+
+        List<Board> boards = new ArrayList<>();
+
+        if ("post".equals(mypageTitle)) {
+            boards = boardRepository.mypagePost(userId);
+        } else if ("comment".equals(mypageTitle)) {
+
+        } else if ("likePost".equals(mypageTitle)) {
+            boards = boardRepository.mypageLikePost(userId);
+        } else if ("likeComment".equals(mypageTitle)) {
+        }
+
+        for (int i=0; i<boards.size(); i++) {
+            boards.get(i).setInsDt(boards.get(i).getInsDt().substring(5, 7) + "." + boards.get(i).getInsDt().substring(8, 10));
+        }
+
+        return boards;
+    }
+
     // 게시판 코드, 이름 세팅
     public Map<String, String> boardCodeSet(Boolean use) {
         log.info("<=====BoardService.boardCodeSet=====>");
-
-//        Map<Integer, String> codeMap = new HashMap<>();
-//
-//        if (use) {
-//            codeMap.put(1, "\uD83D\uDE0A침착맨");
-//            codeMap.put(2, "\uD83C\uDF83침착맨 짤");
-//            codeMap.put(3, "\uD83C\uDFA8침착맨 팬아트");
-//            codeMap.put(4, "\uD83D\uDCE3방송 해줘요");
-//            codeMap.put(5, "\uD83C\uDF73침투부 찾아요");
-//            codeMap.put(6, "\uD83C\uDFAC쇼츠 만들어줘요");
-//            codeMap.put(7, "\uD83D\uDC53재밌게 본 침투부");
-//        } else {
-//            codeMap.put(1, "침착맨");
-//            codeMap.put(2, "침착맨 짤");
-//            codeMap.put(3, "침착맨 팬아트");
-//            codeMap.put(4, "방송 해줘요");
-//            codeMap.put(5, "침투부 찾아요");
-//            codeMap.put(6, "쇼츠 만들어줘요");
-//            codeMap.put(7, "재밌게 본 침투부");
-//        }
 
         Map<String, String> codeMap = new HashMap<>();
 
         codeMap.put("all", "전체게시글");
         codeMap.put("total_chim", "침착맨 전체게시글");
+
         if (use) {
             codeMap.put("chim", "\uD83D\uDE0A침착맨");
             codeMap.put("chimhaha", "\uD83D\uDC4D침하하");
