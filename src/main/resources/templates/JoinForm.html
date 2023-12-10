@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+<th:block layout:fragment="content">
+    <main id="join-main">
+        <div class="content-box">
+            <h2>회원가입</h2>
+            <form id="join-form" name="join-form" action="/join" th:action th:object="${member}" method="post">
+                <div class="loginDiv">
+                    <div th:class="${errors?.containsKey('userId')} ? 'login-input-div field-error' : 'login-input-div'"
+                         class="login-input-div">
+                        <span><i class="fa-regular fa-user fa-lg"></i></span>
+                        <input type="text" id="userId" name="userId" th:field="*{userId}" placeholder="아이디"
+                               oninput="this.value = this.value.replace(/[^0-9a-z.]/g, '').replace(/(\..*)\./g, '$1');"
+                               class="loginInput" maxlength="20">
+                    </div>
+                </div>
+                <div id="userIdError" th:class="${errors?.containsKey('userId')} ? 'join-text-error' : 'join-text-div'" class="join-text-div">
+                    <p class="join-text" th:text="${errors?.containsKey('userId')} ? ${errors.userId} : ''"></p>
+                </div>
+
+                <div class="loginDiv">
+                    <div th:class="${errors?.containsKey('password')} ? 'login-input-div field-error' : 'login-input-div'">
+                        <span><i class="fa-solid fa-lock fa-lg"></i></i></span>
+                        <input type="password" id="password" name="password" th:field="*{password}" placeholder="비밀번호"
+                               class="loginInput" maxlength="16">
+                    </div>
+                </div>
+                <div id="passwordError" th:class="${errors?.containsKey('password')} ? 'join-text-error' : 'join-text-div'" class="join-text-div">
+                    <p class="join-text" th:text="${errors?.containsKey('password')} ? ${errors.password} : ''"></p>
+                </div>
+
+                <div class="loginDiv">
+                    <div th:class="${errors?.containsKey('userName')} ? 'login-input-div field-error' : 'login-input-div'">
+                        <span><i class="fa-regular fa-user fa-lg"></i></span>
+                        <input type="text" id="userName" name="userName" th:field="*{userName}" placeholder="이름"
+                               class="loginInput" maxlength="37">
+                    </div>
+                </div>
+                <div id="userNameError" th:class="${errors?.containsKey('userName')} ? 'join-text-error' : 'join-text-div'" class="join-text-div">
+                    <p class="join-text"
+                       th:text="${errors?.containsKey('userName')} ? ${errors.userName} : ''"></p>
+                </div>
+
+                <div class="loginDiv">
+                    <div th:class="${errors?.containsKey('birth')} ? 'login-input-div field-error' : 'login-input-div'">
+                        <span><i class="fa-regular fa-calendar-days fa-lg"></i></span>
+                        <input type="text" id="birth" name="birth" th:field="*{birth}" placeholder="생년월일"
+                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                               class="loginInput" maxlength="8">
+                    </div>
+                </div>
+                <div id="birthError" th:class="${errors?.containsKey('birth')} ? 'join-text-error' : 'join-text-div'" class="join-text-div">
+                    <p class="join-text"
+                       th:text="${errors?.containsKey('birth')} ? ${errors.birth} : ''"></p>
+                </div>
+
+                <div class="loginDiv">
+                    <div th:class="${errors?.containsKey('phoneNumber')} ? 'login-input-div field-error' : 'login-input-div'">
+                        <span><i class="fa-solid fa-mobile fa-lg"></i></span>
+                        <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}" placeholder="휴대전화번호"
+                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                               class="loginInput" maxlength="11">
+                    </div>
+                </div>
+                <div id="phoneNumberError" th:class="${errors?.containsKey('phoneNumber')} ? 'join-text-error' : 'join-text-div'" class="join-text-div">
+                    <p class="join-text"
+                       th:text="${errors?.containsKey('phoneNumber')} ? ${errors.phoneNumber} : ''"></p>
+                </div>
+
+                <div class="loginDiv">
+                    <div th:class="${errors?.containsKey('nickName')} ? 'login-input-div field-error' : 'login-input-div'">
+                        <span><i class="fa-regular fa-user fa-lg"></i></span>
+                        <input type="text" id="nickName" name="nickName" th:field="*{nickName}" placeholder="닉네임"
+                               class="loginInput" maxlength="15">
+                    </div>
+                </div>
+                <div id="nickNameError" th:class="${errors?.containsKey('nickName')} ? 'join-text-error' : 'join-text-div'" class="join-text-div">
+                    <p class="join-text"
+                       th:text="${errors?.containsKey('nickName')} ? ${errors.nickName} : ''"></p>
+                </div>
+
+                <div class="loginBtn">
+                    <button type="submit" class="confirm">회원가입</button>
+                    <button onclick="location.href='loginForm.html'" th:onclick="|location.href='@{/login}'|"
+                            type="button" class="cancel">취소</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</th:block>
+</html>
+<script>
+    // 아이디 focus, focusout 시 아이콘과 박스 색상 변경
+    const idDiv = document.getElementsByClassName("login-input-div").item(0);
+    const userId = document.getElementsByClassName("loginInput").item(0);
+    const userIcon = document.getElementsByClassName("fa-user").item(0);
+    const idError = document.getElementById("userIdError");
+
+    userId.addEventListener("focus", focusUserId);
+    function focusUserId(event) {
+        idDiv.style.borderColor = 'black';
+        userId.style.outline = 'none';
+        userIcon.style.color = 'black';
+    }
+
+    userId.addEventListener("focusout", focusOutUserId);
+    function focusOutUserId(event) {
+        idDiv.style.borderColor = '#D2D2D2';
+        idDiv.style.borderWidth = '1px';
+        userId.style.outline = 'none';
+        userIcon.style.color = '#D2D2D2';
+
+        if (userId.value.length < 5) {
+            var text = '아이디: 5~20자의 영문 소문자, 숫자만 사용 가능합니다.';
+            document.getElementsByClassName("join-text").item(0).innerText = text;
+
+            if (idError.style.display == '') {
+                idError.style.display = 'block';
+                idError.style.height = '40px';
+                idError.style.marginLeft = '280px';
+                idError.style.color = 'red';
+            }
+        } else {
+            if (idError.style.display != '') {
+                idError.style.display = '';
+            }
+        }
+    }
+
+    // 비밀번호 focus, focusout 시 아이콘과 박스 색상 변경
+    const passDiv = document.getElementsByClassName("login-input-div").item(1);
+    const userPass = document.getElementsByClassName("loginInput").item(1);
+    const lockIcon = document.querySelector('.fa-lock');
+    const passError = document.getElementById("passwordError");
+
+    userPass.addEventListener("focus", focusUserPass);
+    function focusUserPass(event) {
+        passDiv.style.borderColor = 'black';
+        userPass.style.outline = 'none';
+        lockIcon.style.color = 'black';
+    }
+
+    userPass.addEventListener("focusout", focusOutUserPass);
+    function focusOutUserPass(event) {
+        passDiv.style.borderColor = '#D2D2D2';
+        passDiv.style.borderWidth = '1px';
+        userPass.style.outline = 'none';
+        lockIcon.style.color = '#D2D2D2';
+
+        if (userPass.value.length < 8) {
+            var text = '비밀번호: 8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.';
+            document.getElementsByClassName("join-text").item(1).innerText = text;
+
+            if (passError.style.display == '') {
+                passError.style.display = 'block';
+                passError.style.height = '40px';
+                passError.style.marginLeft = '280px';
+                passError.style.color = 'red';
+            }
+        } else {
+            if (passError.style.display != '') {
+                passError.style.display = '';
+            }
+        }
+    }
+
+    // 이름 focus, focusout 시 아이콘과 박스 색상 변경
+    const nameDiv = document.getElementsByClassName("login-input-div").item(2);
+    const userName = document.getElementsByClassName("loginInput").item(2);
+    const nameIcon = document.getElementsByClassName("fa-user").item(1);
+
+    userName.addEventListener("focus", focusUserName);
+    function focusUserName(event) {
+        nameDiv.style.borderColor = 'black';
+        userName.style.outline = 'none';
+        nameIcon.style.color = 'black';
+    }
+
+    userName.addEventListener("focusout", focusOutUserName);
+    function focusOutUserName(event) {
+        nameDiv.style.borderColor = '#D2D2D2';
+        nameDiv.style.borderWidth = '1px';
+        userName.style.outline = 'none';
+        nameIcon.style.color = '#D2D2D2';
+    }
+
+    // 생년월일 focus, focusout 시 아이콘과 박스 색상 변경
+    const birthDiv = document.getElementsByClassName("login-input-div").item(3);
+    const userBirth = document.getElementsByClassName("loginInput").item(3);
+    const calendarIcon = document.querySelector('.fa-calendar-days');
+    const birthError = document.getElementById("birthError");
+
+    userBirth.addEventListener("focus", focusUserBirth);
+    function focusUserBirth(event) {
+        birthDiv.style.borderColor = 'black';
+        userBirth.style.outline = 'none';
+        calendarIcon.style.color = 'black';
+    }
+
+    userBirth.addEventListener("focusout", focusOutUserBirth);
+    function focusOutUserBirth(event) {
+        birthDiv.style.borderColor = '#D2D2D2';
+        birthDiv.style.borderWidth = '1px';
+        userBirth.style.outline = 'none';
+        calendarIcon.style.color = '#D2D2D2';
+
+        if (userBirth.value.length < 8) {
+            var text = '생년월일: 8자리 숫자로 입력해 주세요.';
+            document.getElementsByClassName("join-text").item(3).innerText = text;
+
+            if (birthError.style.display == '') {
+                birthError.style.display = 'block';
+                birthError.style.height = '40px';
+                birthError.style.marginLeft = '280px';
+                birthError.style.color = 'red';
+            }
+        } else {
+            if (birthError.style.display != '') {
+                birthError.style.display = '';
+            }
+        }
+    }
+
+    // 휴대전화번호 focus, focusout 시 아이콘과 박스 색상 변경
+    const phoneDiv = document.getElementsByClassName("login-input-div").item(4);
+    const userPhone = document.getElementsByClassName("loginInput").item(4);
+    const phoneIcon = document.querySelector('.fa-mobile');
+    const phoneError = document.getElementById("phoneNumberError");
+
+    userPhone.addEventListener("focus", focusUserPhone);
+    function focusUserPhone(event) {
+        phoneDiv.style.borderColor = 'black';
+        userPhone.style.outline = 'none';
+        phoneIcon.style.color = 'black';
+    }
+
+    userPhone.addEventListener("focusout", focusOutUserPhone);
+    function focusOutUserPhone(event) {
+        phoneDiv.style.borderColor = '#D2D2D2';
+        phoneDiv.style.borderWidth = '1px';
+        userPhone.style.outline = 'none';
+        phoneIcon.style.color = '#D2D2D2';
+
+        if (userPhone.value.length < 11) {
+            var text = '휴대전화번호: 11자리 숫자로 입력해 주세요.';
+            document.getElementsByClassName("join-text").item(4).innerText = text;
+
+            if (phoneError.style.display == '') {
+                phoneError.style.display = 'block';
+                phoneError.style.height = '40px';
+                phoneError.style.marginLeft = '280px';
+                phoneError.style.color = 'red';
+            }
+        } else {
+            var phone = userPhone.value;
+            if (phone.substring(0, 3) != '010') {
+                var text = '휴대전화번호: 정확한지 확인해 주세요.';
+                document.getElementsByClassName("join-text").item(4).innerText = text;
+
+                if (phoneError.style.display == '') {
+                    phoneError.style.display = 'block';
+                    phoneError.style.height = '40px';
+                    phoneError.style.marginLeft = '280px';
+                    phoneError.style.color = 'red';
+                }
+            } else {
+                if (phoneError.style.display != '') {
+                    phoneError.style.display = '';
+                }
+            }
+        }
+    }
+
+    // 닉네임 focus, focusout 시 아이콘과 박스 색상 변경
+    const nickDiv = document.getElementsByClassName("login-input-div").item(5);
+    const userNick = document.getElementsByClassName("loginInput").item(5);
+    const nickIcon = document.getElementsByClassName("fa-user").item(2);
+
+    userNick.addEventListener("focus", focusUserNick);
+    function focusUserNick(event) {
+        nickDiv.style.borderColor = 'black';
+        userNick.style.outline = 'none';
+        nickIcon.style.color = 'black';
+    }
+
+    userNick.addEventListener("focusout", focusOutUserNick);
+    function focusOutUserNick(event) {
+        nickDiv.style.borderColor = '#D2D2D2';
+        nickDiv.style.borderWidth = '1px';
+        userNick.style.outline = 'none';
+        nickIcon.style.color = '#D2D2D2';
+    }
+</script>

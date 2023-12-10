@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+<th:block layout:fragment="content">
+    <main id="main">
+        <div class="content-box">
+            <form class="h2" action="/addFavorite" th:action="@{|/addFavorite/${board.titleCode}|}" method="post">
+                <span th:text="${board.title}"></span>
+                <button type="submit" onclick="updateFavorite()" th:if="${session.member ne null}">
+                    <i id="starIcon" class="fa-regular fa-star fa-2x"></i>
+                </button>
+            </form>
+            <script th:inline="javascript">
+                const star = document.getElementById('starIcon');
+                if ([[${board.titleCode}]] == [[${member.favorite1}]]) {
+                    star.classList.replace('fa-regular', 'fa-solid');
+                } else if ([[${board.titleCode}]] == [[${member.favorite2}]]) {
+                    star.classList.replace('fa-regular', 'fa-solid');
+                } else if ([[${board.titleCode}]] == [[${member.favorite3}]]) {
+                    star.classList.replace('fa-regular', 'fa-solid');
+                } else if ([[${board.titleCode}]] == [[${member.favorite4}]]) {
+                    star.classList.replace('fa-regular', 'fa-solid');
+                } else if ([[${board.titleCode}]] == [[${member.favorite5}]]) {
+                    star.classList.replace('fa-regular', 'fa-solid');
+                } else if ([[${board.titleCode}]] == [[${member.favorite6}]]) {
+                    star.classList.replace('fa-regular', 'fa-solid');
+                } else if ([[${board.titleCode}]] == [[${member.favorite7}]]) {
+                    star.classList.replace('fa-regular', 'fa-solid');
+                } else if ([[${board.titleCode}]] == [[${member.favorite8}]]) {
+                    star.classList.replace('fa-regular', 'fa-solid');
+                } else if ([[${board.titleCode}]] == [[${member.favorite9}]]) {
+                    star.classList.replace('fa-regular', 'fa-solid');
+                } else if ([[${board.titleCode}]] == [[${member.favorite10}]]) {
+                    star.classList.replace('fa-regular', 'fa-solid');
+                }
+
+            </script>
+            <section th:each="board : ${boards}">
+                <a href="postForm.html" th:href="@{|/${board.seq}|}">
+                    <div class="img">
+                        <i class="fa-regular fa-file-lines fa-3x" th:if="${board.path eq null}"></i>
+                        <img class="thumbnail" th:src="@{${board.path}}" th:unless="${board.path eq null}">
+                    </div>
+                    <div class="cont">
+                        <div class="txt-title">
+                            <span class="txtCategory" th:text="${board.boardName}"></span>
+                            <span class="txtName" th:text="${board.txtName}"></span>
+                        </div>
+                        <div class="txt-etc">
+                            <span class="nick" th:text="${board.insId}"></span>
+                            <span class="dot">·</span>
+                            <span class="txtTime" th:text="${board.insDt}"></span>
+                            <span class="dot">·</span>
+                            <span class="view" th:text="${board.view}"></span>
+                            <span class="dot">·</span>
+                            <span class="point" th:text="${board.point}"></span>
+                        </div>
+                    </div>
+                </a>
+<!--                <table class="table">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th>seq</th>-->
+<!--                        <th>boardSub</th>-->
+<!--                        <th>category</th>-->
+<!--                        <th>txtName</th>-->
+<!--                        <th>comment</th>-->
+<!--                        <th>tag</th>-->
+<!--                        <th>insId</th>-->
+<!--                        <th>insDt</th>-->
+<!--                        <th>uptId</th>-->
+<!--                        <th>uptDt</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr th:each="board : ${boards}">-->
+<!--                        <td><a href="" th:text="${board.seq}"></a></td>-->
+<!--                        <td><a href="" th:text="${board.boardSub}"></a></td>-->
+<!--                        <td><a href="" th:text="${board.category}"></a></td>-->
+<!--                        <td><a href="" th:text="${board.txtName}"></a></td>-->
+<!--                        <td><a href="" th:text="${board.comment}"></a></td>-->
+<!--                        <td><a href="" th:text="${board.tag}"></a></td>-->
+<!--                        <td><a href="" th:text="${board.insId}"></a></td>-->
+<!--                        <td><a href="" th:text="${board.insDt}"></a></td>-->
+<!--                        <td><a href="" th:text="${board.uptId}"></a></td>-->
+<!--                        <td><a href="" th:text="${board.uptDt}"></a></td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+            </section>
+
+            <nav>
+                <div id="number">
+                    <a class="none_page" href="home.html" th:href="@{'/board/' + ${board.titleCode}(page=${board.page1})}" th:text="${board.page1}" th:if="${board.page1} != ${board.currentPage}"></a>
+                    <a class="page" th:text="${board.page1}" th:unless="${board.page1} != ${board.currentPage}"></a>
+
+                    <a class="none_page" href="home.html" th:href="@{'/board/' + ${board.titleCode}(page=${board.page2})}" th:text="${board.page2}" th:if="${board.page2} != ${board.currentPage}"></a>
+                    <a class="page" th:text="${board.page2}" th:unless="${board.page2} != ${board.currentPage}"></a>
+
+                    <a class="none_page" href="home.html" th:href="@{'/board/' + ${board.titleCode}(page=${board.page3})}" th:text="${board.page3}" th:if="${board.page3} != ${board.currentPage}"></a>
+                    <a class="page" th:text="${board.page3}" th:unless="${board.page3} != ${board.currentPage}"></a>
+
+                    <a class="none_page" href="home.html" th:href="@{'/board/' + ${board.titleCode}(page=${board.page4})}" th:text="${board.page4}" th:if="${board.page4} != ${board.currentPage}"></a>
+                    <a class="page" th:text="${board.page4}" th:unless="${board.page4} != ${board.currentPage}"></a>
+
+                    <a class="none_page" href="home.html" th:href="@{'/board/' + ${board.titleCode}(page=${board.page5})}" th:text="${board.page5}" th:if="${board.page5} != ${board.currentPage}"></a>
+                    <a class="page" th:text="${board.page5}" th:unless="${board.page5} != ${board.currentPage}"></a>
+                </div>
+                <div id="next">
+                    <a href="home.html" th:href="@{'/board/' + ${board.titleCode}(page=${board.page5} + 1)}">다음</a>
+                </div>
+            </nav>
+
+            <div class="search-form">
+                <div class="search">
+                    <form action="/search" th:action="@{|/search|}" th:object="${board}" method="get">
+                        <select class="bot-box" th:field="*{searchType}">
+                            <option value="title">제목</option>
+                            <option value="titleAndContent">제목 + 내용</option>
+                            <option value="nickname">글쓴이</option>
+                        </select>
+                        <input class="bot-box" th:field="*{searchKeyword}" type="text">
+                        <button class="bot-box">검색</button>
+                    </form>
+                </div>
+            </div>
+            <section id="write">
+                <a href="addForm.html" th:href="@{/add}" th:unless="${session.member eq null}">글쓰기</a>
+            </section>
+        </div>
+    </main>
+</th:block>
+</html>
+<script>
+    function updateFavorite() {
+        const doc = document.getElementsByClassName('h2').item(0);
+        const start = doc.action.lastIndexOf("/")+1;
+        var urlLike = doc.action.substr(start);
+        console.log(urlLike);
+
+        const icon = document.getElementById('starIcon');
+        var type = '';
+        if (icon.className != 'fa-regular fa-star fa-2x') {
+            type = 'remove';
+        } else {
+            type = 'add';
+        }
+
+        $.ajax({
+            url : '/favorite/' + urlLike,
+            type : 'POST',
+            data : {type: type},
+            success: function(Data){
+
+                if (Data.RESULT == "ADD") {
+                    alert("즐겨찾기에 추가되었습니다.");
+                    icon.classList.replace('fa-regular', 'fa-solid');
+                } else if (Data.RESULT == "REMOVE") {
+                    alert("즐겨찾기에서 제외되었습니다.");
+                    icon.classList.replace('fa-solid', 'fa-regular');
+                } else {
+                    alert("로그인이 필요합니다.");
+                }
+                location.href = "/board/" + urlLike;
+            }
+        });
+    }
+</script>

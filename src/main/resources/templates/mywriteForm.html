@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+<th:block layout:fragment="content">
+    <main id="mywrite">
+        <div class="content-box">
+            <th:block th:replace="common/fragments/mypageHeader :: mypageHeaderFragment"></th:block>
+
+            <h2 th:text="${board.mypageTitle}"></h2>
+            <section th:each="board : ${boards}">
+                <div class="write-div">
+                    <div class="write-txtName-div">
+                        <a href="" th:text="${board.txtName}"></a>
+                    </div>
+                    <div class="write-id-div">
+                        <p th:text="${board.insId}"></p>
+                    </div>
+                    <div class="write-indDt-div">
+                        <p th:text="${board.insDt}"></p>
+                    </div>
+                </div>
+                <hr class="hr">
+            </section>
+        </div>
+    </main>
+</th:block>
+</html>

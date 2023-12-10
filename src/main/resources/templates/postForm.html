@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+<th:block layout:fragment="content">
+    <main>
+        <div class="content-box">
+<!--            <form id="post-form" action="/${board.seq}" th:action method="post">-->
+<!--                <div th:each="board : ${boards}">-->
+                <div>
+                    <section class="post-head">
+                        <div class="post-txt-title bold">
+                            <span class="txtCategory post-txtCategory"><a href="" th:text="${board.boardName}"></a></span>
+                            <span th:text="'[' + ${board.categoryName} + ']'"></span>
+                            <span th:text="${board.txtName}"></span>
+                        </div>
+                        <div class="nickname">
+                            <span th:text="${board.insId}"></span>
+                            <ul>
+                                <li><a href="">게시글 보기</a></li>
+                                <li><a href="">댓글 보기</a></li>
+                            </ul>
+                        </div>
+                        <div class="nick-state">
+                            <span class="dot">·</span>
+                            <span th:text="${board.insDt}"></span>
+                            <span class="dot">·</span>
+                            <span><i class="fa-solid fa-eye"></i></span>
+                            <span th:text="${board.view}"></span>
+                            <span class="dot">·</span>
+                            <span><i class="fa-regular fa-thumbs-up"></i></span>
+                            <span th:text="${board.point}"></span>
+                        </div>
+                        <div class="board-state">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                            <ul>
+                                <li><button>
+                                    <i class="fa-regular fa-flag"></i>
+                                    신고</button></li>
+                                <li><button>
+                                    <i class="fa-solid fa-ban"></i>
+                                    차단</button></li>
+                                <li><button>
+                                    <i class="fa-solid fa-share-from-square"></i>
+                                    공유</button></li>
+                            </ul>
+                        </div>
+                    </section>
+                    <div class="wide-hr">
+                        <hr class="hr">
+                    </div>
+                    <section id="post-cont">
+                        <script th:inline="javascript">
+                            const articleObject = [[${board.comment}]];
+                            const arr = articleObject.split("<br />");
+                            for (var i=0; i<arr.length; i++){
+
+                                if (arr[i].substr(0, 4) == "<img") {
+                                    var start = arr[i].indexOf("src")+5;
+                                    var end = arr[i].lastIndexOf(".")+4;
+                                    var files = "http://localhost:8080" + arr[i].substring(start, end);
+                                    const bgImage = document.createElement("img");
+                                    bgImage.src = files;
+                                    bgImage.className = "post-img";
+                                    document.getElementById("post-cont").appendChild(bgImage);
+                                } else {
+                                    const tagP = document.createElement('p');
+                                    tagP.innerHTML = arr[i];
+                                    tagP.className = "post-img";
+                                    document.getElementById("post-cont").appendChild(tagP);
+                                }
+                            }
+                        </script>
+                    </section>
+                    <section>
+                        <div class="post-like">
+                            <form id="post-form" action="/${board.seq}/like" th:action="@{|/${board.seq}/like|}" method="post">
+<!--                                <button class="like" type="button" onclick="updateLike()" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">-->
+                                <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">
+                                    침하하<br>😂
+                                </button>
+                            </form>
+                            <form action th:action>
+                                <button class="like" type="button" th:if="${member.userId} == ${board.insId}">
+                                    침하하 불가<br>😐
+                                </button>
+                            </form>
+<!--                            <button class="like" type="button" onclick="cancelLike()" th:if="${session.member ne null} and ${board.cnt ne 0}">-->
+                            <form action="/${board.seq}/cancel" th:action="@{|/${board.seq}/cancel|}" method="post">
+                                <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and ${session.member ne null} and ${board.cnt ne 0}">
+                                    침하하 취소<br>🤣
+                                </button>
+                            </form>
+                            <button class="scrap">
+                                스크랩<br>
+                                <i class="fa-regular fa-bookmark"></i>
+                            </button>
+                        </div>
+                        <div class="post-list">
+                            <div class="left"><button>&lt;이전 글</button></div>
+                            <div class="center"><button>목록</button></div>
+                            <div class="right"><button>다음 글&gt;</button></div>
+                        </div>
+                    </section>
+                </div>
+<!--            </form>-->
+        </div>
+    </main>
+</th:block>
+</html>
+<script>
+    <!-- 신고/차단/공유 박스를 브라우저 크기가 변해도 유지 하도록 -->
+    const mainRight = document.querySelector('.board-state>ul');
+    mainRight.style.left = `${400 + (window.innerWidth / 2)}px`;
+    window.addEventListener('resize', () => {
+        mainRight.style.left = `${400 + (window.innerWidth / 2)}px`;
+    });
+
+    <!-- 닉네임 클릭 시 게시글보기/댓글보기 박스 보이기 -->
+    const nick = document.querySelector('.nickname');
+    const dropdown = document.querySelector('.nickname>ul');
+    var chkDisplay = dropdown.style.display;
+    var chkNick = false;
+
+    nick.addEventListener('click', clickNickEvent);
+    function clickNickEvent(event) {
+        chkNick = true;
+        if (chkDisplay == '') {
+            dropdown.style.display = 'block';
+            dropdown.style.background = 'white';
+
+        } else {
+            dropdown.style.display = '';
+        }
+
+        chkDisplay = dropdown.style.display;
+    }
+
+    <!-- 닉네임을 제외한 다른 곳 클릭 시 게시글보기/댓글보기 박스 끄기 -->
+    const body = document.querySelector("body");
+    body.addEventListener('click', clickBodyEvent);
+    function clickBodyEvent(event) {
+        if (chkNick == false){
+            if (chkDisplay == 'block') {
+                dropdown.style.display = '';
+            }
+
+            chkDisplay = dropdown.style.display;
+        }
+        chkNick = false;
+    }
+
+    <!-- ... 클릭 시 신고/차단/공유 박스 보이기 -->
+    const board = document.querySelector('.board-state');
+    const banMenu = document.querySelector('.board-state>ul');
+    menuDisplay = banMenu.style.display;
+    var chkBoard = false;
+
+    board.addEventListener('click', clickBoardEvent);
+    function clickBoardEvent(event) {
+        chkBoard = true;
+        if (menuDisplay == '') {
+            banMenu.style.display = 'block';
+            banMenu.style.background = 'white';
+
+        } else {
+            banMenu.style.display = '';
+        }
+
+        menuDisplay = banMenu.style.display;
+    }
+
+    <!-- ...을 제외한 다른 곳 클릭 시 신고/차단/공유 박스 끄기 -->
+    body2 = document.querySelector("body");
+    body2.addEventListener('click', clickBody2Event);
+    function clickBody2Event(event) {
+        if (chkBoard == false){
+            if (menuDisplay == 'block') {
+                banMenu.style.display = '';
+            }
+
+            menuDisplay = banMenu.style.display;
+        }
+        chkBoard = false;
+    }
+
+<!--    function updateLike() {-->
+<!--        var start = $('#post-form')[0].action.lastIndexOf("/")-2;-->
+<!--        var urlLike = $('#post-form')[0].action.substr(start);-->
+<!--        console.log("urlLike => " + urlLike);-->
+
+<!--        $.ajax({-->
+<!--            url : urlLike,-->
+<!--            type : 'POST',-->
+<!--            dataType : "json",-->
+<!--            contentType: 'application/json',-->
+<!--            data : {},-->
+<!--            success: function(Data){-->
+<!--                if (Data.RESULT == "FAIL") {-->
+<!--                    alert("로그인이 필요합니다.");-->
+<!--                } else {-->
+<!--                    if (document.querySelector('.like').innerText == "침하하") {-->
+<!--                        document.querySelector('.like').innerText = "침하하 취소";-->
+<!--                    } else {-->
+<!--                        document.querySelector('.like').innerText = "침하하";-->
+<!--                    }-->
+<!--                }-->
+<!--            },-->
+<!--            cache : false,-->
+<!--            processData : false-->
+<!--        });-->
+<!--    }-->
+
+<!--    function cancelLike() {-->
+<!--        var start = $('#post-form')[0].action.lastIndexOf("/")+1;-->
+<!--        var urlLike = $('#post-form')[0].action.substr(start);-->
+
+<!--        var form = $('#post-form')[0];-->
+<!--        var formData = new FormData(form);-->
+
+<!--        $.ajax({-->
+<!--            url : urlLike + '/cancel',-->
+<!--            type : 'POST',-->
+<!--            dataType : 'json',-->
+<!--            contentType: 'application/json',-->
+<!--            data : {},-->
+<!--            success: function(Data){-->
+<!--                if (Data.RESULT == "FAIL") {-->
+<!--                    alert("로그인이 필요합니다.");-->
+<!--                } else {-->
+<!--                    if (document.querySelector('.like').innerText == "침하하") {-->
+<!--                        document.querySelector('.like').innerText = "침하하 취소";-->
+<!--                    } else {-->
+<!--                        document.querySelector('.like').innerText = "침하하";-->
+<!--                    }-->
+<!--                }-->
+<!--            },-->
+<!--            cache : false,-->
+<!--            processData : false-->
+<!--        });-->
+<!--    }-->
+window.onload = function() {
+$('#div_load_image').hide();
+}
+</script>

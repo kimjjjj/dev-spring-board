@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+<th:block layout:fragment="content">
+    <main id="mypage">
+        <div class="content-box">
+            <th:block th:replace="common/fragments/mypageHeader :: mypageHeaderFragment"></th:block>
+            <h2>회원 정보 변경</h2>
+            <div class="mypage-div">
+                <form action="/mypage" th:action="@{|/mypage|}" th:object="${member}" method="post" enctype="multipart/form-data">
+                    <div class="mypage-profile-div">
+                        <img th:src="'/images/' + *{profileName}" class="mypage-profile">
+                        <input type="file" name="file" class="mypage-profile-hidden" accept="image/*" th:field="*{profileName}">
+<!--                               onchange="javascript:document.getElementById('fileName').value=this.value"/>-->
+<!--                        <input type="file" name="file" th:field="*{profileName}">-->
+                    </div>
+
+                    <div class="mypage-input-div" th:text="'포인트 : ' + ${member.userPoint}"></div>
+
+                    <div class="mypage-input-div">
+                        <input class="mypage-input" onclick="aa()" th:field="*{userId}" disabled>
+                    </div>
+
+                    <div class="mypage-input-div">
+                        <input class="mypage-input" th:class="${errors?.containsKey('nickName')} ? 'mypage-input field-error' : 'mypage-input'" th:field="*{nickName}">
+                    </div>
+                    <div id="nickNameError" th:class="${errors?.containsKey('nickName')} ? 'mypage-text-error' : 'join-text-div'" class="join-text-div"
+                         th:text="${errors?.containsKey('nickName')} ? ${errors.nickName} : ''">
+                    </div>
+
+                    <div class="mypage-input-div">
+                        <button class="mypage-btn" type="submit">정보수정</button>
+                    </div>
+                </form>
+
+                <form action="/delete" th:action="@{|/delete|}" th:object="${member}" method="post">
+                    <div class="mypage-input-div">
+                        <button class="delete-btn">☠️회원 탈퇴☠️
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</th:block>
+</html>

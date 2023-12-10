@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+<th:block layout:fragment="content">
+    <main id="login-main">
+        <div class="content-box">
+            <h2>로그인</h2>
+            <form id="login-form" name="login-form" action="/login" th:action th:object="${login}" method="post">
+                <div class="loginDiv">
+                    <div class="login-input-div">
+                        <span><i class="fa-regular fa-user fa-lg"></i></span>
+                        <input type="text" class="loginInput" th:field="*{userId}" placeholder="아이디">
+                    </div>
+                </div>
+
+                <div class="loginDiv">
+                    <div class="login-input-div">
+                        <span><i class="fa-solid fa-lock fa-lg"></i></i></span>
+                        <input type="password" class="loginInput" th:field="*{password}" autoComplete="off" placeholder="비밀번호">
+                    </div>
+                </div>
+                <div class="join-text-error" th:errors="*{errorTxt}">
+                    에러
+                </div>
+
+                <div class="loginBtn">
+                    <button type="submit" class="confirm">로그인</button>
+                    <button onclick="location.href='home.html'" th:onclick="|location.href='@{/}'|"
+                            type="button" class="cancel">취소</button>
+                </div>
+                <div class="loginBtn">
+                    <button onclick="location.href='joinForm.html'" th:onclick="|location.href='@{/join}'|" type="button" class="joinBtn">회원가입</button>
+                </div>
+            </form>
+        </div>
+    </main>
+<!--    <footer th:replace="common/fragments/footer :: footerFragment"></footer>-->
+<!--    <th:block th:replace="common/fragments/footer :: footerFragment"></th:block>-->
+</th:block>
+</html>

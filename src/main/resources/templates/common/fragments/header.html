@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="headerFragment">
+    <header id="header">
+        <div class="content-box">
+            <nav id="top-menu">
+                <ul>
+                    <li><a href="loginForm" th:href="@{/login}" th:if="${session.member eq null}">로그인</a></li>
+                    <li th:unless="${session.member eq null}">
+                        <form th:action="@{/logout}" method="post">
+                            <button id="logoutBtn" type="submit">로그아웃</button>
+                        </form>
+                    </li>
+                    <li><a href="" th:unless="${session.member eq null}">알림 없음</a></li>
+                    <li><a href="mypageForm.html" th:href="@{|/mypage|}" th:unless="${session.member eq null}">마이페이지</a></li>
+                    <li th:unless="${session.member eq null}" th:text="'포인트: ' + ${member.userPoint}"></li>
+                    <script th:inline="javascript">
+                        // 로그인, 로그아웃에 따른 위치 조정
+                        const menu = document.getElementById('top-menu');
+                        if ([[${session.member}]] == null) {
+                            menu.style.left = '3%';
+<!--                            menu.style.width = '10%';-->
+                        }
+<!--                        else {-->
+<!--                            menu.style.left = '0.5%';-->
+<!--                            menu.style.width = '40%';-->
+<!--                        }-->
+                    </script>
+                </ul>
+            </nav>
+            <hr class="hr">
+            <nav id="title">
+                <div id="logo">
+                    <a href="/">
+                        <img src="/images/logo.png" alt="침하하">
+                    </a>
+                </div>
+                <div id="search">
+                    <form action="/search" th:action="@{|/search|}" th:object="${board}" method="get" th:if="${session.member ne null}">
+                        <input id="searchInput" name="searchKeyword" type="text">
+<!--                        <input id="searchInput" type="text" th:field="*{searchKeyword}">-->
+                        <button>
+                            <i class="fa-solid fa-magnifying-glass fa-2x"></i>
+                        </button>
+                    </form>
+                </div>
+            </nav>
+
+            <nav id="menu">
+                <ul>
+                    <li><a href="boardForm.html" th:href="@{|/board/chimhaha|}">👍침하하</a>
+                        <ul>
+                            <li><a href="boardForm.html" th:href="@{|/board/chimhaha|}">👍침하하</a></li>
+                            <li><a href="boardForm.html" th:href="@{|/board/library|}">🏛️알렉산드리아 짤 도서관</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li><a onclick="updateLike(this)" href="boardForm.html" th:href="@{|/board/all|}">전체글</a>
+                        <ul>
+                            <li><a href="boardForm.html" th:href="@{|/board/all|}">전체 게시판 목록</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li><a href="boardForm.html" th:href="@{|/board/total_chim|}">침착맨</a>
+                        <ul>
+                            <li><a href="boardForm.html" th:href="@{|/board/notice|}">👀방송일정 및 공지</a></li>
+                            <hr class="hr">
+                            <li><a href="boardForm.html" th:href="@{|/board/chim|}">😊침착맨</a></li>
+                            <li><a href="boardForm.html" th:href="@{|/board/chim_jjal|}">🎃침착맨 짤</a></li>
+                            <li><a href="boardForm.html" th:href="@{|/board/chim_fanart|}">🎨침착맨 팬아트</a></li>
+                            <hr class="hr">
+                            <li><a href="boardForm.html" th:href="@{|/board/request_stream|}">📣방송 해줘요</a></li>
+                            <li><a href="boardForm.html" th:href="@{|/board/find_chimtube|}">🍳침투부 찾아요</a></li>
+                            <li><a href="boardForm.html" th:href="@{|/board/make_short|}">🎬쇼츠 만들어줘요</a></li>
+                            <li><a href="boardForm.html" th:href="@{|/board/favorite_chimtubu|}">👓재밌게 본 침투부</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul id="complain">
+                    <li><a href="">신고/건의</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <aside id="shortcut">
+        <div class="content-box">
+            <nav th:if="${session.member ne null}">
+                <span class="shortcut-title">즐겨찾기</span>
+                <span><a th:href="'/board/' + ${member.favorite1}" th:text="${member.favoriteName1}" th:if="${member.favoriteName1 ne null}">즐찾1</a></span>
+                <span><a th:href="'/board/' + ${member.favorite2}" th:text="${member.favoriteName2}" th:if="${member.favoriteName2 ne null}">즐찾2</a></span>
+                <span><a th:href="'/board/' + ${member.favorite3}" th:text="${member.favoriteName3}" th:if="${member.favoriteName3 ne null}">즐찾3</a></span>
+                <span><a th:href="'/board/' + ${member.favorite4}" th:text="${member.favoriteName4}" th:if="${member.favoriteName4 ne null}">즐찾4</a></span>
+                <span><a th:href="'/board/' + ${member.favorite5}" th:text="${member.favoriteName5}" th:if="${member.favoriteName5 ne null}">즐찾5</a></span>
+                <span><a th:href="'/board/' + ${member.favorite6}" th:text="${member.favoriteName6}" th:if="${member.favoriteName6 ne null}">즐찾6</a></span>
+                <span><a th:href="'/board/' + ${member.favorite7}" th:text="${member.favoriteName7}" th:if="${member.favoriteName7 ne null}">즐찾7</a></span>
+                <span><a th:href="'/board/' + ${member.favorite8}" th:text="${member.favoriteName8}" th:if="${member.favoriteName8 ne null}">즐찾8</a></span>
+                <span><a th:href="'/board/' + ${member.favorite9}" th:text="${member.favoriteName9}" th:if="${member.favoriteName9 ne null}">즐찾9</a></span>
+                <span><a th:href="'/board/' + ${member.favorite10}" th:text="${member.favoriteName10}" th:if="${member.favoriteName10 ne null}">즐찾10</a></span>
+            </nav>
+            <hr class="hr">
+            <nav>
+                <span class="shortcut-title">최근방문</span>
+                <span><a th:href="'/board/' + ${board.visitBoard1}" th:text="${board.visitBoardName1}" th:if="${board.visitBoardName1 ne null}">최근방문1</a></span>
+                <span><a th:href="'/board/' + ${board.visitBoard2}" th:text="${board.visitBoardName2}" th:if="${board.visitBoardName2 ne null}">최근방문2</a></span>
+                <span><a th:href="'/board/' + ${board.visitBoard3}" th:text="${board.visitBoardName3}" th:if="${board.visitBoardName3 ne null}">최근방문3</a></span>
+                <span><a th:href="'/board/' + ${board.visitBoard4}" th:text="${board.visitBoardName4}" th:if="${board.visitBoardName4 ne null}">최근방문4</a></span>
+                <span><a th:href="'/board/' + ${board.visitBoard5}" th:text="${board.visitBoardName5}" th:if="${board.visitBoardName5 ne null}">최근방문5</a></span>
+                <span><a th:href="'/board/' + ${board.visitBoard6}" th:text="${board.visitBoardName6}" th:if="${board.visitBoardName6 ne null}">최근방문6</a></span>
+                <span><a th:href="'/board/' + ${board.visitBoard7}" th:text="${board.visitBoardName7}" th:if="${board.visitBoardName7 ne null}">최근방문7</a></span>
+                <span><a th:href="'/board/' + ${board.visitBoard8}" th:text="${board.visitBoardName8}" th:if="${board.visitBoardName8 ne null}">최근방문8</a></span>
+                <span><a th:href="'/board/' + ${board.visitBoard9}" th:text="${board.visitBoardName9}" th:if="${board.visitBoardName9 ne null}">최근방문9</a></span>
+                <span><a th:href="'/board/' + ${board.visitBoard10}" th:text="${board.visitBoardName10}" th:if="${board.visitBoardName10 ne null}">최근방문10</a></span>
+            </nav>
+        </div>
+    </aside>
+</th:block>
+</html>

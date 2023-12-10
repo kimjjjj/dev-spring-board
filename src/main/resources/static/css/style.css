@@ -1,0 +1,865 @@
+@import url("reset.css");
+
+.content-box {
+    height: inherit;
+    width: 960px;
+    /* 중앙정렬 */
+    margin-left: auto;
+    margin-right: auto;
+    /* background: #ff000020; */
+}
+
+/* 마우스를 올렸을 경우 밑줄 제거 */
+a:hover {
+    text-decoration: none;
+}
+
+.hr {
+    background: #F2F2F2;
+    height: 1px;
+    border: 0;
+}
+
+#header {
+    /* background: #ffff0020; */
+}
+
+    #top-menu {
+        position: relative;
+        /*left: 65%;*/
+        text-align: right;
+        /*width: 37%;*/
+        width: 100%;
+        /*left: 595px;*/
+        /*left: 63.5%;
+        width: 38.5%;*/
+        /*height: 100%;*/
+        height: 30px;
+        line-height: 30px;
+    }
+
+    #header hr {
+        background: #353536;
+        height: 1px;
+        border: 0;
+    }
+
+    #top-menu li {
+        display: inline-block;
+        /*margin: 1%;*/
+        margin-left: 1%;
+    }
+
+    #header>.content-box>#title {
+        display: flex;
+    }
+
+    #title>#logo {
+        height: inherit;
+        width: 70%;
+        text-align: right;
+        margin-right: 60px;
+    }
+
+    #title>#search {
+        height: inherit;
+        width: 30%;
+        font-size: 30px;
+    }
+
+    #search form {
+        position: relative;
+        height: 100%;
+    }
+
+    #search #searchInput {
+        position: absolute;
+        width: 80%;
+        height: 40%;
+        bottom: 0px;
+        right: 0%;
+        border: solid #1CA8AF;
+        outline: none;
+        border-width: 3px;
+        border-radius: 15px;
+        font-size: 15px;
+        background-color: transparent;
+        padding-left: 10px;
+        margin-bottom: 5px;
+    }
+
+    #search button {
+        width: 20%;
+        height: 44%;
+        right: 0%;
+        position: absolute;
+        bottom: 0px;
+        background-color: transparent;
+        border: 0;
+        cursor: pointer;
+        color: #1CA8AF;
+        margin-bottom: 5px;
+    }
+
+    #menu {
+        background: #1CA8AF;
+		font: bold 16px "malgun gothic";
+		/* width: 700px; */
+		height: 45px;
+        line-height: 45px;
+		color: white;
+        /* 중앙정렬 */
+		/* margin: 0 auto;  */
+		text-align: center;
+	}
+
+    #menu>ul>li {
+		float: left;
+		width: 100px;
+		position: relative;
+	}
+
+    #menu>#complain {
+        float: right;
+    }
+
+    #menu>ul>li>ul {
+        background: white;
+        color: black;
+        width: max-content;
+		display: none;
+		position: absolute;
+		font-size: 14px;
+        text-align: left;
+        padding-left: 15px;
+        padding-right: 15px;
+        border: solid #1CA8AF;
+        border-width: 4px;
+	}
+
+    #menu>ul>li:hover>ul {
+		display: block;
+	}
+
+	#logoutBtn{
+	    background-color: transparent;
+	    border: 0;
+	    font-size: 16px;
+	    /*font: 16px "malgun gothic";*/
+	    cursor: pointer;
+	}
+
+#shortcut {
+    /* background: green; */
+}
+
+    #shortcut nav {
+        height: 35px;
+        line-height: 35px;
+        /* background: #242526; */
+        background: #F2F2F2;
+    }
+
+    .shortcut-title {
+        /* color: white; */
+        color: black;
+        font-size: 14px;
+        padding-left: 15px;
+        padding-right: 5px;
+    }
+
+    #shortcut a {
+        border-radius: 10px;
+        /* color: white; */
+        color: black;
+        font-size: 13px;
+        /* background: #2F3031; */
+        background: #E6E6E6;
+        padding: 5px;
+    }
+
+    #shortcut hr {
+        background: black;
+        height: 1px;
+        border: 0;
+    }
+
+#main {
+    /* background:rgba(100%, 0%, 0%, 0.5); */
+}
+
+    #number {
+        text-align: right;
+        float: left;
+        position: relative;
+        width: 60%;
+        height: 70px;
+        line-height: 70px;
+    }
+
+    #next {
+        height: 70px;
+        line-height: 70px;
+    }
+    #next a {
+        /* float: right; */
+        /* color: white; */
+        color: black;
+        padding-left: 10px;
+    }
+
+    .search-form {
+        text-align: center;
+        height: 70px;
+        line-height: 70px;
+        float: left;
+        width: 90%;
+        position: relative;
+    }
+
+    .search {
+        text-align: right;
+        width: 80%;
+    }
+
+    .bot-box {
+        height: 40px;
+        background: #F2F2F2;
+        border-radius: 10px;
+        border: 0;
+    }
+
+    #main select {
+        width: 120px;
+        appearance: none;
+        padding-left: 10px;
+    }
+
+    #main input {
+        width: 230px;
+        outline: none;
+        padding-left: 10px;
+        font-size: 15px;
+    }
+
+    #main .search-form>.search button {
+        width: 70px;
+        cursor: pointer;
+    }
+
+    #write {
+        text-align: center;
+        height: 70px;
+        line-height: 70px;
+        float: right;
+        width: 10%;
+    }
+
+    #write a {
+        background: #F2F2F2;
+        border-radius: 10px;
+        border: 0;
+        font-size: 14px;
+        padding: 13px;
+    }
+
+#footer {
+    /* background:grey; */
+    padding-top: 50px;
+}
+
+    .guide {
+        text-align: center;
+        list-style:none;
+    }
+
+    .bold {
+        font: bold 15px "malgun gothic";
+    }
+
+/*----- home -------------------------------------------------------------*/
+.youtube {
+    display: flex;
+    gap: 5px;
+}
+.chimtube {
+    float: 1;
+    width: 50%;
+}
+
+.youtubeHead{
+    font-size: 17px;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.thumbnail {
+    width: 55px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+
+/* 게시판 이름 */
+.h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 19.9px;
+    margin-bottom: 19.9px;
+}
+
+#main .h2>button {
+    background-color: transparent;
+    width: 35px;
+    height: 30px;
+    padding: 0px;
+    margin-left: -5px;
+    border: 0;
+}
+
+/* 즐겨찾기 별 */
+.fa-star {
+    color: #1CA8AF;
+}
+
+#main #number a {
+    border-radius: 3px;
+    font-size: 17px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    cursor: pointer;
+    border: 0;
+}
+
+.page {
+    background: #1CA8AF;
+    color: white;
+}
+
+.none_page {
+    background: #F2F2F2;
+    color: black;
+}
+
+/*----- addForm -------------------------------------------------------------*/
+#add-form {
+    /* height: 300px; */
+}
+#add-form div {
+    /* border: 1px black; */
+    /* height: 65px; */
+}
+
+.add-box {
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 17px;
+}
+
+.board {
+    width: 78%;
+}
+
+.category {
+    width: 21%;
+}
+
+.add-input {
+    box-sizing: border-box;
+    background: transparent;
+    border: solid #B2B2B2;
+    border-width: 1px;
+    padding-left: 10px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+#add-main button {
+    border-width: 0;
+    cursor: pointer;
+    background: #F2F2F2;
+}
+
+#add-main button:hover {
+    background: #E5E5E5;
+}
+
+/* 에러 발생 시 */
+/*.field-error {
+    border: solid #dc3545;
+}*/
+
+.img {
+    float: left;
+    width: 55px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    padding: 10px;
+}
+
+.cont {
+    /* background: yellow; */
+    height: 50px;
+    padding: 10px;
+}
+
+.txt-title {
+    height: 57%;
+}
+
+.txtCategory {
+    background: #F2F2F2;
+    vertical-align: middle;
+    border-radius: 5px;
+    margin-left: 13px;
+    padding: 4px;
+    font-size: 14px;
+}
+
+.txtName {
+    vertical-align: middle;
+}
+
+.post-head {
+    overflow: hidden;
+}
+
+.post-txt-title {
+    height: 60px;
+    line-height: 60px;
+    font-size: 23px;
+}
+
+.post-txtCategory {
+    padding: 13px;
+}
+
+.nick {
+    margin-left: 13px;
+    font-size: 12px;
+    color: #A9A9A9;
+}
+
+.txtTime {
+    font-size: 12px;
+    color: #A9A9A9;
+}
+
+.view {
+    font-size: 12px;
+    color: #A9A9A9;
+}
+
+.point {
+    font-size: 12px;
+    color: #A9A9A9;
+}
+
+.dot {
+    color: #A9A9A9;
+}
+
+.nickname {
+    float: left;
+    line-height: 60px;
+    margin-left: 13px;
+    color: #A9A9A9;
+    cursor: pointer;
+}
+
+.nickname>ul {
+    display: none;
+    position: absolute;
+    border-radius: 7px;
+    margin-left: 20px;
+    border: solid #F2F2F2;
+    border-width: 1px;
+}
+
+.nickname>ul>li {
+    width: 110px;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    border-radius: 5px;
+    color: black;
+}
+
+.nickname>ul>li:hover {
+    background: #B9B9B9;
+}
+
+.nick-state {
+    float: left;
+    width: 50%;
+    margin-left: 5px;
+    height: 60px;
+    line-height: 60px;
+    color: #A9A9A9;
+    position: relative;
+}
+
+.board-state {
+    float: right;
+    width: 38%;
+    height: 60px;
+    line-height: 60px;
+    text-align: right;
+}
+
+.board-state>ul {
+    display: none;
+    position: absolute;
+    border-radius: 7px;
+    border: solid #F2F2F2;
+    border-width: 1px;
+}
+
+.board-state>ul>li {
+    width: 85px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    border-radius: 5px;
+    color: black;
+}
+
+.board-state>ul>li>button {
+    border: 0;
+    background: white;
+    border-radius: 5px;
+    font-size: 15px
+}
+
+.board-state>ul>li>button:hover {
+    background: #F2F2F2;
+    cursor: pointer;
+}
+
+.fa-ellipsis-vertical {
+    cursor: pointer;
+}
+
+.wide-hr {
+    height: 20px;
+}
+
+#post-cont {
+    overflow: auto;
+}
+
+.post-like {
+    align-items: center;
+    height: 90px;
+    line-height: 90px;
+    display: flex;
+}
+
+.like {
+    width: 115px;
+    height: 70px;
+    font-size: 16px;
+    float: 1;
+    margin-left: 353px;
+    margin-bottom: 20px;
+    border-radius: 7px;
+    border-width: 0px;
+    cursor: pointer;
+}
+
+.scrap {
+    width: 115px;
+    height: 70px;
+    font-size: 16px;
+    float: 1;
+    margin-left: 23px;
+    border-radius: 7px;
+    border-width: 0px;
+    cursor: pointer;
+}
+
+.post-list {
+    display: flex;
+    height: 90px;
+}
+
+.left {
+    float: 30;
+    width: 500px;
+    height: 90px;
+    text-align: left;
+}
+
+.center {
+    float: 30;
+    width: 500px;
+    height: 90px;
+    text-align: center;
+}
+
+.right {
+    float: 30;
+    width: 500px;
+    height: 90px;
+    text-align: right;
+}
+
+.post-list button {
+    width: 110px;
+    height: 45px;
+    line-height: 45px;
+    border-radius: 7px;
+    border-width: 0px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.post-list>.center button {
+    width: 70px;
+}
+
+/*----- 로그인 -------------------------------------------------------------*/
+.loginDiv {
+    height: 50px;
+}
+
+.login-input-div {
+    width: 398px;
+    height: 40px;
+    margin: 0 auto;
+    border-radius: 7px;
+    border: solid #D2D2D2;
+    border-width: 1px;
+}
+
+.loginInput {
+    width: 360px;
+    height: 40px;
+    line-height: 40px;
+    border-width: 0px;
+    font-size: 20px;
+}
+
+.fa-user {
+    color: #D2D2D2;
+    margin-left: 10px;
+}
+
+.fa-lock {
+    color: #D2D2D2;
+    margin-left: 10px;
+}
+
+#login-main button {
+    background: #F2F2F2;
+    border-width: 0px;
+    color: black;
+    height: 50px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 25px;
+}
+
+.loginBtn {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.joinBtn {
+    /*background: #1CA8AF;*/
+    /*background: #F2F2F2;
+    border-width: 0px;*/
+    /*color: white;*/
+    /*color: black;*/
+    width: 398px;
+    /*height: 50px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 25px;*/
+}
+
+/*----- 회원가입 -------------------------------------------------------------*/
+.fa-calendar-days {
+    color: #D2D2D2;
+    margin-left: 10px;
+}
+
+.fa-mobile {
+    color: #D2D2D2;
+    margin-left: 10px;
+}
+
+#join-main button {
+    background: #F2F2F2;
+    border-width: 0px;
+    color: black;
+    height: 50px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 25px;
+}
+
+.confirm {
+    width: 297px;
+}
+
+.cancel {
+    width: 98px;
+}
+
+/*중복확인 박스
+.idChk {
+    text-align: center;
+    height: 40px;
+    margin-top: 2px;
+}
+#chkbtn {
+    background: #F2F2F2;
+    border-width: 0px;
+    color: black;
+    width: 90px;
+    height: 30px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 15px;
+    margin-right: 33px;
+}*/
+
+.join-text-div {
+    display: none;
+}
+
+.join-text-error {
+    /*display: block;*/
+    height: 40px;
+    margin-left: 280px;
+    color: red;
+}
+
+/*.field-error {
+    border: solid #dc3545;
+}*/
+
+/*----- 마이페이지 -------------------------------------------------------------*/
+#mypage-grid {
+    display: grid;
+    /* grid-template-columns: 237.5px 237.5px 237.5px 237.5px; */
+    grid-template-columns: 24.76% 24.76% 24.76% 24.77%;
+    grid-template-rows: 40px 40px;
+    grid-gap: 3px 3px;
+    text-align: center;
+    line-height: 40px;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.mypage-item {
+    border: 1px solid #E5E5E5;
+}
+
+.mypage-div {
+    text-align: center;
+}
+
+.mypage-profile-div {
+    position: relative;
+}
+
+.mypage-profile {
+    width: 70px;
+    height: 70px;
+    border: solid;
+    border-radius: 100%;
+    background: transparent;
+}
+
+.mypage-profile-hidden {
+    font-size: 29px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    -ms-filter: alpha(opacity=0);
+    cursor: pointer;
+}
+
+.mypage-input-div {
+    text-align: center;
+    padding: 5px;
+}
+
+.mypage-input {
+    width: 380px;
+    height: 50px;
+    border: 0;
+    border-radius: 7px;
+    background: #F2F2F2;
+    padding-left: 20px;
+    font-size: 15px;
+}
+
+.mypage-input:focus {
+    outline: none;
+}
+
+.mypage-btn{
+    width: 400px;
+    height: 50px;
+    border: 0;
+    border-radius: 7px;
+    background: #E5E5E5;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.field-error {
+    border: solid #dc3545;
+}
+
+.mypage-text-error {
+    height: 40px;
+    color: red;
+    /* margin-right: 350px; */
+    margin-left: 280px;
+    text-align: left;
+}
+
+.delete-btn {
+    background-color: red;
+    width: 150px;
+    height: 50px;
+    border: 0;
+    border-radius: 7px;
+    font-size: 15px;
+    cursor: pointer;
+    color: white;
+    margin-left: 250px;
+    margin-top: 20px;
+}
+
+.write-div {
+    display: flex;
+}
+
+.write-txtName-div {
+    width: 80%;
+    padding: 7px;
+}
+
+.write-id-div {
+    width: 15%;
+    text-align: right;
+    padding: 7px;
+}
+
+.write-indDt-div {
+    width: 5%;
+    text-align: right;
+    padding: 7px;
+}
