@@ -43,7 +43,7 @@ public class LoginRepository {
                     "SELECT SUM(POINT) AS POINT, INSID FROM BOARD GROUP BY INSID " +
                 ") B ON A.ID = B.INSID " +
                 "LEFT JOIN ( " +
-                    "SELECT SUM(POINT) AS POINT, ID FROM BOARD_POINT GROUP BY ID " +
+                    "SELECT COUNT(*) AS POINT, ID FROM LIKE_POST GROUP BY ID " +
                 ") C ON A.ID = C.ID " +
                 "WHERE A.ID = ? AND A.PASSWORD = ?";
 

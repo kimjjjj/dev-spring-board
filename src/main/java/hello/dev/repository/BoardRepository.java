@@ -191,8 +191,8 @@ public class BoardRepository {
 
     public Board findPost(String userId, int seq) throws SQLException {
         log.info("<=====BoardRepository.findPost=====>{} {}", userId, seq);
-        String sql = "SELECT A.*, COUNT(B.POINT) AS CNT FROM BOARD A " +
-                "LEFT JOIN BOARD_POINT B " +
+        String sql = "SELECT A.*, COUNT(*) AS CNT FROM BOARD A " +
+                "LEFT JOIN LIKE_POST B " +
                 "ON A.SEQ = B.PARENT_SEQ WHERE A.SEQ = ? " +
                 "AND DECODE(B.ID, NULL, B.ID, NVL(?, 1)) = NVL(?, 1)";
 

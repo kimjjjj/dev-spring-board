@@ -100,7 +100,7 @@ public class MemberRepository {
                 "SELECT SUM(POINT) AS POINT, INSID FROM BOARD GROUP BY INSID " +
                 ") B ON A.ID = B.INSID " +
                 "LEFT JOIN (" +
-                "SELECT SUM(POINT) AS POINT, ID FROM BOARD_POINT GROUP BY ID " +
+                "SELECT COUNT(*) AS POINT, ID FROM LIKE_POST GROUP BY ID " +
                 ") C ON A.ID = C.ID " +
                 "WHERE A.ID = ?";
 
@@ -134,7 +134,7 @@ public class MemberRepository {
     public String updateUserPoint(String userId, int seq) throws SQLException {
         log.info("<=====MemberRepository.updateUserPoint=====>");
 
-        String sql = "INSERT INTO BOARD_POINT (ID, PARENT_SEQ, POINT) VALUES (?,?,?)";
+        String sql = "INSERT INTO LIKE_POST (ID, PARENT_SEQ, INSDT) VALUES (?,?,?)";
 
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -145,7 +145,9 @@ public class MemberRepository {
 
             pstmt.setString(1, userId);
             pstmt.setInt(2, seq);
-            pstmt.setInt(3, 1);
+
+            LocalDateTime nowDateTime = LocalDateTime.now();
+            pstmt.setString(3, String.valueOf(nowDateTime));
 
             pstmt.executeUpdate();
 
@@ -163,7 +165,7 @@ public class MemberRepository {
     public String cancelUserPoint(String userId, int seq) throws SQLException {
         log.info("<=====MemberRepository.cancelUserPoint=====>");
 
-        String sql = "DELETE FROM BOARD_POINT WHERE PARENT_SEQ = ? " +
+        String sql = "DELETE FROM LIKE_POST WHERE PARENT_SEQ = ? " +
                 "AND DECODE(ID, NULL, ID, NVL(?, 1)) = NVL(?, 1)";
 
         Connection con = null;
@@ -397,7 +399,7 @@ public class MemberRepository {
         log.info("<=====MemberRepository.mypageLikePost=====>");
 
         String sql = "SELECT B.TXTNAME, B.INSID, B.INSDT " +
-                    "FROM BOARD_POINT A " +
+                    "FROM LIKE_POST A " +
                     "LEFT JOIN BOARD B " +
                     "ON A.PARENT_SEQ = B.SEQ " +
                     "WHERE A.ID = ? " +
