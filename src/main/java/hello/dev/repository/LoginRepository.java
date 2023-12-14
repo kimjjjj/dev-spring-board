@@ -27,7 +27,7 @@ public class LoginRepository {
                         "SELECT ID, BOARD_CODE " +
                         "FROM FAVORITE WHERE ID = ? " +
                         "ORDER BY INSDT)) " +
-                "SELECT A.*, NVL(B.POINT, 0) + NVL(C.POINT, 0) AS USER_POINT " +
+                "SELECT A.*, NVL(B.POINT, 0) + NVL(C.POINT, 0) + NVL(D.POINT, 0) AS USER_POINT " +
                 ", (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 1) AS FAVORITE_1 " +
                 ", (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 2) AS FAVORITE_2 " +
                 ", (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 3) AS FAVORITE_3 " +
@@ -43,8 +43,11 @@ public class LoginRepository {
                     "SELECT SUM(POINT) AS POINT, INSID FROM BOARD GROUP BY INSID " +
                 ") B ON A.ID = B.INSID " +
                 "LEFT JOIN ( " +
-                    "SELECT COUNT(*) AS POINT, ID FROM LIKE_POST GROUP BY ID " +
+                    "SELECT COUNT(*) AS POINT, ID FROM LIKE_TB GROUP BY ID " +
                 ") C ON A.ID = C.ID " +
+                "LEFT JOIN ( " +
+                    "SELECT SUM(POINT) AS POINT, ID FROM COMMENT GROUP BY ID " +
+                ") D ON A.ID = D.ID " +
                 "WHERE A.ID = ? AND A.PASSWORD = ?";
 
         Connection con = null;

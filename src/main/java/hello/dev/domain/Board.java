@@ -35,6 +35,7 @@ public class Board {
 
     private String saveFileName; // 저장 파일명
     private String path; // 저장 경로
+    private Integer commentSeq; // 댓글 seq
 
     // 최근방문게시판
     private String visitBoard1; // 최근방문게시판1 코드

@@ -192,8 +192,8 @@ public class BoardRepository {
     public Board findPost(String userId, int seq) throws SQLException {
         log.info("<=====BoardRepository.findPost=====>{} {}", userId, seq);
         String sql = "SELECT A.*, COUNT(*) AS CNT FROM BOARD A " +
-                "LEFT JOIN LIKE_POST B " +
-                "ON A.SEQ = B.PARENT_SEQ WHERE A.SEQ = ? " +
+                "LEFT JOIN LIKE_TB B " +
+                "ON A.SEQ = B.PARENT_SEQ WHERE A.SEQ = ? AND B.LIKE_TYPE = 'board'" +
                 "AND DECODE(B.ID, NULL, B.ID, NVL(?, 1)) = NVL(?, 1)";
 
         Connection con = null;
@@ -540,15 +540,54 @@ public class BoardRepository {
         }
     }
 
+    // 마이페이지 내가 쓴 댓글 조회
+    public List<Board> mypageComment(String userId) throws SQLException {
+        log.info("<=====BoardRepository.mypageComment=====>");
+
+        String sql = "SELECT BOARD_SEQ AS SEQ, SEQ AS COMMENT_SEQ, CONTENT, INSDT FROM COMMENT WHERE ID = ? ORDER BY INSDT";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setString(1, userId);
+
+            rs = pstmt.executeQuery();
+
+            List<Board> boards = new ArrayList<>();
+
+            while (rs.next()) {
+                Board board = new Board();
+
+                board.setSeq(rs.getInt("SEQ"));
+                board.setCommentSeq(rs.getInt("COMMENT_SEQ"));
+                board.setTxtName(rs.getString("CONTENT"));
+                board.setInsDt(rs.getString("INSDT"));
+
+                boards.add(board);
+            }
+
+            return boards;
+
+        } catch (SQLException e) {
+            log.error("<=====db error=====>", e);
+            throw e;
+        }
+    }
+
     // 마이페이지 좋아요 한 글 조회
     public List<Board> mypageLikePost(String userId) throws SQLException {
         log.info("<=====BoardRepository.mypageLikePost=====>");
 
         String sql = "SELECT A.PARENT_SEQ AS SEQ, B.TXTNAME, B.INSID, B.INSDT " +
-                "FROM LIKE_POST A " +
+                "FROM LIKE_TB A " +
                 "LEFT JOIN BOARD B " +
                 "ON A.PARENT_SEQ = B.SEQ " +
-                "WHERE A.ID = ? " +
+                "WHERE A.ID = ? AND A.LIKE_TYPE = 'board'" +
                 "ORDER BY B.INSDT";
 
         Connection con = null;
@@ -571,6 +610,50 @@ public class BoardRepository {
                 board.setSeq(rs.getInt("SEQ"));
                 board.setTxtName(rs.getString("TXTNAME"));
                 board.setInsId(rs.getString("INSID"));
+                board.setInsDt(rs.getString("INSDT"));
+
+                boards.add(board);
+            }
+
+            return boards;
+
+        } catch (SQLException e) {
+            log.error("<=====db error=====>", e);
+            throw e;
+        }
+    }
+
+    // 마이페이지 좋아요 한 댓글 조회
+    public List<Board> mypageLikeComment(String userId) throws SQLException {
+        log.info("<=====BoardRepository.mypageLikeComment=====>");
+
+        String sql = "SELECT B.BOARD_SEQ AS SEQ, A.PARENT_SEQ AS COMMENT_SEQ, B.CONTENT, B.ID, B.INSDT " +
+                    "FROM LIKE_TB A " +
+                    "LEFT JOIN COMMENT B ON A.PARENT_SEQ = B.SEQ " +
+                    "WHERE A.ID = ? AND A.LIKE_TYPE = 'comment' " +
+                    "ORDER BY B.INSDT";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setString(1, userId);
+
+            rs = pstmt.executeQuery();
+
+            List<Board> boards = new ArrayList<>();
+
+            while (rs.next()) {
+                Board board = new Board();
+
+                board.setSeq(rs.getInt("SEQ"));
+                board.setCommentSeq(rs.getInt("COMMENT_SEQ"));
+                board.setTxtName(rs.getString("CONTENT"));
+                board.setInsId(rs.getString("ID"));
                 board.setInsDt(rs.getString("INSDT"));
 
                 boards.add(board);

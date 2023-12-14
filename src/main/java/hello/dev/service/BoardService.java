@@ -322,10 +322,11 @@ public class BoardService {
         if ("post".equals(mypageTitle)) {
             boards = boardRepository.mypagePost(userId);
         } else if ("comment".equals(mypageTitle)) {
-
+            boards = boardRepository.mypageComment(userId);
         } else if ("likePost".equals(mypageTitle)) {
             boards = boardRepository.mypageLikePost(userId);
         } else if ("likeComment".equals(mypageTitle)) {
+            boards = boardRepository.mypageLikeComment(userId);
         }
 
         for (int i=0; i<boards.size(); i++) {

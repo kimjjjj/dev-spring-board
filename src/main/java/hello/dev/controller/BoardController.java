@@ -3,6 +3,7 @@ package hello.dev.controller;
 import hello.dev.domain.*;
 import hello.dev.repository.MemberRepository;
 import hello.dev.service.BoardService;
+import hello.dev.service.CommentService;
 import hello.dev.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class BoardController {
     private final BoardService boardService;
     private final MemberRepository memberRepository;
     private final MemberService memberService;
+    private final CommentService commentService;
 
     // 첫 화면
     @GetMapping("/")
@@ -120,7 +122,6 @@ public class BoardController {
             member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
         } else {
             member = new Member();
-//            member.setUserId("0");
         }
 
         model.addAttribute("member", member);
@@ -130,6 +131,10 @@ public class BoardController {
         // 최근방문 게시판 조회
         board = boardService.getCookie(board, request, null);
         model.addAttribute("board", board);
+
+        // 댓글 조회
+        List<Comment> comments = commentService.findComment(member.getUserId(), seq);
+        model.addAttribute("comments", comments);
 
         return "postForm";
     }

@@ -94,14 +94,17 @@ public class MemberRepository {
     public Integer findByUserPoint(String userId) throws SQLException {
         log.info("<=====MemberRepository.findByUserPoint=====>");
 
-        String sql = "SELECT NVL(B.POINT, 0) + NVL(C.POINT, 0) AS USER_POINT " +
+        String sql = "SELECT NVL(B.POINT, 0) + NVL(C.POINT, 0) + NVL(D.POINT, 0) AS USER_POINT " +
                 "FROM MEMBER_INFORMATION A " +
                 "LEFT JOIN (" +
-                "SELECT SUM(POINT) AS POINT, INSID FROM BOARD GROUP BY INSID " +
+                    "SELECT SUM(POINT) AS POINT, INSID FROM BOARD GROUP BY INSID " +
                 ") B ON A.ID = B.INSID " +
                 "LEFT JOIN (" +
-                "SELECT COUNT(*) AS POINT, ID FROM LIKE_POST GROUP BY ID " +
+                    "SELECT COUNT(*) AS POINT, ID FROM LIKE_TB GROUP BY ID " +
                 ") C ON A.ID = C.ID " +
+                "LEFT JOIN ( " +
+                    "SELECT SUM(POINT) AS POINT, ID FROM COMMENT GROUP BY ID " +
+                ") D ON A.ID = D.ID " +
                 "WHERE A.ID = ?";
 
         Connection con = null;
@@ -134,7 +137,7 @@ public class MemberRepository {
     public String updateUserPoint(String userId, int seq) throws SQLException {
         log.info("<=====MemberRepository.updateUserPoint=====>");
 
-        String sql = "INSERT INTO LIKE_POST (ID, PARENT_SEQ, INSDT) VALUES (?,?,?)";
+        String sql = "INSERT INTO LIKE_TB (ID, PARENT_SEQ, LIKE_TYPE, INSDT) VALUES (?,?,'board',?)";
 
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -165,7 +168,7 @@ public class MemberRepository {
     public String cancelUserPoint(String userId, int seq) throws SQLException {
         log.info("<=====MemberRepository.cancelUserPoint=====>");
 
-        String sql = "DELETE FROM LIKE_POST WHERE PARENT_SEQ = ? " +
+        String sql = "DELETE FROM LIKE_TB WHERE PARENT_SEQ = ? AND LIKE_TYPE = 'board'" +
                 "AND DECODE(ID, NULL, ID, NVL(?, 1)) = NVL(?, 1)";
 
         Connection con = null;

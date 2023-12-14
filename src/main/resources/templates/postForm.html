@@ -5,105 +5,195 @@
 <th:block layout:fragment="content">
     <main>
         <div class="content-box">
-<!--            <form id="post-form" action="/${board.seq}" th:action method="post">-->
-<!--                <div th:each="board : ${boards}">-->
-                <div>
-                    <section class="post-head">
-                        <div class="post-txt-title bold">
-                            <span class="txtCategory post-txtCategory"><a href="" th:text="${board.boardName}"></a></span>
-                            <span th:text="'[' + ${board.categoryName} + ']'"></span>
-                            <span th:text="${board.txtName}"></span>
+            <div>
+                <section class="post-head">
+                    <div class="post-txt-title bold">
+                        <span class="txtCategory post-txtCategory"><a href="" th:text="${board.boardName}"></a></span>
+                        <span th:text="'[' + ${board.categoryName} + ']'"></span>
+                        <span th:text="${board.txtName}"></span>
+                    </div>
+                    <div class="nickname">
+                        <span th:text="${board.insId}"></span>
+                        <ul>
+                            <li><a href="">게시글 보기</a></li>
+                            <li><a href="">댓글 보기</a></li>
+                        </ul>
+                    </div>
+                    <div class="nick-state">
+                        <span class="dot">·</span>
+                        <span th:text="${board.insDt}"></span>
+                        <span class="dot">·</span>
+                        <span><i class="fa-solid fa-eye"></i></span>
+                        <span th:text="${board.view}"></span>
+                        <span class="dot">·</span>
+                        <span><i class="fa-regular fa-thumbs-up"></i></span>
+                        <span th:text="${board.point}"></span>
+                    </div>
+                    <div class="board-state">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                        <ul>
+                            <li><button>
+                                <i class="fa-regular fa-flag"></i>
+                                신고</button></li>
+                            <li><button>
+                                <i class="fa-solid fa-ban"></i>
+                                차단</button></li>
+                            <li><button>
+                                <i class="fa-solid fa-share-from-square"></i>
+                                공유</button></li>
+                        </ul>
+                    </div>
+                </section>
+                <div class="wide-hr">
+                    <hr class="hr">
+                </div>
+                <section id="post-cont">
+                    <script th:inline="javascript">
+                        const articleObject = [[${board.comment}]];
+                        const arr = articleObject.split("<br />");
+                        for (var i=0; i<arr.length; i++){
+
+                            if (arr[i].substr(0, 4) == "<img") {
+                                var start = arr[i].indexOf("src")+5;
+                                var end = arr[i].lastIndexOf(".")+4;
+                                var files = "http://localhost:8080" + arr[i].substring(start, end);
+                                const bgImage = document.createElement("img");
+                                bgImage.src = files;
+                                bgImage.className = "post-img";
+                                document.getElementById("post-cont").appendChild(bgImage);
+                            } else {
+                                const tagP = document.createElement('p');
+                                tagP.innerHTML = arr[i];
+                                tagP.className = "post-img";
+                                document.getElementById("post-cont").appendChild(tagP);
+                            }
+                        }
+                    </script>
+                </section>
+                <section>
+                    <div class="post-like">
+                        <form id="post-form" action="/${board.seq}/like" th:action="@{|/${board.seq}/like|}" method="post">
+<!--                                <button class="like" type="button" onclick="updateLike()" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">-->
+                            <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">
+                                침하하<br>😂
+                            </button>
+                        </form>
+                        <form action th:action>
+                            <button class="like" type="button" th:if="${member.userId} == ${board.insId}">
+                                침하하 불가<br>😐
+                            </button>
+                        </form>
+<!--                            <button class="like" type="button" onclick="cancelLike()" th:if="${session.member ne null} and ${board.cnt ne 0}">-->
+                        <form action="/${board.seq}/cancel" th:action="@{|/${board.seq}/cancel|}" method="post">
+                            <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and ${session.member ne null} and ${board.cnt ne 0}">
+                                침하하 취소<br>🤣
+                            </button>
+                        </form>
+                        <button class="scrap">
+                            스크랩<br>
+                            <i class="fa-regular fa-bookmark"></i>
+                        </button>
+                    </div>
+                    <div class="post-list">
+                        <div class="left"><button>&lt;이전 글</button></div>
+                        <div class="center"><button>목록</button></div>
+                        <div class="right"><button>다음 글&gt;</button></div>
+                    </div>
+                </section>
+                <h2>댓글</h2>
+                <section th:each="comment : ${comments}">
+                    <div class="comment-all-div">
+                        <div class="comment-div">
+                            <div class="comment-top">
+                                <div class="comment-left">
+                                    <span>
+                                        <img th:src="'/images/' + ${comment.profileName}" class="comment-profile">
+                                    </span>
+                                    <span class="bold comment-nick" th:text="${comment.nickName}">
+                                    </span>
+                                    <span class="comment-indDt" th:text="${comment.insDt}">
+                                    </span>
+                                </div>
+                                <div class="comment-right" th:if="${session.member ne null}">
+                                    <div>
+                                        <button class="comment-re">댓글</button>
+                                    </div>
+                                    <form action="/${board.seq}/commentLike" th:action="@{|/${board.seq}/commentLike|}" method="post">
+                                        <input name="commentSeq" th:value="${comment.seq}" type="text" style="display:none">
+                                        <button class="comment-like" type="submit" th:if="${member.userId} != ${board.insId} and ${board.cnt eq 0}">침하하😂</button>
+                                    </form>
+                                    <form action th:action>
+                                        <input name="commentSeq" th:value="${comment.seq}" type="text" style="display:none">
+                                        <button class="comment-like" type="button" th:if="${member.userId} == ${board.insId}">침하하 불가😐</button>
+                                    </form>
+                                    <form action="/${board.seq}/commentCancel" th:action="@{|/${board.seq}/commentCancel|}" method="post">
+                                        <input name="commentSeq" th:value="${comment.seq}" type="text" style="display:none">
+                                        <button class="comment-like" type="submit" th:if="${member.userId} != ${board.insId} and ${board.cnt ne 0}">침하하 취소🤣</button>
+                                    </form>
+                                    <div>
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment-content" th:text="${comment.content}">
+                            </div>
+
+                            <form class="comment-input-form-re" action="/${board.seq}/childComment" th:action="@{|/${board.seq}/childComment|}" method="post">
+                                <input name="rownumb" th:value="${comment.rownumb}" type="text" style="display:none">
+                                <input name="topSeq" th:value="${comment.topSeq}" type="text" style="display:none">
+                                <input name="parentSeq" th:value="${comment.parentSeq}" type="text" style="display:none">
+                                <input name="seq" th:value="${comment.seq}" type="text" style="display:none">
+                                <input name="orderRow" th:value="${comment.orderRow}" type="text" style="display:none">
+                                <input name="lvl" th:value="${comment.lvl}" type="text" style="display:none">
+
+                                <div class="comment-textarea-div">
+                                    <textarea class="comment-textarea" name="content" placeholder="댓글을 작성해 주세요."></textarea>
+                                </div>
+                                <div class="comment-btn-div">
+                                    <button class="comment-btn" type="submit">등 록</button>
+                                </div>
+<!--                                <script th:inline="javascript">-->
+<!--                                    function reSaveComment() {-->
+<!--                                        const urlLike = [[${board.seq}]];-->
+<!--                                        console.log("00 => " + urlLike);-->
+<!--                                        console.log("333 => " + document.querySelector('textarea[name="content"]').value);-->
+<!--                                        const content = document.getElementsByClassName('comment-textarea').item(0).value;-->
+<!--                                        console.log("22 => " + content + "  " + [[${comment.topSeq}]]);-->
+<!--                                        $.ajax({-->
+<!--                                            url : urlLike + '/childCommentTemp',-->
+<!--                                            type : 'POST',-->
+<!--                                            data : {content: content, topSeq: [[${comment.topSeq}]]},-->
+<!--                                            success: function(Data){-->
+<!--                                                console.log("11 => " + Data);-->
+<!--                                            }-->
+<!--                                        });-->
+<!--                                    }-->
+<!--                                </script>-->
+                            </form>
                         </div>
-                        <div class="nickname">
-                            <span th:text="${board.insId}"></span>
-                            <ul>
-                                <li><a href="">게시글 보기</a></li>
-                                <li><a href="">댓글 보기</a></li>
-                            </ul>
-                        </div>
-                        <div class="nick-state">
-                            <span class="dot">·</span>
-                            <span th:text="${board.insDt}"></span>
-                            <span class="dot">·</span>
-                            <span><i class="fa-solid fa-eye"></i></span>
-                            <span th:text="${board.view}"></span>
-                            <span class="dot">·</span>
-                            <span><i class="fa-regular fa-thumbs-up"></i></span>
-                            <span th:text="${board.point}"></span>
-                        </div>
-                        <div class="board-state">
-                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                            <ul>
-                                <li><button>
-                                    <i class="fa-regular fa-flag"></i>
-                                    신고</button></li>
-                                <li><button>
-                                    <i class="fa-solid fa-ban"></i>
-                                    차단</button></li>
-                                <li><button>
-                                    <i class="fa-solid fa-share-from-square"></i>
-                                    공유</button></li>
-                            </ul>
-                        </div>
-                    </section>
-                    <div class="wide-hr">
                         <hr class="hr">
                     </div>
-                    <section id="post-cont">
-                        <script th:inline="javascript">
-                            const articleObject = [[${board.comment}]];
-                            const arr = articleObject.split("<br />");
-                            for (var i=0; i<arr.length; i++){
+                    <script th:inline="javascript">
+                        // 대댓글 margin 추가
+                        var lvl = [[${comment.lvl}]] - 1;
+                        var cnt = [[${comment.rownumb}]] - 1; // class item을 위해 위에서부터 카운트
 
-                                if (arr[i].substr(0, 4) == "<img") {
-                                    var start = arr[i].indexOf("src")+5;
-                                    var end = arr[i].lastIndexOf(".")+4;
-                                    var files = "http://localhost:8080" + arr[i].substring(start, end);
-                                    const bgImage = document.createElement("img");
-                                    bgImage.src = files;
-                                    bgImage.className = "post-img";
-                                    document.getElementById("post-cont").appendChild(bgImage);
-                                } else {
-                                    const tagP = document.createElement('p');
-                                    tagP.innerHTML = arr[i];
-                                    tagP.className = "post-img";
-                                    document.getElementById("post-cont").appendChild(tagP);
-                                }
-                            }
-                        </script>
-                    </section>
-                    <section>
-                        <div class="post-like">
-                            <form id="post-form" action="/${board.seq}/like" th:action="@{|/${board.seq}/like|}" method="post">
-<!--                                <button class="like" type="button" onclick="updateLike()" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">-->
-                                <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">
-                                    침하하<br>😂
-                                </button>
-                            </form>
-                            <form action th:action>
-                                <button class="like" type="button" th:if="${member.userId} == ${board.insId}">
-                                    침하하 불가<br>😐
-                                </button>
-                            </form>
-<!--                            <button class="like" type="button" onclick="cancelLike()" th:if="${session.member ne null} and ${board.cnt ne 0}">-->
-                            <form action="/${board.seq}/cancel" th:action="@{|/${board.seq}/cancel|}" method="post">
-                                <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and ${session.member ne null} and ${board.cnt ne 0}">
-                                    침하하 취소<br>🤣
-                                </button>
-                            </form>
-                            <button class="scrap">
-                                스크랩<br>
-                                <i class="fa-regular fa-bookmark"></i>
-                            </button>
-                        </div>
-                        <div class="post-list">
-                            <div class="left"><button>&lt;이전 글</button></div>
-                            <div class="center"><button>목록</button></div>
-                            <div class="right"><button>다음 글&gt;</button></div>
-                        </div>
-                    </section>
-                </div>
-<!--            </form>-->
+                        var cls = document.getElementsByClassName('comment-all-div').item(cnt);
+                        cls.style.marginLeft = lvl * 20 + 'px';
+                    </script>
+                </section>
+
+                <form class="comment-input-form" action="/${board.seq}/parentComment" th:action="@{|/${board.seq}/parentComment|}" method="post">
+                    <div class="comment-textarea-div">
+                        <textarea class="comment-textarea" name="content" placeholder="로그인 해주세요." disabled th:if="${session.member eq null}"></textarea>
+                        <textarea class="comment-textarea" name="content" placeholder="댓글을 작성해 주세요." th:if="${session.member ne null}"></textarea>
+                    </div>
+                    <div class="comment-btn-div">
+                        <button class="comment-btn" type="submit" disabled th:if="${session.member eq null}">등 록</button>
+                        <button class="comment-btn" type="submit" th:if="${session.member ne null}">등 록</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </main>
 </th:block>
@@ -239,7 +329,21 @@
 <!--            processData : false-->
 <!--        });-->
 <!--    }-->
-window.onload = function() {
-$('#div_load_image').hide();
-}
+
+    $(document).ready(function(){
+        $('.comment-re').each(function(i){
+            $(this).click(function(e){
+                console.log("11111111");
+
+                var cls = document.getElementsByClassName('comment-input-form-re').item(i);
+                var chkDisplay = cls.style.display;
+
+                if (chkDisplay == '') {
+                    cls.style.display = 'flex';
+                } else {
+                    cls.style.display = '';
+                }
+            });
+        });
+    });
 </script>

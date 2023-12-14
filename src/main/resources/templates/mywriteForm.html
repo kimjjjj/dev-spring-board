@@ -13,6 +13,9 @@
                     <div class="write-txtName-div">
                         <a th:href="'/' + ${board.seq}" th:text="${board.txtName}"></a>
                     </div>
+                    <div style="display:none">
+                        <p th:text="${board.commentSeq}"></p>
+                    </div>
                     <div class="write-id-div">
                         <p th:text="${board.insId}"></p>
                     </div>

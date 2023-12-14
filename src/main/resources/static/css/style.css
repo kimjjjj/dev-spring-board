@@ -20,6 +20,12 @@ a:hover {
     border: 0;
 }
 
+textarea {
+    width:100%;
+    height:auto;
+    resize:none;
+}
+
 #header {
     /* background: #ffff0020; */
 }
@@ -416,7 +422,7 @@ a:hover {
     background: #F2F2F2;
     vertical-align: middle;
     border-radius: 5px;
-    margin-left: 13px;
+    /*margin-left: 13px;*/
     padding: 4px;
     font-size: 14px;
 }
@@ -467,7 +473,7 @@ a:hover {
 .nickname {
     float: left;
     line-height: 60px;
-    margin-left: 13px;
+    /*margin-left: 13px;*/
     color: #A9A9A9;
     cursor: pointer;
 }
@@ -781,11 +787,14 @@ a:hover {
 .mypage-profile-hidden {
     font-size: 29px;
     position: absolute;
-    right: 0px;
-    top: 0px;
+    /*right: 0px;*/
+    /*top: 0px;*/
     opacity: 0;
-    filter: alpha(opacity=0);
-    -ms-filter: alpha(opacity=0);
+    /*filter: alpha(opacity=0);*/
+    /*-ms-filter: alpha(opacity=0);*/
+    width: 80px;
+    height: 76px;
+    right: 440px;
     cursor: pointer;
 }
 
@@ -862,4 +871,125 @@ a:hover {
     width: 5%;
     text-align: right;
     padding: 7px;
+}
+
+/*----- 댓글 -------------------------------------------------------------*/
+.comment-textarea:focus {
+    outline: none;
+}
+
+.comment-input-form {
+    display: flex;
+    background:#F2F2F2;
+    border-radius: 7px;
+    border: 0;
+    width: 100%;
+    height:110px;
+    margin-top: 10px;
+}
+
+.comment-textarea-div {
+    /* background:#F2F2F2;
+    border-radius: 7px; */
+    width: 88%;
+    height:110px;
+}
+
+.comment-textarea {
+    width: 97%;
+    height: 100%;
+    background: transparent;
+    border: 0;
+    /* border-radius: 7px; */
+    padding-top: 10px;
+    padding-left: 10px;
+    font: 15px "malgun gothic";
+}
+
+.comment-btn-div {
+    /* background:#F2F2F2;
+    border-radius: 7px; */
+    width: 12%;
+    height:110px;
+    text-align: center;
+}
+
+.comment-btn {
+    width: 100px;
+    height: 55px;
+    margin-top: 27.5px;
+    border-radius: 7px;
+    border: 0;
+    cursor: pointer;
+    background: #E6E6E6;
+}
+
+.comment-profile {
+    width: 30px;
+    height: 30px;
+    /* border: solid; */
+    border-radius: 100%;
+    background: transparent;
+}
+
+.comment-indDt {
+    font-size: 12px;
+    color: #A9A9A9;
+}
+
+.comment-div {
+    padding: 10px;
+}
+
+.comment-indDt {
+    font-size: 14px;
+    color: #A9A9A9;
+    vertical-align: top;
+}
+
+.comment-nick{
+    vertical-align: top;
+}
+
+.comment-content {
+    margin-left: 35px;
+    font-size: 15px;
+}
+
+.comment-top {
+    display: flex;
+}
+
+.comment-left {
+    width: 80%;
+}
+
+.comment-right {
+    width: 190px;
+    text-align: right;
+    display: flex;
+    margin-left: 100px;
+}
+
+.comment-right button {
+    background: transparent;
+    border: 0;
+    width: 80px;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.comment-like {
+    margin-right: 15px;
+
+}
+
+.comment-input-form-re {
+    display: none;
+    background:#F2F2F2;
+    border-radius: 7px;
+    border: 0;
+    width: 100%;
+    height:110px;
+    margin-top: 10px;
 }
