@@ -37,7 +37,7 @@
 
             </script>
             <section th:each="board : ${boards}">
-                <a href="postForm.html" th:href="@{|/${board.seq}|}">
+                <a href="postForm.html" th:href="@{|/board/${board.titleCode}/${board.seq}|}">
                     <div class="img">
                         <i class="fa-regular fa-file-lines fa-3x" th:if="${board.path eq null}"></i>
                         <img class="thumbnail" th:src="@{${board.path}}" th:unless="${board.path eq null}">

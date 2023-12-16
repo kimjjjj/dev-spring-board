@@ -35,6 +35,7 @@ public class BoardService {
         int max = page * pageLimit;
         int min = max - 1;
 
+        // 게시글 조회
         List<Board> chimList = boardRepository.findChimList(min, max);
 
         // 썸네일 작업
@@ -42,6 +43,9 @@ public class BoardService {
 
         for (int i=0; i<chimList.size(); i++) {
             Board board = chimList.get(i);
+
+            board.setTitleCode("chimhaha"); // 타이틀 코드 세팅
+
             board.setBoardName(boardCodeSet(false).get(board.getBoardNumber()));
             Matcher matcher = nonValidPattern.matcher(board.getComment());
             
@@ -88,6 +92,8 @@ public class BoardService {
         // 게시판 코드->이름 작업
         for (int i=0; i<boardList.size(); i++) {
             Board board = boardList.get(i);
+
+            board.setTitleCode(titleCode); // 타이틀 코드 세팅
             board.setBoardName(boardCodeSet(false).get(board.getBoardNumber()));
             boardList.set(i, board);
         }
@@ -95,16 +101,18 @@ public class BoardService {
         return boardList;
     }
 
-    public Board boardPost(String userId, int seq) throws SQLException {
+    public Board boardPost(String userId, int seq, String titleCode) throws SQLException {
         log.info("<=====BoardService.boardPost=====>");
 
         // 게시글 뷰수 plus
         boardRepository.updateView(seq);
 
-        Board board = boardRepository.findPost(userId, seq);
+        // 게시글 조회
+        Board board = boardRepository.findPost(userId, seq, titleCode);
 
 //        for (int i=0; i<post.size(); i++) {
 //            Board board = post.get(i);
+        board.setTitleCode(titleCode);
         board.setBoardName(boardCodeSet(false).get(board.getBoardNumber()));
         board.setCategoryName(categoryCodeSet().get(board.getCategoryNumber()));
 //            post.set(i, board);
@@ -346,10 +354,11 @@ public class BoardService {
         codeMap.put("total_chim", "침착맨 전체게시글");
 
         if (use) {
-            codeMap.put("chim", "\uD83D\uDE0A침착맨");
             codeMap.put("chimhaha", "\uD83D\uDC4D침하하");
             codeMap.put("library", "\uD83C\uDFDB️알렉산드리아 짤 도서관");
+
             codeMap.put("notice", "\uD83D\uDC40방송일정 및 공지");
+            codeMap.put("chim", "\uD83D\uDE0A침착맨");
             codeMap.put("chim_jjal", "\uD83C\uDF83침착맨 짤");
             codeMap.put("chim_fanart", "\uD83C\uDFA8침착맨 팬아트");
             codeMap.put("request_stream", "\uD83D\uDCE3방송 해줘요");
@@ -357,9 +366,10 @@ public class BoardService {
             codeMap.put("make_short", "\uD83C\uDFAC쇼츠 만들어줘요");
             codeMap.put("favorite_chimtubu", "\uD83D\uDC53재밌게 본 침투부");
         } else {
-            codeMap.put("chim", "침착맨");
             codeMap.put("chimhaha", "침하하");
             codeMap.put("library", "️알렉산드리아 짤 도서관");
+
+            codeMap.put("chim", "침착맨");
             codeMap.put("notice", "방송일정 및 공지");
             codeMap.put("chim_jjal", "침착맨 짤");
             codeMap.put("chim_fanart", "침착맨 팬아트");

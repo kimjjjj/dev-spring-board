@@ -37,8 +37,6 @@ public class BoardController {
             , HttpServletRequest request, Model model) throws SQLException {
         log.info("<=====BoardController.chimList=====>");
 
-        model.addAttribute("boards", boardService.chimList(page));
-
         // 최근방문 게시판 조회
         board = boardService.getCookie(board, request, null);
 
@@ -46,6 +44,9 @@ public class BoardController {
         board = boardService.setPage(board, page);
 
         model.addAttribute("board", board);
+
+        // 게시글 조회
+        model.addAttribute("boards", boardService.chimList(page));
 
         // 세션에 회원 데이터가 없으면 home
         if (member == null) {
@@ -99,7 +100,6 @@ public class BoardController {
         model.addAttribute("boards", boards);
 
         // 게시판 이름
-//        board board = new board();
         board.setTitleCode(titleCode);
 
         // 게시판 코드->이름
@@ -112,10 +112,11 @@ public class BoardController {
     }
 
     // 게시글보기
-    @GetMapping("/{seq}")
+    @GetMapping("/board/{titleCode}/{seq}")
     public String boardPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
-            , @PathVariable int seq, Model model, HttpServletRequest request) throws SQLException {
-        log.info("<=====BoardController.boardPost=====>");
+            , @PathVariable String titleCode, @PathVariable int seq
+            , Model model, HttpServletRequest request) throws SQLException {
+        log.info("<=====BoardController.boardPost=====> titleCode: {}, seq: {}", titleCode, seq);
 
         // 계정 포인트 조회
         if (member != null) {
@@ -125,8 +126,9 @@ public class BoardController {
         }
 
         model.addAttribute("member", member);
-
-        Board board = boardService.boardPost(member.getUserId(), seq);
+        
+        // 게시글 조회
+        Board board = boardService.boardPost(member.getUserId(), seq, titleCode);
 
         // 최근방문 게시판 조회
         board = boardService.getCookie(board, request, null);
@@ -142,14 +144,15 @@ public class BoardController {
     // 침하하
     @PostMapping("/{seq}/like")
     public String updateLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
-            , @PathVariable int seq, Model model) throws SQLException {
-        log.info("<=====BoardController.updateLike=====>");
+            , @PathVariable int seq, @RequestParam String titleCode, Model model) throws SQLException {
+        log.info("<=====BoardController.updateLike=====> titleCode : {}", titleCode);
 
         // 계정 없으면
         if (member == null) {
             // alert창 띄우기
             model.addAttribute("message", "로그인이 필요합니다.");
-            model.addAttribute("searchUrl", "/" + seq);
+//            model.addAttribute("searchUrl", "/" + titleCode + "/" + seq);
+            model.addAttribute("searchUrl", "/login");
 
             return "message";
         } else {
@@ -163,7 +166,7 @@ public class BoardController {
             member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
             model.addAttribute("member", member);
 
-            return "redirect:/{seq}";
+            return "redirect:/board/" + titleCode + "/{seq}";
         }
     }
 
@@ -171,7 +174,7 @@ public class BoardController {
     @PostMapping("/{seq}/cancel")
 //    @ResponseBody
     public String cancelLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
-            , @PathVariable int seq, Model model) throws SQLException {
+            , @PathVariable int seq, @RequestParam String titleCode, Model model) throws SQLException {
         log.info("<=====BoardController.cancelLike=====>");
 
         // 계정이 있다면
@@ -197,7 +200,7 @@ public class BoardController {
 //        return resultMap;
         }
 
-        return "redirect:/{seq}";
+        return "redirect:/board/" + titleCode + "/{seq}";
     }
 
     // 글쓰기 페이지로 이동

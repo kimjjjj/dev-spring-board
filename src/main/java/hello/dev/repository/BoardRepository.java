@@ -100,15 +100,17 @@ public class BoardRepository {
     }
 
     public List<Board> boardList(String titleCode, Integer min, Integer max) throws SQLException {
-        log.info("<=====BoardRepository.boardList=====>");
+        log.info("<=====BoardRepository.boardList=====> titleCode: {}", titleCode);
 
         String sql = "WITH TEMP AS ( " +
                 "SELECT ROWNUM AS ROW_NUMB, A.* " +
                 "FROM ( " +
-                "SELECT * FROM BOARD ";
+                "SELECT * FROM BOARD WHERE 1=1 ";
 
-        if (!"all".equals(titleCode)) {
-            sql += "WHERE BOARD_CODE = ?";
+        if ("total_chim".equals(titleCode)) {
+            sql += " AND BOARD_CODE IN ('notice', 'chim', 'chim_jjal', 'chim_fanart', 'request_stream', 'find_chimtube', 'make_short', 'favorite_chimtubu') ";
+        } else if (!"all".equals(titleCode)) {
+            sql += " AND BOARD_CODE = ?";
         }
 
         sql += "ORDER BY SEQ DESC " +
@@ -125,7 +127,7 @@ public class BoardRepository {
             con = getConnection();
             pstmt = con.prepareStatement(sql);
 
-            if (!"all".equals(titleCode)) {
+            if (!"all".equals(titleCode) && !"total_chim".equals(titleCode)) {
                 pstmt.setString(1, titleCode);
                 pstmt.setInt(2, min);
                 pstmt.setInt(3, max);
@@ -189,12 +191,32 @@ public class BoardRepository {
         }
     }
 
-    public Board findPost(String userId, int seq) throws SQLException {
-        log.info("<=====BoardRepository.findPost=====>{} {}", userId, seq);
-        String sql = "SELECT A.*, COUNT(*) AS CNT FROM BOARD A " +
-                "LEFT JOIN LIKE_TB B " +
-                "ON A.SEQ = B.PARENT_SEQ WHERE A.SEQ = ? AND B.LIKE_TYPE = 'board'" +
-                "AND DECODE(B.ID, NULL, B.ID, NVL(?, 1)) = NVL(?, 1)";
+    public Board findPost(String userId, int seq, String titleCode) throws SQLException {
+        log.info("<=====BoardRepository.findPost=====>{} {} {}", userId, seq, titleCode);
+//        String sql = "SELECT A.*, COUNT(*) AS CNT FROM BOARD A " +
+//                "LEFT JOIN LIKE_TB B " +
+//                "ON A.SEQ = B.PARENT_SEQ WHERE A.SEQ = ? AND B.LIKE_TYPE = 'board'" +
+//                "AND DECODE(B.ID, NULL, B.ID, NVL(?, 1)) = NVL(?, 1)";
+        String sql = "SELECT A.*, NVL(B.CNT, 0) AS CNT " +
+                    "FROM ( " +
+                        "SELECT * " +
+                        ", LAG(SEQ) OVER(ORDER BY SEQ DESC) AS BEFORE_SEQ " +
+                        ", LEAD(SEQ) OVER(ORDER BY SEQ DESC) AS AFTER_SEQ " +
+                        "FROM BOARD WHERE 1=1 ";
+
+        if ("chimhaha".equals(titleCode)) {
+            sql += " AND POINT >= 10 ";
+        } else if ("total_chim".equals(titleCode)) {
+            sql += " AND BOARD_CODE IN ('notice', 'chim', 'chim_jjal', 'chim_fanart', 'request_stream', 'find_chimtube', 'make_short', 'favorite_chimtubu') ";
+        } else if (!"all".equals(titleCode)) {
+            sql += " AND BOARD_CODE = ? ";
+        }
+        sql += "ORDER BY SEQ DESC) A " +
+                    "LEFT JOIN ( " +
+                        "SELECT PARENT_SEQ, COUNT(*) AS CNT FROM LIKE_TB " +
+                        "WHERE ID = NVL(?, 0) AND LIKE_TYPE = 'board' " +
+                        "GROUP BY PARENT_SEQ) B " +
+                    "ON A.SEQ = B.PARENT_SEQ WHERE A.SEQ = ?";
 
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -204,9 +226,18 @@ public class BoardRepository {
             con = getConnection();
             pstmt = con.prepareStatement(sql);
 
-            pstmt.setInt(1, seq);
-            pstmt.setString(2, userId);
-            pstmt.setString(3, userId);
+//            pstmt.setInt(1, seq);
+//            pstmt.setString(2, userId);
+//            pstmt.setString(3, userId);
+
+            if (!"all".equals(titleCode) && !"chimhaha".equals(titleCode) && !"total_chim".equals(titleCode)) {
+                pstmt.setString(1, titleCode);
+                pstmt.setString(2, userId);
+                pstmt.setInt(3, seq);
+            } else {
+                pstmt.setString(1, userId);
+                pstmt.setInt(2, seq);
+            }
 
             rs = pstmt.executeQuery();
 
@@ -216,6 +247,8 @@ public class BoardRepository {
                 LocalDateTime nowDateTime = LocalDateTime.now();
 
                 board.setSeq(seq);
+                board.setBeforeSeq(rs.getInt("BEFORE_SEQ"));
+                board.setAfterSeq(rs.getInt("AFTER_SEQ"));
                 board.setBoardNumber(rs.getString("BOARD_CODE"));
                 board.setCategoryNumber(rs.getInt("CATEGORY_CODE"));
                 board.setTxtName(rs.getString("txtName"));

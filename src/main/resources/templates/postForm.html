@@ -73,6 +73,7 @@
                 <section>
                     <div class="post-like">
                         <form id="post-form" action="/${board.seq}/like" th:action="@{|/${board.seq}/like|}" method="post">
+                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
 <!--                                <button class="like" type="button" onclick="updateLike()" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">-->
                             <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">
                                 침하하<br>😂
@@ -85,6 +86,7 @@
                         </form>
 <!--                            <button class="like" type="button" onclick="cancelLike()" th:if="${session.member ne null} and ${board.cnt ne 0}">-->
                         <form action="/${board.seq}/cancel" th:action="@{|/${board.seq}/cancel|}" method="post">
+                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
                             <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and ${session.member ne null} and ${board.cnt ne 0}">
                                 침하하 취소<br>🤣
                             </button>
@@ -95,9 +97,10 @@
                         </button>
                     </div>
                     <div class="post-list">
-                        <div class="left"><button>&lt;이전 글</button></div>
-                        <div class="center"><button>목록</button></div>
-                        <div class="right"><button>다음 글&gt;</button></div>
+                        <div class="left"><button th:onclick="'location.href=\'' + @{${board.beforeSeq}} + '\''" type="button" th:if="${board.beforeSeq ne 0}">&lt;이전 글</button></div>
+<!--                        <div class="center"><button type="button">목록</button></div>-->
+                        <div class="center"><a th:href="@{|/board/${board.titleCode}|}">목록</a></div>
+                        <div class="right"><button th:onclick="'location.href=\'' + @{${board.afterSeq}} + '\''" type="button" th:if="${board.afterSeq ne 0}">다음 글&gt;</button></div>
                     </div>
                 </section>
                 <h2>댓글</h2>
@@ -120,15 +123,17 @@
                                     </div>
                                     <form action="/${board.seq}/commentLike" th:action="@{|/${board.seq}/commentLike|}" method="post">
                                         <input name="commentSeq" th:value="${comment.seq}" type="text" style="display:none">
-                                        <button class="comment-like" type="submit" th:if="${member.userId} != ${board.insId} and ${board.cnt eq 0}">침하하😂</button>
+                                        <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
+                                        <button class="comment-like" type="submit" th:if="${member.userId} != ${comment.userId} and ${comment.cnt eq 0}">침하하😂</button>
                                     </form>
                                     <form action th:action>
                                         <input name="commentSeq" th:value="${comment.seq}" type="text" style="display:none">
-                                        <button class="comment-like" type="button" th:if="${member.userId} == ${board.insId}">침하하 불가😐</button>
+                                        <button class="comment-like" type="button" th:if="${member.userId} == ${comment.userId}">침하하 불가😐</button>
                                     </form>
                                     <form action="/${board.seq}/commentCancel" th:action="@{|/${board.seq}/commentCancel|}" method="post">
                                         <input name="commentSeq" th:value="${comment.seq}" type="text" style="display:none">
-                                        <button class="comment-like" type="submit" th:if="${member.userId} != ${board.insId} and ${board.cnt ne 0}">침하하 취소🤣</button>
+                                        <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
+                                        <button class="comment-like" type="submit" th:if="${member.userId} != ${comment.userId} and ${comment.cnt ne 0}">침하하 취소🤣</button>
                                     </form>
                                     <div>
                                         <i class="fa-solid fa-ellipsis-vertical"></i>

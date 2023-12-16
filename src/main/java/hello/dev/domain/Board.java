@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 public class Board {
 
     private int seq; // seq
+    private int beforeSeq; // 이전 seq
+    private int afterSeq; // 다음 seq
     private String boardNumber; // 게시판 코드
     private String boardName; // 게시판명
     private int categoryNumber; // 카테고리 코드
@@ -24,7 +26,7 @@ public class Board {
     private String uptDt; // 수정 일시
     private Integer view; // 글 본 횟수
     private Integer point; // 추천 횟수
-    private Integer cnt; //
+    private Integer cnt; // 좋아요 유무
     private String title; // view의 게시판 이름
     private String titleCode; // view의 게시판 코드
     private String searchKeyword; // 검색

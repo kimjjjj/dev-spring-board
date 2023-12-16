@@ -327,6 +327,7 @@ textarea {
 /* 즐겨찾기 별 */
 .fa-star {
     color: #1CA8AF;
+    cursor: pointer;
 }
 
 #main #number a {
@@ -603,7 +604,6 @@ textarea {
 
 .center {
     float: 30;
-    width: 500px;
     height: 90px;
     text-align: center;
 }
@@ -627,6 +627,18 @@ textarea {
 
 .post-list>.center button {
     width: 70px;
+}
+
+.post-list a {
+    width: 110px;
+    height: 45px;
+    line-height: 45px;
+    border-radius: 7px;
+    margin-top: 20px;
+    cursor: pointer;
+    background: #F2F2F2;
+    font-size: 14px;
+    display: block;
 }
 
 /*----- 로그인 -------------------------------------------------------------*/
