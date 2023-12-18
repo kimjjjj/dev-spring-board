@@ -51,8 +51,10 @@
                     <script th:inline="javascript">
                         const articleObject = [[${board.comment}]];
                         const arr = articleObject.split("<br />");
+
                         for (var i=0; i<arr.length; i++){
 
+                            // 이미지 포함
                             if (arr[i].substr(0, 4) == "<img") {
                                 var start = arr[i].indexOf("src")+5;
                                 var end = arr[i].lastIndexOf(".")+4;
@@ -61,6 +63,15 @@
                                 bgImage.src = files;
                                 bgImage.className = "post-img";
                                 document.getElementById("post-cont").appendChild(bgImage);
+
+                                // 이미지 이후 줄바꿈 없이 글이 있을 경우
+                                start = arr[i].lastIndexOf("/>") + 2;
+                                end = arr[i].length;
+
+                                const tagP = document.createElement('p');
+                                tagP.innerHTML = arr[i].substr(start, end);
+                                tagP.className = "post-img";
+                                document.getElementById("post-cont").appendChild(tagP);
                             } else {
                                 const tagP = document.createElement('p');
                                 tagP.innerHTML = arr[i];

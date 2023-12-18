@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.*;
+import java.util.Collection;
 import java.util.UUID;
 
 @Slf4j
@@ -43,19 +46,24 @@ public class ImageUploadController {
         response.setContentType("text/html; charset=utf-8");
 
         try {
-            // 이름 중복 방지
-            UUID uuid = UUID.randomUUID();
-            
-            // 업로드한 파일명, 확장자명, 저장될 파일명
-            String fileName = upload.getOriginalFilename();
-            String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
-            String uploadFileName = uuid + "." + ext;
+//            UUID uuid = UUID.randomUUID();
+//
+//            // 업로드한 파일명, 확장자명, 저장될 파일명
+//            String fileName = upload.getOriginalFilename();
+//            String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
+//            String uploadFileName = uuid + "." + ext;
+
+            // 이미지를 업로드할 디렉토리
+//            String imgUploadPath = uploadPath + "/images/" + uploadFileName;
+
+            // 이미지 이름 세팅
+            String uploadFileName = setFileName(upload.getOriginalFilename());
+
+            // 이미지 경로 세팅
+            String imgUploadPath = setFilePath(uploadFileName);
 
             // 파일을 바이트 배열로 변환
             byte[] bytes = upload.getBytes();
-
-            // 이미지를 업로드할 디렉토리
-            String imgUploadPath = uploadPath + "/images/" + uploadFileName;
 
             // 서버로 업로드
             // write메소드의 매개값으로 파일의 총 바이트를 매개값으로 준다.
@@ -98,5 +106,43 @@ public class ImageUploadController {
             }
         }
         return;
+    }
+
+    // request에서 이미지 이름 가져오기
+    public String getFileName(String fileName, HttpServletRequest request) throws ServletException, IOException {
+        log.info("<=====ImageUploadController.getFileName=====>");
+
+        Collection<Part> parts = request.getParts();
+
+        for (Part part : parts) {
+            Collection<String> headerNames = part.getHeaderNames();
+
+            if (part.getSubmittedFileName() != null && fileName == null) {
+                return part.getSubmittedFileName();
+            }
+        }
+
+        return null;
+    }
+
+    // 이미지 이름 세팅
+    public String setFileName(String fileName) {
+        log.info("<=====ImageUploadController.setFileName=====>");
+
+        // 이름 중복 방지
+        UUID uuid = UUID.randomUUID();
+
+        // 업로드한 파일명, 확장자명, 저장될 파일명
+        String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String uploadFileName = uuid + "." + ext;
+
+        return uploadFileName;
+    }
+
+    // 이미지 경로 세팅
+    public String setFilePath(String fileName) {
+        log.info("<=====ImageUploadController.setFilePath=====>");
+
+        return uploadPath + "/images/" + fileName;
     }
 }

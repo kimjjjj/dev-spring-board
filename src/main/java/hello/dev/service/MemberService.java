@@ -319,35 +319,16 @@ public class MemberService {
         return member;
     }
 
-    // 프로필 이미지 이름 세팅
-    public Member setProfile(Member member, HttpServletRequest request) throws ServletException, IOException {
+    // 파일을 경로에 저장
+    public void setProfile(String uploadFileName, HttpServletRequest request) throws ServletException, IOException {
         log.info("<=====MemberService.setProfile=====>");
 
         Collection<Part> parts = request.getParts();
 
         for (Part part : parts) {
-            Collection<String> headerNames = part.getHeaderNames();
-
-            // 프로필 이미지 이름 저장
-            if (part.getSubmittedFileName() != null && member.getProfileName() == null) {
-                member.setProfileName(part.getSubmittedFileName());
-            }
-
-            // 데이터 읽기
-            InputStream inputStream = part.getInputStream();
-            String body = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-
-            // 파일에 저장하기
-            if (StringUtils.hasText(part.getSubmittedFileName())) {
-                String fullPath = filePath + "/images/";
-
-                member.setProfilePath(fullPath);
-
-                part.write(fullPath + part.getSubmittedFileName());
-            }
+            part.write(uploadFileName);
+            break;
         }
-
-        return member;
     }
 
     // 회원탈퇴

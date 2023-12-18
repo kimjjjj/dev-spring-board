@@ -10,10 +10,8 @@
             <div class="mypage-div">
                 <form action="/mypage" th:action="@{|/mypage|}" th:object="${member}" method="post" enctype="multipart/form-data">
                     <div class="mypage-profile-div">
-                        <img th:src="'/images/' + *{profileName}" class="mypage-profile">
-                        <input type="file" name="file" class="mypage-profile-hidden" accept="image/*" th:field="*{profileName}">
-<!--                               onchange="javascript:document.getElementById('fileName').value=this.value"/>-->
-<!--                        <input type="file" name="file" th:field="*{profileName}">-->
+                        <img id="preview" th:src="'/images/' + *{profileName}" class="mypage-profile">
+                        <input type="file" name="file" class="mypage-profile-hidden" accept="image/*" th:field="*{profileName}" onchange="readURL(this);">
                     </div>
 
                     <div class="mypage-input-div" th:text="'포인트 : ' + ${member.userPoint}"></div>
@@ -45,3 +43,18 @@
     </main>
 </th:block>
 </html>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                document.getElementById('preview').src = e.target.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            document.getElementById('preview').src = "";
+        }
+    }
+</script>

@@ -26,6 +26,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final BoardService boardService;
+    private final ImageUploadController imageUploadController;
 
     // 회원가입 페이지
     @GetMapping("/join")
@@ -159,29 +160,40 @@ public class MemberController {
         model.addAttribute("member", member);
         model.addAttribute("board", board);
 
-        // 닉네임 중복 발생
-        if (!errors.isEmpty()) {
+        // request에서 파일 이름 가져오기
+        String fileName = imageUploadController.getFileName(null, request);
+
+        // 프로필 이미지 이름&경로 세팅
+        if ("".equals(member.getProfileName()) || member.getProfileName() == null || (!"".equals(fileName) && member.getProfileName() != fileName)) {
+            // 이미지 이름 세팅
+            String uploadFileName = imageUploadController.setFileName(fileName);
+
+            // 이미지 경로 세팅
+            String imgUploadPath = imageUploadController.setFilePath(uploadFileName);
+
+            member.setProfileName(uploadFileName);
+            member.setProfilePath(imgUploadPath);
+
+            memberService.setProfile(imgUploadPath, request);
+
+        } else if (!"".equals(member.getProfileName()) && member.getProfileName() != null && !errors.isEmpty()) {
             log.info("error = {}", errors);
 
             model.addAttribute("errors", errors);
 
             return "mypageForm";
-        } else {
-            
-            // 프로필 이미지 이름 세팅
-            member = memberService.setProfile(member, request);
-
-            // 회원정보 update
-            member = memberService.saveMypage(member, member.getUserId(), nickName, member.getProfileName(), member.getProfilePath());
-
-            model.addAttribute("member", member);
-
-            // alert창 띄우기
-            model.addAttribute("message", "변경되었습니다.");
-            model.addAttribute("searchUrl", "/mypage");
-
-            return "message";
         }
+
+        // 회원정보 update
+        member = memberService.saveMypage(member, member.getUserId(), nickName, member.getProfileName(), member.getProfilePath());
+
+        model.addAttribute("member", member);
+
+        // alert창 띄우기
+        model.addAttribute("message", "변경되었습니다.");
+        model.addAttribute("searchUrl", "/mypage");
+
+        return "message";
     }
 
     // 회원탈퇴
