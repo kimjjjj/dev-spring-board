@@ -24,11 +24,12 @@ public class CommentController {
     private final MemberService memberService;
     private final BoardService boardService;
 
-    @PostMapping("/{seq}/parentComment")
+    // 댓글 저장
+    @PostMapping("/board/{titleCode}/{seq}/parentComment")
     public String saveParentComment(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Board board, @ModelAttribute Comment comment
             , @PathVariable int seq, @RequestParam String content, Model model, HttpServletRequest request) throws SQLException {
-        log.info("<=====CommentController.parentComment=====> {}", content);
+        log.info("<=====CommentController.parentComment=====> {}, {}", seq, content);
 
         // 계정 없으면
         if (member == null) {
@@ -62,10 +63,11 @@ public class CommentController {
         List<Comment> comments = commentService.findComment(member.getUserId(), seq);
         model.addAttribute("comments", comments);
 
-        return "redirect:/" + seq;
+        return "redirect:/board/{titleCode}/{seq}";
     }
 
-    @PostMapping("/{seq}/childComment")
+    // 대댓글 저장
+    @PostMapping("/board/{titleCode}/{seq}/childComment")
     public String saveChildComment(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Board board, @ModelAttribute Comment comment
             , @PathVariable int seq, @RequestParam String content
@@ -108,7 +110,7 @@ public class CommentController {
         List<Comment> comments = commentService.findComment(member.getUserId(), seq);
         model.addAttribute("comments", comments);
 
-        return "redirect:/" + seq;
+        return "redirect:/board/{titleCode}/{seq}";
     }
 
     // 댓글 침하하

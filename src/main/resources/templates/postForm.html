@@ -179,7 +179,8 @@
                             <div class="comment-content" th:text="${comment.content}">
                             </div>
 
-                            <form class="comment-input-form-re" action="/${board.seq}/childComment" th:action="@{|/${board.seq}/childComment|}" method="post">
+                            <form class="comment-input-form-re" action="/board/${board.titleCode}/${board.seq}/childComment"
+                                  th:action="@{|/board/${board.titleCode}/${board.seq}/childComment|}" method="post">
                                 <input name="rownumb" th:value="${comment.rownumb}" type="text" style="display:none">
                                 <input name="topSeq" th:value="${comment.topSeq}" type="text" style="display:none">
                                 <input name="parentSeq" th:value="${comment.parentSeq}" type="text" style="display:none">
@@ -224,7 +225,8 @@
                     </script>
                 </section>
 
-                <form class="comment-input-form" action="/${board.seq}/parentComment" th:action="@{|/${board.seq}/parentComment|}" method="post">
+                <form class="comment-input-form" action="/board/${board.titleCode}/${board.seq}/parentComment"
+                      th:action="@{|/board/${board.titleCode}/${board.seq}/parentComment|}" method="post">
                     <div class="comment-textarea-div">
                         <textarea class="comment-textarea" name="content" placeholder="로그인 해주세요." disabled th:if="${session.member eq null}"></textarea>
                         <textarea class="comment-textarea" name="content" placeholder="댓글을 작성해 주세요." th:if="${session.member ne null}"></textarea>
