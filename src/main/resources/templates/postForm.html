@@ -29,18 +29,43 @@
                         <span><i class="fa-regular fa-thumbs-up"></i></span>
                         <span th:text="${board.point}"></span>
                     </div>
-                    <div class="board-state">
+                    <div class="board-state" th:if="${session.member ne null}">
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                         <ul>
-                            <li><button>
-                                <i class="fa-regular fa-flag"></i>
-                                신고</button></li>
-                            <li><button>
-                                <i class="fa-solid fa-ban"></i>
-                                차단</button></li>
-                            <li><button>
-                                <i class="fa-solid fa-share-from-square"></i>
-                                공유</button></li>
+                            <li>
+                                <form>
+                                    <button th:if="${member.userId} != ${board.insId}">
+                                        <i class="fa-regular fa-flag"></i>
+                                        신고
+                                    </button>
+                                </form>
+                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/edit|}" method="get">
+                                    <button th:if="${member.userId} == ${board.insId}">
+                                        <i class="fa-regular fa-edit"></i>
+                                        수정
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
+                                <form>
+                                    <button th:if="${member.userId} != ${board.insId}">
+                                        <i class="fa-solid fa-ban"></i>
+                                        차단
+                                    </button>
+                                </form>
+                                <form>
+                                    <button th:if="${member.userId} == ${board.insId}">
+                                        <i class="fa-regular fa-trash-alt"></i>
+                                        삭제
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
+                                <button>
+                                    <i class="fa-solid fa-share-from-square"></i>
+                                    공유
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </section>

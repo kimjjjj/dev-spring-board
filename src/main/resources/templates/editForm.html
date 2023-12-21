@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+<th:block layout:fragment="content">
+    <main id="add-main">
+        <div class="content-box">
+            <h2>글 수정</h2>
+            <article>
+                <form id="add-form" th:action="@{|/board/${board.titleCode}/${board.seq}/edit|}" th:object="${board}" method="post">
+                    <th:block th:replace="common/fragments/addFormCommon :: addFormFragment"></th:block>
+                </form>
+            </article>
+        </div>
+    </main>
+</th:block>
+</html>
+<script>
+    // 게시판 세팅
+    $('#boardCode').val('[[${board.boardNumber}]]').prop("selected",true);
+
+    // 카테고리 세팅
+    if([[${board.categoryNumber}]] != 0) {
+        $('#category').val([[${board.categoryNumber}]]).prop("selected",true);
+    }
+
+    function categoryChange(e) {
+        // 게시판 선택에 따른 카테고리 변경
+        $.ajax({
+            url : '/categoryCode',
+            type : 'GET',
+            data: {boardCode: e.value},
+            success: function(Data){
+                $("#category").children().remove();
+
+                for(var i=0; i<Data.length; i++) {
+                    $("#category").append("<option value=" + `${Data[i].code}` + ">" + `${Data[i].displayName}` + "</option>");
+                }
+            }
+        });
+    }
+</script>

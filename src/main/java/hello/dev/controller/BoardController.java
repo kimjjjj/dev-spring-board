@@ -271,6 +271,59 @@ public class BoardController {
         return "redirect:/board/all";
     }
 
+    // 글수정 페이지로 이동
+    @GetMapping("/board/{titleCode}/{seq}/edit")
+    public String editForm(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , @PathVariable String titleCode, @PathVariable int seq
+            , Board board, Model model, HttpServletRequest request) throws SQLException {
+        log.info("<=====BoardController.editForm=====>");
+
+        // 계정 포인트 조회
+        if (member != null) {
+            member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
+        }
+
+        model.addAttribute("member", member);
+
+        // 게시글 조회
+        board = boardService.editBoardPost(member.getUserId(), seq, titleCode);
+
+        // 최근방문 게시판 조회
+        board = boardService.getCookie(board, request, null);
+        model.addAttribute("board", board);
+
+        // 카테고리 세팅
+        model.addAttribute("categoryCodes", categoryC(board.getBoardNumber()));
+
+        return "editForm";
+    }
+
+    // 글수정
+    @PostMapping("/board/{titleCode}/{seq}/edit")
+    public String updatePost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , @PathVariable String titleCode, @PathVariable int seq
+            , Board board, Model model, HttpServletRequest request
+    ) throws SQLException {
+        log.info("<=====BoardController.updatePost=====>");
+        log.info("{}, {}", board.getTxtName(), board.getComment());
+
+        // 계정 포인트 조회
+        if (member != null) {
+            member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
+        }
+
+        model.addAttribute("member", member);
+
+        // 최근방문 게시판 조회
+        board = boardService.getCookie(board, request, null);
+        model.addAttribute("board", board);
+
+        // 게시글 update
+        boardService.updatePost(board, member.getUserId());
+
+        return "redirect:/board/{titleCode}/{seq}";
+    }
+
     // 검색
     @GetMapping("/search")
     public String search(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member

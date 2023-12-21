@@ -101,6 +101,7 @@ public class BoardService {
         return boardList;
     }
 
+    // 게시글 조회
     public Board boardPost(String userId, int seq, String titleCode) throws SQLException {
         log.info("<=====BoardService.boardPost=====>");
 
@@ -110,13 +111,10 @@ public class BoardService {
         // 게시글 조회
         Board board = boardRepository.findPost(userId, seq, titleCode);
 
-//        for (int i=0; i<post.size(); i++) {
-//            Board board = post.get(i);
         board.setTitleCode(titleCode);
         board.setBoardName(boardCodeSet(false).get(board.getBoardNumber()));
         board.setCategoryName(categoryCodeSet().get(board.getCategoryNumber()));
-//            post.set(i, board);
-//        }
+//        board.setCategoryCode(board.getCategoryNumber());
 
         return board;
     }
@@ -162,6 +160,31 @@ public class BoardService {
 //
 //        img;
         return board;
+    }
+
+    // 게시글 수정 이동
+    public Board editBoardPost(String userId, int seq, String titleCode) throws SQLException {
+        log.info("<=====BoardService.editBoardPost=====>");
+
+        // 게시글 뷰수 plus
+        boardRepository.updateView(seq);
+
+        // 게시글 조회
+        Board board = boardRepository.findPost(userId, seq, titleCode);
+
+        board.setTitleCode(titleCode);
+        board.setBoardName(boardCodeSet(false).get(board.getBoardNumber()));
+        board.setCategoryName(categoryCodeSet().get(board.getCategoryNumber()));
+
+        return board;
+    }
+
+    // 게시글 수정
+    public void updatePost(Board board, String userId) throws SQLException {
+        log.info("<=====BoardService.updatePost=====>");
+
+        // 게시글 update
+        boardRepository.updatePost(board, userId);
     }
 
     // 게시글 포인트 plus

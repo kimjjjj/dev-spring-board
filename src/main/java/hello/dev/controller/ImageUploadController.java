@@ -1,13 +1,12 @@
 package hello.dev.controller;
 
-import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +20,7 @@ import java.util.UUID;
 
 @Slf4j
 @Controller
+@RequestMapping("/")
 public class ImageUploadController {
 
     @Value("${upload.path}")
@@ -32,9 +32,25 @@ public class ImageUploadController {
     // 컨트롤러클래스의 로그를 출력
     private static final Logger logger = LoggerFactory.getLogger(ImageUploadController.class);
 
+    // 게시글 신규 등록에 이미지 업로드
+    @PostMapping("/imageUpload")
+    public void addImageUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam MultipartFile upload) {
+        log.info("<=====ImageUploadController.addImageUpload=====>");
+
+        imageUpload(request, response, upload);
+    }
+
+    // 게시글 수정에 이미지 업로드
+    @PostMapping("/board/{titleCode}/{seq}/imageUpload")
+    public void editImageUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam MultipartFile upload) {
+        log.info("<=====ImageUploadController.editImageUpload=====>");
+
+        imageUpload(request, response, upload);
+    }
+
     //MultipartFile 타입은 ckedit에서 upload란 이름으로 저장하게 된다
-    @RequestMapping(value = "imageUpload", method = RequestMethod.POST)
-    public void imageUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam MultipartFile upload) throws Exception {
+    public void imageUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam MultipartFile upload) {
+        log.info("<=====ImageUploadController.imageUpload=====>");
 
         OutputStream out = null;
         PrintWriter printWriter = null;

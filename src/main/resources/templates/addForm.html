@@ -7,42 +7,8 @@
         <div class="content-box">
             <h2>글쓰기</h2>
             <article>
-                <form id="add-form" action="/add" th:action th:object="${board}" method="post">
-                    <div>
-                        <select th:class="${errors?.containsKey('boardCode')} ? 'add-box board field-error' : 'add-box board'"
-                                class="add-box board" th:field="*{boardCode}" onchange="categoryChange(this)">
-                            <option value="">게시판을 선택해 주세요</option>
-                            <option th:each="boardCode : ${boardCodes}" th:value="${boardCode.code}" th:text="${boardCode.displayName}"></option>
-                        </select>
-                        <select id="category" class="add-box category" th:field="*{categoryCode}" disabled>
-                            <option value="">카테고리 없음</option>
-                            <option th:each="categoryCode : ${categoryCodes}" th:value="${categoryCode.code}" th:text="${categoryCode.displayName}"></option>
-                        </select>
-                    </div>
-                    <div><input type="text" id="txtName" th:field="*{txtName}"
-                                th:class="${errors?.containsKey('txtName')} ? 'add-box add-input field-error' : 'add-box add-input'"
-                                class="add-input" placeholder="제목"></div>
-                    <textarea class="form-control" id="comment" name="comment" th:field="*{comment}"></textarea>
-                    <script type="text/javascript">
-                        CKEDITOR.replace('comment', {
-                            filebrowserUploadUrl:'imageUpload' // 파일업로드를 위한 URL
-                            , uploadUrl: "/image/drag" // 이게 드래그 드롭을 위한 URL
-<!--                            , height: 300-->
-                            , toolbar: [
-                                { name: 'styles', items: [ 'Font', 'FontSize' ] },
-                                { name: 'insert', items: [ 'Image', 'Smiley', 'SpecialChar' ] },
-                                { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-                                { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
-                                { name: 'paragraph', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', ] },
-                                { name: 'clipboard', items: [ 'Undo', 'Redo' ] },
-                                { name: 'document', items: [ 'Source' ] },
-                            ]
-                            , enterMode: CKEDITOR.ENTER_BR
-                            ,filebrowserUploadMethod: 'form'
-                        });
-                    </script>
-                    <div><input class="add-box add-input" type="text" id="tag" th:field="*{tag}" placeholder="태그"></div>
-                    <div><button class="add-box" type="submit">등록</button></div>
+                <form id="add-form" th:action="@{|/add|}" th:object="${board}" method="post">
+                    <th:block th:replace="common/fragments/addFormCommon :: addFormFragment"></th:block>
                 </form>
             </article>
         </div>
@@ -50,6 +16,10 @@
 </th:block>
 </html>
 <script>
+    if([[${board.seq}]] == 0 || [[${board.seq}]] == null) {
+        document.getElementById("category").disabled = 'disabled';
+    }
+
     function categoryChange(e) {
         // 게시판 선택에 따른 카테고리 disabled
         if (e.value == "") {
@@ -76,78 +46,26 @@
             }
         });
     }
-</script>
-<!--<script>-->
-<!--    function categoryChange(e) {-->
-<!--        var board_0 = ["카테고리 없음"];-->
-<!--        var board_1 = ["침착맨", "생중계"];-->
-<!--        var board_2 = ["침착맨 짤"];-->
-<!--        var board_3 = ["팬아트", "팬무비", "팬픽션", "팬게임"];-->
-<!--        var board_4 = ["게임", "합방", "개인컨텐츠", "해줘요"];-->
-<!--        var board_5 = ["찾아요"];-->
-<!--        var board_6 = ["쇼츠"];-->
-<!--        var board_7 = ["추천영상"];-->
-<!--        var target = document.getElementById("category");-->
 
-<!--        var boardCode_0 = [0];-->
-<!--        var boardCode_1 = [1, 2];-->
-<!--        var boardCode_2 = [3];-->
-<!--        var boardCode_3 = [4, 5, 6, 7];-->
-<!--        var boardCode_4 = [8, 9, 10, 11];-->
-<!--        var boardCode_5 = [12];-->
-<!--        var boardCode_6 = [13];-->
-<!--        var boardCode_7 = [14];-->
+<!--    function updatePost() {-->
+<!--        var urlLike = '/board/[[${board.titleCode}]]/[[${board.seq}]]';-->
 
-<!--        var cateName = null;-->
-<!--        var cateVal = null;-->
-<!--        if(e.value == "chim") {-->
-<!--            cateName = board_1;-->
-<!--            cateVal = boardCode_1;-->
-<!--        } else if(e.value == "chim_jjal") {-->
-<!--            cateName = board_2;-->
-<!--            cateVal = boardCode_2;-->
-<!--        } else if(e.value == "chim_fanart") {-->
-<!--            cateName = board_3;-->
-<!--            cateVal = boardCode_3;-->
-<!--        } else if(e.value == "request_stream") {-->
-<!--            cateName = board_4;-->
-<!--            cateVal = boardCode_4;-->
-<!--        } else if(e.value == "find_chimtube") {-->
-<!--            cateName = board_5;-->
-<!--            cateVal = boardCode_5;-->
-<!--        } else if(e.value == "make_short") {-->
-<!--            cateName = board_6;-->
-<!--            cateVal = boardCode_6;-->
-<!--        } else if(e.value == "favorite_chimtubu") {-->
-<!--            cateName = board_7;-->
-<!--            cateVal = boardCode_7;-->
-<!--        } else {-->
-<!--            cateName = board_0;-->
-<!--            cateVal = boardCode_0;-->
-<!--        }-->
+<!--        var data = {};-->
+<!--        data["boardCode"] = $("#boardCode").val();-->
+<!--        data["categoryCode"] = $("#category").val();-->
+<!--        data["txtName"] = $("#txtName").val();-->
+<!--        data["comment"] = $("#comment").val();-->
+<!--        data["tag"] = $("#tag").val();-->
 
-<!--        console.log("11 => " + e.value);-->
-
-<!--        target.options.length = 0;-->
-<!--        var cnt = 0;-->
-
-<!--        for (val in cateVal) {-->
-<!--            var opt = document.createElement("option");-->
-<!--            opt.value = cateVal[cnt];-->
-<!--            opt.innerHTML = cateName[val];-->
-<!--            target.appendChild(opt);-->
-<!--            cnt++;-->
-<!--        }-->
-
-<!--        // 게시판 선택에 따른 카테고리 disabled-->
-<!--        if (e.value == "") {-->
-<!--            // disabled 부여하는 방법-->
-<!--&lt;!&ndash;            document.getElementById("category").disabled = true;&ndash;&gt;-->
-<!--            document.getElementById("category").disabled = 'disabled';-->
-<!--        } else {-->
-<!--            // disabled 해제하는 방법-->
-<!--&lt;!&ndash;            document.getElementById("category").disabled = false;&ndash;&gt;-->
-<!--            document.getElementById("category").removeAttribute("disabled");-->
-<!--        }-->
+<!--        $.ajax({-->
+<!--            url : urlLike + '/edit',-->
+<!--            type : 'POST',-->
+<!--            dataType : "json",-->
+<!--            contentType: 'application/json',-->
+<!--            data : JSON.stringify(data),-->
+<!--            success: function(Data){-->
+<!--                location.href = urlLike;-->
+<!--            }-->
+<!--        });-->
 <!--    }-->
-<!--</script>-->
+</script>

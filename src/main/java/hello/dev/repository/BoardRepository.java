@@ -400,6 +400,42 @@ public class BoardRepository {
         }
     }
 
+    // 게시글 수정
+    public void updatePost(Board board, String userId) throws SQLException {
+        log.info("<=====BoardRepository.updatePost=====>");
+        String sql = "UPDATE BOARD SET BOARD_CODE = ?, CATEGORY_CODE = ? " +
+                    ", TXTNAME = ?, COMMENT = ?, TAG = ?, UPTID = ?, UPTDT = ? " +
+                    "WHERE SEQ = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setString(1, board.getBoardCode());
+            pstmt.setString(2, board.getCategoryCode());
+            pstmt.setString(3, board.getTxtName());
+            pstmt.setString(4, board.getComment());
+            pstmt.setString(5, board.getTag());
+            pstmt.setString(6, userId);
+
+            LocalDateTime nowDateTime = LocalDateTime.now();
+            pstmt.setString(7, String.valueOf(nowDateTime));
+
+            pstmt.setInt(8, board.getSeq());
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            log.error("<=====db error=====>", e);
+            throw e;
+        } finally {
+            close(con, pstmt, null);
+        }
+    }
+
     // 게시글 포인트 plus
     public String updateLike(int seq) throws SQLException {
         log.info("<=====BoardRepository.updateLike=====>");
