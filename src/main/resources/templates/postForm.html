@@ -13,7 +13,7 @@
                         <span th:text="${board.txtName}"></span>
                     </div>
                     <div class="nickname">
-                        <span th:text="${board.insId}"></span>
+                        <span th:text="${board.nickName}"></span>
                         <ul>
                             <li><a href="">게시글 보기</a></li>
                             <li><a href="">댓글 보기</a></li>
@@ -145,13 +145,17 @@
                         <div class="comment-div">
                             <div class="comment-top">
                                 <div class="comment-left">
-                                    <span>
-                                        <img th:src="'/images/' + ${comment.profileName}" class="comment-profile">
-                                    </span>
-                                    <span class="bold comment-nick" th:text="${comment.nickName}">
-                                    </span>
-                                    <span class="comment-indDt" th:text="${comment.insDt}">
-                                    </span>
+                                    <div>
+                                        <span>
+                                            <img th:src="'/images/' + ${comment.profileName}" class="comment-profile">
+                                        </span>
+                                    </div>
+                                    <div class="comment-nick-div">
+                                        <span class="bold" th:text="${comment.nickName}"></span>
+                                        <span class="comment-nick" th:if="${board.insId} == ${comment.userId}">글쓴이</span>
+                                        <span class="comment-nick" th:if="${member.userId} == ${comment.userId}">나</span>
+                                        <span class="comment-indDt" th:text="${comment.insDt}"></span>
+                                    </div>
                                 </div>
                                 <div class="comment-right" th:if="${session.member ne null}">
                                     <div>

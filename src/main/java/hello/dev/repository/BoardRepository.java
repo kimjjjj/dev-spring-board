@@ -29,9 +29,10 @@ public class BoardRepository {
                             "WHERE POINT >= 10 " +
                             "ORDER BY SEQ DESC " +
                     ") A) " +
-                    "SELECT * FROM TEMP " +
-                    "WHERE ? <= ROW_NUMB AND ROW_NUMB <= ? " +
-                    "ORDER BY ROW_NUMB";
+                    "SELECT A.*, B.NICKNAME FROM TEMP A " +
+                    "LEFT JOIN MEMBER_INFORMATION B ON A.INSID = B.ID " +
+                    "WHERE ? <= A.ROW_NUMB AND A.ROW_NUMB <= ? " +
+                    "ORDER BY A.ROW_NUMB";
 
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -58,6 +59,7 @@ public class BoardRepository {
                 board.setTxtName(rs.getString("txtName"));
                 board.setComment(rs.getString("comment"));
                 board.setTag(rs.getString("tag"));
+                board.setNickName(rs.getString("NICKNAME"));
                 board.setInsId(rs.getString("insId"));
                 board.setUptId(rs.getString("uptId"));
                 board.setView(rs.getInt("view"));
@@ -103,9 +105,9 @@ public class BoardRepository {
         log.info("<=====BoardRepository.boardList=====> titleCode: {}", titleCode);
 
         String sql = "WITH TEMP AS ( " +
-                "SELECT ROWNUM AS ROW_NUMB, A.* " +
-                "FROM ( " +
-                "SELECT * FROM BOARD WHERE 1=1 ";
+                        "SELECT ROWNUM AS ROW_NUMB, A.* " +
+                        "FROM ( " +
+                            "SELECT * FROM BOARD WHERE 1=1 ";
 
         if ("total_chim".equals(titleCode)) {
             sql += " AND BOARD_CODE IN ('notice', 'chim', 'chim_jjal', 'chim_fanart', 'request_stream', 'find_chimtube', 'make_short', 'favorite_chimtubu') ";
@@ -115,9 +117,10 @@ public class BoardRepository {
 
         sql += "ORDER BY SEQ DESC " +
                 ") A) " +
-                "SELECT * FROM TEMP " +
-                "WHERE ? <= ROW_NUMB AND ROW_NUMB <= ? " +
-                "ORDER BY ROW_NUMB";
+                "SELECT A.*, B.NICKNAME FROM TEMP A " +
+                "LEFT JOIN MEMBER_INFORMATION B ON A.INSID = B.ID " +
+                "WHERE ? <= A.ROW_NUMB AND A.ROW_NUMB <= ? " +
+                "ORDER BY A.ROW_NUMB";
 
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -150,6 +153,7 @@ public class BoardRepository {
                 board.setTxtName(rs.getString("txtName"));
                 board.setComment(rs.getString("comment"));
                 board.setTag(rs.getString("tag"));
+                board.setNickName(rs.getString("NICKNAME"));
                 board.setInsId(rs.getString("insId"));
                 board.setUptId(rs.getString("uptId"));
                 board.setView(rs.getInt("view"));
@@ -197,7 +201,7 @@ public class BoardRepository {
 //                "LEFT JOIN LIKE_TB B " +
 //                "ON A.SEQ = B.PARENT_SEQ WHERE A.SEQ = ? AND B.LIKE_TYPE = 'board'" +
 //                "AND DECODE(B.ID, NULL, B.ID, NVL(?, 1)) = NVL(?, 1)";
-        String sql = "SELECT A.*, NVL(B.CNT, 0) AS CNT " +
+        String sql = "SELECT A.*, NVL(B.CNT, 0) AS CNT, C.NICKNAME " +
                     "FROM ( " +
                         "SELECT * " +
                         ", LAG(SEQ) OVER(ORDER BY SEQ DESC) AS BEFORE_SEQ " +
@@ -215,8 +219,9 @@ public class BoardRepository {
                     "LEFT JOIN ( " +
                         "SELECT PARENT_SEQ, COUNT(*) AS CNT FROM LIKE_TB " +
                         "WHERE ID = NVL(?, 0) AND LIKE_TYPE = 'board' " +
-                        "GROUP BY PARENT_SEQ) B " +
-                    "ON A.SEQ = B.PARENT_SEQ WHERE A.SEQ = ?";
+                        "GROUP BY PARENT_SEQ) B ON A.SEQ = B.PARENT_SEQ " +
+                    "LEFT JOIN MEMBER_INFORMATION C ON A.INSID = C.ID " +
+                    "WHERE A.SEQ = ?";
 
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -254,6 +259,7 @@ public class BoardRepository {
                 board.setTxtName(rs.getString("txtName"));
                 board.setComment(rs.getString("comment"));
                 board.setTag(rs.getString("tag"));
+                board.setNickName(rs.getString("NICKNAME"));
                 board.setInsId(rs.getString("insId"));
                 board.setUptId(rs.getString("uptId"));
                 board.setView(rs.getInt("view"));

@@ -936,23 +936,27 @@ textarea {
     background: transparent;
 }
 
-.comment-indDt {
-    font-size: 12px;
-    color: #A9A9A9;
-}
-
 .comment-div {
     padding: 10px;
+}
+
+.comment-nick-div {
+    margin-top: 4px;
+}
+
+.comment-nick {
+    color: blue;
+    border: 1px solid blue;
+    border-radius: 10px;
+    font-size: 11px;
+    padding: 1px;
+    padding-right: 3px;
+    padding-left: 3px;
 }
 
 .comment-indDt {
     font-size: 14px;
     color: #A9A9A9;
-    vertical-align: top;
-}
-
-.comment-nick{
-    vertical-align: top;
 }
 
 .comment-content {
@@ -966,6 +970,7 @@ textarea {
 
 .comment-left {
     width: 80%;
+    display: flex;
 }
 
 .comment-right {

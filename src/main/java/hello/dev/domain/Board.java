@@ -20,6 +20,7 @@ public class Board {
     private String txtName; // 제목
     private String comment; // 내용
     private String tag; // 태그
+    private String nickName; // 닉네임
     private String insId; // 입력자 ID
     private String insDt; // 입력 일시
     private String uptId; // 수정자 ID
