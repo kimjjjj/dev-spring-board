@@ -503,6 +503,10 @@ textarea {
     position: relative;
 }
 
+.fa-thumbs-up {
+    color: black;
+}
+
 .board-state {
     float: right;
     width: 38%;
@@ -550,6 +554,12 @@ textarea {
 
 #post-cont {
     overflow: auto;
+}
+
+.tag {
+    color: #C2C2C2;
+    height: 70px;
+    line-height: 70px;
 }
 
 .post-like {

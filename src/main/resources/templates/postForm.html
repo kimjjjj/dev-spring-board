@@ -74,6 +74,7 @@
                 </div>
                 <section id="post-cont">
                     <script th:inline="javascript">
+                        // 게시글 내용
                         const articleObject = [[${board.comment}]];
                         const arr = articleObject.split("<br />");
 
@@ -105,6 +106,7 @@
                             }
                         }
                     </script>
+                    <div class="tag" th:text="'태그 : ' + ${board.tag}"></div>
                 </section>
                 <section>
                     <div class="post-like">
