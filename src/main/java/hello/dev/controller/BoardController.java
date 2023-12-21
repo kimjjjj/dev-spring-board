@@ -302,10 +302,8 @@ public class BoardController {
     @PostMapping("/board/{titleCode}/{seq}/edit")
     public String updatePost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
-            , Board board, Model model, HttpServletRequest request
-    ) throws SQLException {
+            , Board board, Model model, HttpServletRequest request) throws SQLException {
         log.info("<=====BoardController.updatePost=====>");
-        log.info("{}, {}", board.getTxtName(), board.getComment());
 
         // 계정 포인트 조회
         if (member != null) {
@@ -322,6 +320,34 @@ public class BoardController {
         boardService.updatePost(board, member.getUserId());
 
         return "redirect:/board/{titleCode}/{seq}";
+    }
+
+    // 게시글 삭제
+    @PostMapping("/board/{titleCode}/{seq}/delete")
+    public String deletePost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , @PathVariable String titleCode, @PathVariable int seq
+            , Board board, Model model, HttpServletRequest request) throws SQLException {
+        log.info("<=====BoardController.deletePost=====>");
+
+        // 계정 포인트 조회
+        if (member != null) {
+            member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
+        }
+
+        model.addAttribute("member", member);
+
+        // 최근방문 게시판 조회
+        board = boardService.getCookie(board, request, null);
+        model.addAttribute("board", board);
+
+
+        // 첨부파일 delete
+        boardService.deleteImg(seq);
+
+        // 게시글 delete
+        boardService.deletePost(seq);
+
+        return "redirect:/board/{titleCode}";
     }
 
     // 검색

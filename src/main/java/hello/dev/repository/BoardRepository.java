@@ -436,6 +436,54 @@ public class BoardRepository {
         }
     }
 
+    // 게시글 삭제
+    public void deletePost(Integer seq) throws SQLException {
+        log.info("<=====BoardRepository.deletePost=====>");
+        String sql = "DELETE FROM BOARD WHERE SEQ = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setInt(1, seq);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            log.error("<=====db error=====>", e);
+            throw e;
+        } finally {
+            close(con, pstmt, null);
+        }
+    }
+
+    // 첨부파일 삭제
+    public void deleteImg(Integer seq) throws SQLException {
+        log.info("<=====BoardRepository.deleteImg=====>");
+        String sql = "DELETE FROM ATTACH WHERE PARENT_SEQ = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setInt(1, seq);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            log.error("<=====db error=====>", e);
+            throw e;
+        } finally {
+            close(con, pstmt, null);
+        }
+    }
+
     // 게시글 포인트 plus
     public String updateLike(int seq) throws SQLException {
         log.info("<=====BoardRepository.updateLike=====>");

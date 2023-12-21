@@ -187,6 +187,22 @@ public class BoardService {
         boardRepository.updatePost(board, userId);
     }
 
+    // 게시글 삭제
+    public void deletePost(Integer seq) throws SQLException {
+        log.info("<=====BoardService.deletePost=====>");
+
+        // 게시글 update
+        boardRepository.deletePost(seq);
+    }
+
+    // 첨부파일 삭제
+    public void deleteImg(Integer seq) throws SQLException {
+        log.info("<=====BoardService.deleteImg=====>");
+
+        // 게시글 update
+        boardRepository.deleteImg(seq);
+    }
+
     // 게시글 포인트 plus
     public String updateLike(int seq) throws SQLException {
         log.info("<=====BoardService.updateLike=====>");

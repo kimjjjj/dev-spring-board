@@ -53,7 +53,7 @@
                                         차단
                                     </button>
                                 </form>
-                                <form>
+                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/delete|}" method="post">
                                     <button th:if="${member.userId} == ${board.insId}">
                                         <i class="fa-regular fa-trash-alt"></i>
                                         삭제
