@@ -115,7 +115,10 @@ public class BoardService {
         board.setTitleCode(titleCode);
         board.setBoardName(boardCodeSet(false).get(board.getBoardNumber()));
         board.setCategoryName(categoryCodeSet().get(board.getCategoryNumber()));
-//        board.setCategoryCode(board.getCategoryNumber());
+
+        // 태그에 #붙임
+        String tag = board.getTag().replace(" ", "#").replace(",", "#").replace("##", "#").replace("#", " #");
+        board.setTag("#" + tag);
 
         return board;
     }
