@@ -449,6 +449,10 @@ textarea {
     color: #A9A9A9;
 }
 
+.list-icon {
+    font-size: 10px;
+}
+
 .view {
     font-size: 12px;
     color: #A9A9A9;
@@ -501,6 +505,14 @@ textarea {
     line-height: 60px;
     color: #A9A9A9;
     position: relative;
+}
+
+.post-icon {
+    font-size: 13px;
+}
+
+.fa-eye {
+    color: black;
 }
 
 .fa-thumbs-up {
