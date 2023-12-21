@@ -20,7 +20,7 @@ public class BoardRepository {
     private static final Map<Integer, Board> board = new HashMap<>();
 
     public List<Board> findChimList(Integer min, Integer max) throws SQLException {
-        log.info("<=====BoardRepository.findChimList=====>");
+        log.info("<=====BoardRepository.findChimList=====>{}, {}", min, max);
 
         String sql = "WITH TEMP AS ( " +
                         "SELECT ROWNUM AS ROW_NUMB, A.* " +

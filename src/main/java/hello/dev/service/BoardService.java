@@ -24,16 +24,16 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
+    // 한페이지에 보여줄 글 개수
+    int pageLimit = 5;
+
     // 침하하 게시판
     public List<Board> chimList(Integer page) throws SQLException {
         log.info("<=====BoardService.chimList=====>");
 
-        // 한페이지에 보여줄 글 개수
-        int pageLimit = 2;
-
         // min <= 게시글 수 <= max
         int max = page * pageLimit;
-        int min = max - 1;
+        int min = max - (pageLimit - 1);
 
         // 게시글 조회
         List<Board> chimList = boardRepository.findChimList(min, max);
@@ -66,8 +66,9 @@ public class BoardService {
     public List<Board> boardList(String titleCode, Integer page) throws SQLException {
         log.info("<=====BoardService.boardList=====>");
 
-        int min = page * 2 - 1;
-        int max = page * 2;
+        // min <= 게시글 수 <= max
+        int max = page * pageLimit;
+        int min = max - (pageLimit - 1);
 
         List<Board> boardList = boardRepository.boardList(titleCode, min, max);
 
@@ -254,7 +255,7 @@ public class BoardService {
                 response.addCookie(cookie);
             } else {
 
-                if (cookies.length == 10) {
+                if (cookies.length == 8) {
                     Cookie cookie = new Cookie(cookies[0].getName(), null);
                     cookie.setPath("/");
                     cookie.setMaxAge(0);
@@ -295,15 +296,9 @@ public class BoardService {
             board.setVisitBoard1(titleCode);
             board.setVisitBoardName1(boardMap.get(titleCode));
         } else {
-            board.setVisitBoard2(map.get(9));
-            board.setVisitBoardName2(boardMap.get(map.get(9)));
+            board.setVisitBoard2(map.get(7));
+            board.setVisitBoardName2(boardMap.get(map.get(7)));
         }
-
-        board.setVisitBoard2(map.get(8));
-        board.setVisitBoardName2(boardMap.get(map.get(8)));
-
-        board.setVisitBoard3(map.get(7));
-        board.setVisitBoardName3(boardMap.get(map.get(7)));
 
         board.setVisitBoard4(map.get(6));
         board.setVisitBoardName4(boardMap.get(map.get(6)));
