@@ -58,8 +58,8 @@ public class MemberRepository {
     public Member save(Member member) throws SQLException {
         log.info("<=====MemberRepository.save=====>");
         String sql = "INSERT INTO MEMBER_INFORMATION (" +
-                "ID, PASSWORD, USER_NAME, BIRTH, PHONE_NUMBER, NICKNAME, INSDT) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "ID, PASSWORD, USER_NAME, BIRTH, PHONE_NUMBER, NICKNAME, TYPE, INSDT) " +
+                "VALUES (?, ?, ?, ?, ?, ?, 'normal', ?)";
 
         Connection con = null;
         PreparedStatement pstmt = null;
