@@ -336,11 +336,35 @@ public class MemberRepository {
         }
     }
 
-    // 회원탈퇴
-    public void delete(String userId) throws SQLException {
-        log.info("<=====MemberRepository.delete=====>");
+    // 회원탈퇴 - 계정 테이블 삭제
+    public void deleteMember(String userId) throws SQLException {
+        log.info("<=====MemberRepository.deleteMember=====>");
 
         String sql = "DELETE FROM MEMBER_INFORMATION WHERE ID = ?";
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setString(1, userId);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            log.error("<=====db error=====>", e);
+            throw e;
+        } finally {
+            close(con, pstmt, null);
+        }
+    }
+
+    // 회원탈퇴 - 즐겨찾기 테이블 삭제
+    public void deleteFavorite(String userId) throws SQLException {
+        log.info("<=====MemberRepository.deleteFavorite=====>");
+
+        String sql = "DELETE FROM FAVORITE WHERE ID = ?";
         Connection con = null;
         PreparedStatement pstmt = null;
 

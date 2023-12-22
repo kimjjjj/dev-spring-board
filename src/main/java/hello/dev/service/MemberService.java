@@ -335,6 +335,7 @@ public class MemberService {
     public void delete(String userId) throws SQLException {
         log.info("<=====MemberService.delete=====>");
 
-        memberRepository.delete(userId);
+        memberRepository.deleteFavorite(userId); // 즐겨찾기 테이블 삭제
+        memberRepository.deleteMember(userId); // 계정 테이블 삭제
     }
 }
