@@ -218,7 +218,7 @@ public class BoardRepository {
         sql += "ORDER BY SEQ DESC) A " +
                     "LEFT JOIN ( " +
                         "SELECT PARENT_SEQ, COUNT(*) AS CNT FROM LIKE_TB " +
-                        "WHERE ID = NVL(?, 0) AND LIKE_TYPE = 'board' " +
+                        "WHERE ID = NVL(?, '0') AND LIKE_TYPE = 'board' " +
                         "GROUP BY PARENT_SEQ) B ON A.SEQ = B.PARENT_SEQ " +
                     "LEFT JOIN MEMBER_INFORMATION C ON A.INSID = C.ID " +
                     "WHERE A.SEQ = ?";

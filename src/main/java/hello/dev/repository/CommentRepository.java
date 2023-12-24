@@ -311,7 +311,7 @@ public class CommentRepository {
         log.info("<=====CommentRepository.commentCancel=====>");
 
         String sql = "DELETE FROM LIKE_TB WHERE PARENT_SEQ = ? AND LIKE_TYPE = 'comment'" +
-                "AND DECODE(ID, NULL, ID, NVL(?, 1)) = NVL(?, 1)";
+                "AND DECODE(ID, NULL, ID, NVL(?, '1')) = NVL(?, '1')";
 
         Connection con = null;
         PreparedStatement pstmt = null;
