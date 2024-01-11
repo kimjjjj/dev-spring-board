@@ -7,7 +7,7 @@
         <div class="content-box">
             <h2 th:text="${board.title} + ' 검색결과'"></h2>
             <section th:each="board : ${boards}">
-                <a href="postForm.html" th:href="@{|/${board.seq}|}">
+                <a href="postForm.html" th:href="@{|/board/all/${board.seq}|}">
                     <div class="img">
                         <i class="fa-regular fa-file-lines"></i>
                     </div>
