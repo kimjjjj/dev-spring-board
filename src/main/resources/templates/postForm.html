@@ -13,6 +13,7 @@
                         <span th:text="${board.txtName}"></span>
                     </div>
                     <div class="nickname">
+                        <img th:src="'/images/' + ${board.profileName}" class="board-profile comment-profile">
                         <span th:text="${board.nickName}"></span>
                         <ul>
                             <li><a href="">게시글 보기</a></li>
@@ -34,13 +35,13 @@
                         <ul>
                             <li>
                                 <form>
-                                    <button th:if="${member.userId} != ${board.insId}">
+                                    <button th:if="${member.userId} != ${board.insId} and ${member.userType} != 'admin'">
                                         <i class="fa-regular fa-flag"></i>
                                         신고
                                     </button>
                                 </form>
                                 <form th:action="@{|/board/${board.titleCode}/${board.seq}/edit|}" method="get">
-                                    <button th:if="${member.userId} == ${board.insId}">
+                                    <button th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
                                         <i class="fa-regular fa-edit"></i>
                                         수정
                                     </button>
@@ -48,13 +49,13 @@
                             </li>
                             <li>
                                 <form>
-                                    <button th:if="${member.userId} != ${board.insId}">
+                                    <button th:if="${member.userId} != ${board.insId} and ${member.userType} != 'admin'">
                                         <i class="fa-solid fa-ban"></i>
                                         차단
                                     </button>
                                 </form>
                                 <form th:action="@{|/board/${board.titleCode}/${board.seq}/delete|}" method="post">
-                                    <button th:if="${member.userId} == ${board.insId}">
+                                    <button th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
                                         <i class="fa-regular fa-trash-alt"></i>
                                         삭제
                                     </button>
@@ -106,7 +107,7 @@
                             }
                         }
                     </script>
-                    <div class="tag" th:text="'태그 : ' + ${board.tag}"></div>
+                    <div class="tag" th:text="'태그 : ' + ${board.tag}" th:if="${board.tag ne null} and ${board.tag ne ''}"></div>
                 </section>
                 <section>
                     <div class="post-like">
@@ -155,7 +156,7 @@
                                     <div class="comment-nick-div">
                                         <span class="bold" th:text="${comment.nickName}"></span>
                                         <span class="comment-nick" th:if="${board.insId} == ${comment.userId}">글쓴이</span>
-                                        <span class="comment-nick" th:if="${member.userId} == ${comment.userId}">나</span>
+                                        <span class="comment-nick" th:if="${session.member ne null} and ${member.userId} == ${comment.userId}">나</span>
                                         <span class="comment-indDt" th:text="${comment.insDt}"></span>
                                     </div>
                                 </div>
@@ -177,8 +178,45 @@
                                         <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
                                         <button class="comment-like" type="submit" th:if="${member.userId} != ${comment.userId} and ${comment.cnt ne 0}">침하하 취소🤣</button>
                                     </form>
-                                    <div>
+
+                                    <div th:id="'comment' + ${comment.rownumb}" class="comment-state" th:if="${session.member ne null}" th:onclick="'fnComBox(' + ${comment.rownumb} + ')'">
                                         <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        <ul>
+                                            <li>
+                                                <form>
+                                                    <button th:if="${member.userId} != ${board.insId} and ${member.userType} != 'admin'">
+                                                        <i class="fa-regular fa-flag"></i>
+                                                        신고
+                                                    </button>
+                                                </form>
+                                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/edit|}" method="get">
+                                                    <button th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
+                                                        <i class="fa-regular fa-edit"></i>
+                                                        수정
+                                                    </button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <form>
+                                                    <button th:if="${member.userId} != ${board.insId} and ${member.userType} != 'admin'">
+                                                        <i class="fa-solid fa-ban"></i>
+                                                        차단
+                                                    </button>
+                                                </form>
+                                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/delete|}" method="post">
+                                                    <button th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
+                                                        <i class="fa-regular fa-trash-alt"></i>
+                                                        삭제
+                                                    </button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <button>
+                                                    <i class="fa-solid fa-share-from-square"></i>
+                                                    공유
+                                                </button>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -248,12 +286,27 @@
 </th:block>
 </html>
 <script>
-    <!-- 신고/차단/공유 박스를 브라우저 크기가 변해도 유지 하도록 -->
+    <!-- 게시글 신고/수정/차단/삭제/공유 박스를 브라우저 크기가 변해도 유지 하도록 -->
     const mainRight = document.querySelector('.board-state>ul');
-    mainRight.style.left = `${400 + (window.innerWidth / 2)}px`;
+    mainRight.style.left = `${385 + (window.innerWidth / 2)}px`;
     window.addEventListener('resize', () => {
-        mainRight.style.left = `${400 + (window.innerWidth / 2)}px`;
+        mainRight.style.left = `${385 + (window.innerWidth / 2)}px`;
     });
+
+    <!-- 댓글 신고/수정/차단/삭제/공유 박스를 브라우저 크기가 변해도 유지 하도록 -->
+    for(var i=1; i<=document.getElementsByClassName('comment-state').length; i++) {
+        var commentRight = document.querySelector('#comment' + i + '>ul');
+        commentRight.style.left = `${375 + (window.innerWidth / 2)}px`;
+        window.addEventListener('resize', () => {
+            commentRight.style.left = `${375 + (window.innerWidth / 2)}px`;
+        });
+    }
+
+<!--    const commentRight = document.querySelector('.comment-state>ul');-->
+<!--    commentRight.style.left = `${375 + (window.innerWidth / 2)}px`;-->
+<!--    window.addEventListener('resize', () => {-->
+<!--        commentRight.style.left = `${375 + (window.innerWidth / 2)}px`;-->
+<!--    });-->
 
     <!-- 닉네임 클릭 시 게시글보기/댓글보기 박스 보이기 -->
     const nick = document.querySelector('.nickname');
@@ -272,8 +325,14 @@
             dropdown.style.display = '';
         }
 
+        // 댓글 상태창 모두 닫기
+        for(var i=1; i<=document.getElementsByClassName('comment-state').length; i++) {
+            document.querySelector('#comment' + i + '>ul').style.display = '';
+        }
+
         chkDisplay = dropdown.style.display;
     }
+    <!--------------------------------------------->
 
     <!-- 닉네임을 제외한 다른 곳 클릭 시 게시글보기/댓글보기 박스 끄기 -->
     const body = document.querySelector("body");
@@ -289,7 +348,7 @@
         chkNick = false;
     }
 
-    <!-- ... 클릭 시 신고/차단/공유 박스 보이기 -->
+    <!-- 게시글 ... 클릭 시 신고/수정/차단/삭제/공유 박스 보이기 -->
     const board = document.querySelector('.board-state');
     const banMenu = document.querySelector('.board-state>ul');
     menuDisplay = banMenu.style.display;
@@ -297,6 +356,7 @@
 
     board.addEventListener('click', clickBoardEvent);
     function clickBoardEvent(event) {
+
         chkBoard = true;
         if (menuDisplay == '') {
             banMenu.style.display = 'block';
@@ -306,20 +366,77 @@
             banMenu.style.display = '';
         }
 
+        // 댓글 상태창 모두 닫기
+        for(var i=1; i<=document.getElementsByClassName('comment-state').length; i++) {
+            document.querySelector('#comment' + i + '>ul').style.display = '';
+        }
+
         menuDisplay = banMenu.style.display;
     }
+    <!------------------------------------------------------>
 
-    <!-- ...을 제외한 다른 곳 클릭 시 신고/차단/공유 박스 끄기 -->
+    <!-- 댓글 ... 클릭 시 신고/수정/차단/삭제/공유 박스 보이기 -->
+    function fnComBox(num) {
+        const commentMenu = document.querySelector('#comment' + num + '>ul');
+        menuDisplay = commentMenu.style.display;
+        chkBoard = true;
+
+        if (menuDisplay == '') {
+            commentMenu.style.display = 'block';
+            commentMenu.style.background = 'white';
+        } else {
+            commentMenu.style.display = '';
+        }
+
+        // 댓글 상태창 현재꺼 제외하고 닫기
+        for(var i=1; i<=document.getElementsByClassName('comment-state').length; i++) {
+            if (i != num) document.querySelector('#comment' + i + '>ul').style.display = '';
+        }
+
+        // 게시글 상태창 닫기
+        document.querySelector('.board-state>ul').style.display = '';
+
+        menuDisplay = commentMenu.style.display;
+    }
+
+<!--    const comment = document.querySelector('.comment-state');-->
+<!--    const commentBanMenu = document.querySelector('.comment-state>ul');-->
+<!--    menuDisplay = commentBanMenu.style.display;-->
+<!--    chkBoard = false;-->
+
+<!--    comment.addEventListener('click', clickCommentEvent);-->
+<!--    function clickCommentEvent(event) {-->
+<!--        console.log("333 => " + menuDisplay);-->
+<!--        chkBoard = true;-->
+<!--        if (menuDisplay == '') {-->
+<!--            commentBanMenu.style.display = 'block';-->
+<!--            commentBanMenu.style.background = 'white';-->
+
+<!--        } else {-->
+<!--            commentBanMenu.style.display = '';-->
+<!--        }-->
+
+<!--        menuDisplay = commentBanMenu.style.display;-->
+<!--    }-->
+
+    <!-- ...을 제외한 다른 곳 클릭 시 신고/수정/차단/삭제/공유 박스 끄기 -->
     body2 = document.querySelector("body");
     body2.addEventListener('click', clickBody2Event);
     function clickBody2Event(event) {
         if (chkBoard == false){
             if (menuDisplay == 'block') {
                 banMenu.style.display = '';
+<!--                commentMenu.style.display = '';-->
+
+                // 댓글 상태창 모두 닫기
+                for(var i=1; i<=document.getElementsByClassName('comment-state').length; i++) {
+                    document.querySelector('#comment' + i + '>ul').style.display = '';
+                }
             }
 
             menuDisplay = banMenu.style.display;
         }
+
         chkBoard = false;
     }
 
