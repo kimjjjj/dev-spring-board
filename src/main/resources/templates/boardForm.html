@@ -7,7 +7,7 @@
         <div class="content-box">
             <form class="h2" action="/addFavorite" th:action="@{|/addFavorite/${board.titleCode}|}" method="post">
                 <span th:text="${board.title}"></span>
-                <button type="submit" onclick="updateFavorite()" th:if="${session.member ne null}">
+                <button type="button" onclick="updateFavorite()" th:if="${session.member ne null}">
                     <i id="starIcon" class="fa-regular fa-star fa-2x"></i>
                 </button>
             </form>
