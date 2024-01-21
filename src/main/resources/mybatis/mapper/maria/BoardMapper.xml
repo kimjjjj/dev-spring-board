@@ -261,10 +261,10 @@
           LEFT JOIN devdb.BLOCK_TB B ON A.INSID = B.BLOCK_ID AND B.ID = #{userId}
        <choose>
         <when test="'title'.equals(searchType)">
-         WHERE A.TXTNAME LIKE '%' || #{searchKeyword} || '%'
+         WHERE A.TXTNAME LIKE CONCAT('%', #{searchKeyword}, '%')
         </when>
         <when test="'titleAndContent'.equals(searchType)">
-         WHERE A.TXTNAME LIKE '%' || #{searchKeyword} || '%' OR A.COMMENT LIKE '%' || #{searchKeyword} || '%'
+         WHERE A.TXTNAME LIKE CONCAT('%', #{searchKeyword}, '%') OR A.COMMENT LIKE CONCAT('%', #{searchKeyword}, '%')
         </when>
         <when test="'nickname'.equals(searchType)">
          WHERE A.INSID = (SELECT ID FROM devdb.MEMBER_INFORMATION WHERE NICKNAME = #{searchKeyword})
