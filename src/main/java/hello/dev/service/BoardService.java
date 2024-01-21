@@ -43,7 +43,8 @@ public class BoardService implements BoardServiceInterface {
         List<Board> chimList = boardRepository.findChimList(min, max, userId);
 
         // 썸네일 작업
-        Pattern nonValidPattern = Pattern.compile("(?i)< *[IMG][^\\>]*[src] *= *[\"\']{0,1}([^\"\'\\ >]*)");
+        Pattern nonValidPattern = Pattern.compile("(?i)< *[IMG][^\\>]*[src] *= *[\"\']{0,1}([^\"\'\\ >]*)"); // 이미지
+        Pattern youtubuPattern = Pattern.compile("<iframe[^>]*[src] *= *[\"\']{0,1}([^\"\'\\ >]*)"); // 유튜브
 
         for (int i=0; i<chimList.size(); i++) {
             Board board = chimList.get(i);
@@ -59,13 +60,23 @@ public class BoardService implements BoardServiceInterface {
 
             // 카테고리 코드->이름 작업
             board.setCategoryName(categoryCodeSet().get(Integer.valueOf(board.getCategoryCode())));
-
-            Matcher matcher = nonValidPattern.matcher(board.getComment());
             
-            // 이미지 있으면 첫 이지미 뽑아내서 path에 넣음
+            // 이미지가 있으면 첫 이지미 뽑아내서 path에 넣음
+            Matcher matcher = nonValidPattern.matcher(board.getComment());
             while (matcher.find()) {
                 String img = matcher.group(1);
                 board.setPath(img);
+                break;
+            }
+
+            // 유튜브가 있으면 첫 이지미 뽑아내서 path에 넣음
+            Matcher youtubeMatcher = youtubuPattern.matcher(board.getComment());
+            while (youtubeMatcher.find()) {
+                String[] strArr = youtubeMatcher.group(1).split("/");
+
+                String img = strArr[strArr.length-1].substring(0, strArr[strArr.length-1].indexOf("?"));
+
+                board.setPath("https://img.youtube.com/vi/" + img + "/0.jpg");
                 break;
             }
 
@@ -87,7 +98,8 @@ public class BoardService implements BoardServiceInterface {
         List<Board> boardList = boardRepository.boardList(titleCode, min, max, userId);
 
         // 썸네일 작업
-        Pattern nonValidPattern = Pattern.compile("(?i)< *[IMG][^\\>]*[src] *= *[\"\']{0,1}([^\"\'\\ >]*)");
+        Pattern nonValidPattern = Pattern.compile("(?i)< *[IMG][^\\>]*[src] *= *[\"\']{0,1}([^\"\'\\ >]*)"); // 이미지
+        Pattern youtubuPattern = Pattern.compile("<iframe[^>]*[src] *= *[\"\']{0,1}([^\"\'\\ >]*)"); // 유튜브
 
         for (int i=0; i<boardList.size(); i++) {
             Board board = boardList.get(i);
@@ -104,12 +116,22 @@ public class BoardService implements BoardServiceInterface {
             // 카테고리 코드->이름 작업
             board.setCategoryName(categoryCodeSet().get(Integer.valueOf(board.getCategoryCode())));
 
+            // 이미지가 있으면 첫 이지미 뽑아내서 path에 넣음
             Matcher matcher = nonValidPattern.matcher(board.getComment());
-
-            // 이미지 있으면 첫 이지미 뽑아내서 path에 넣음
             while (matcher.find()) {
                 String img = matcher.group(1);
                 board.setPath(img);
+                break;
+            }
+
+            // 유튜브가 있으면 첫 이지미 뽑아내서 path에 넣음
+            Matcher youtubeMatcher = youtubuPattern.matcher(board.getComment());
+            while (youtubeMatcher.find()) {
+                String[] strArr = youtubeMatcher.group(1).split("/");
+
+                String img = strArr[strArr.length-1].substring(0, strArr[strArr.length-1].indexOf("?"));
+
+                board.setPath("https://img.youtube.com/vi/" + img + "/0.jpg");
                 break;
             }
 
@@ -277,6 +299,10 @@ public class BoardService implements BoardServiceInterface {
 
         List<Board> boards = boardRepository.search(searchKeyword, searchType, userId);
 
+        // 썸네일 작업
+        Pattern nonValidPattern = Pattern.compile("(?i)< *[IMG][^\\>]*[src] *= *[\"\']{0,1}([^\"\'\\ >]*)"); // 이미지
+        Pattern youtubuPattern = Pattern.compile("<iframe[^>]*[src] *= *[\"\']{0,1}([^\"\'\\ >]*)"); // 유튜브
+
         for (int i=0; i<boards.size(); i++) {
             Board board = boards.get(i);
 
@@ -285,6 +311,26 @@ public class BoardService implements BoardServiceInterface {
 
             // 게시판 코드->이름 작업
             board.setBoardName(boardCodeSet(false).get(board.getBoardCode()));
+
+            // 이미지가 있으면 첫 이지미 뽑아내서 path에 넣음
+            Matcher matcher = nonValidPattern.matcher(board.getComment());
+            while (matcher.find()) {
+                String img = matcher.group(1);
+                board.setPath(img);
+                break;
+            }
+
+            // 유튜브가 있으면 첫 이지미 뽑아내서 path에 넣음
+            Matcher youtubeMatcher = youtubuPattern.matcher(board.getComment());
+            while (youtubeMatcher.find()) {
+                String[] strArr = youtubeMatcher.group(1).split("/");
+
+                String img = strArr[strArr.length-1].substring(0, strArr[strArr.length-1].indexOf("?"));
+
+                board.setPath("https://img.youtube.com/vi/" + img + "/0.jpg");
+                break;
+            }
+
             boards.set(i, board);
         }
 
