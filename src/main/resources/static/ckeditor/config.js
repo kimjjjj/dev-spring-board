@@ -27,4 +27,7 @@ CKEDITOR.editorConfig = function( config ) {
 	];
 
 	config.removeButtons = 'Save,NewPage,ExportPdf,Print,Templates,PasteFromWord,Find,Replace,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Table,HorizontalRule,PageBreak,Iframe,ShowBlocks,About';
+
+    // 유튜브 플러그인
+	config.extraPlugins = 'youtube';
 };
