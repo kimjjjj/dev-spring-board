@@ -20,9 +20,12 @@
                         <input type="password" class="loginInput" th:field="*{password}" autoComplete="off" placeholder="비밀번호">
                     </div>
                 </div>
-                <div class="join-text-error" th:errors="*{errorTxt}">
-                    에러
-                </div>
+                <p class="login-text-error" th:text="${errors.userId}" th:if="${errors?.containsKey('userId')}">
+                    아이디 에러
+                </p>
+                <p class="login-text-error" th:text="${errors.password}" th:if="${errors?.containsKey('password')}">
+                    비밀번호 에러
+                </p>
 
                 <div class="loginBtn">
                     <button type="submit" class="confirm">로그인</button>

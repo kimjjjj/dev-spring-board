@@ -11,14 +11,14 @@
                             <button id="logoutBtn" type="submit">로그아웃</button>
                         </form>
                     </li>
-                    <li><a href="" th:unless="${session.member eq null}">알림 없음</a></li>
+<!--                    <li><a href="" th:unless="${session.member eq null}">알림 없음</a></li>-->
                     <li><a href="mypageForm.html" th:href="@{|/mypage|}" th:unless="${session.member eq null}">마이페이지</a></li>
                     <li th:unless="${session.member eq null}" th:text="'포인트: ' + ${member.userPoint}"></li>
                     <script th:inline="javascript">
                         // 로그인, 로그아웃에 따른 위치 조정
                         const menu = document.getElementById('top-menu');
                         if ([[${session.member}]] == null) {
-                            menu.style.left = '3%';
+                            menu.style.left = '1%';
 <!--                            menu.style.width = '10%';-->
                         }
 <!--                        else {-->
@@ -48,17 +48,16 @@
 
             <nav id="menu">
                 <ul>
-                    <li><a href="boardForm.html" th:href="@{|/board/chimhaha|}">👍침하하</a>
+                    <li><a href="boardForm.html" th:href="@{|/board/chimhaha|}">침하하</a>
                         <ul>
                             <li><a href="boardForm.html" th:href="@{|/board/chimhaha|}">👍침하하</a></li>
-                            <li><a href="boardForm.html" th:href="@{|/board/library|}">🏛️알렉산드리아 짤 도서관</a></li>
                         </ul>
                     </li>
                 </ul>
                 <ul>
                     <li><a onclick="updateLike(this)" href="boardForm.html" th:href="@{|/board/all|}">전체글</a>
                         <ul>
-                            <li><a href="boardForm.html" th:href="@{|/board/all|}">전체 게시판 목록</a></li>
+                            <li><a href="boardForm.html" th:href="@{|/board/all|}">📄전체글</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -70,7 +69,10 @@
                             <li><a href="boardForm.html" th:href="@{|/board/chim|}">😊침착맨</a></li>
                             <li><a href="boardForm.html" th:href="@{|/board/chim_jjal|}">🎃침착맨 짤</a></li>
                             <li><a href="boardForm.html" th:href="@{|/board/chim_fanart|}">🎨침착맨 팬아트</a></li>
-                            <hr class="hr">
+                        </ul>
+                    </li>
+                    <li><a href="boardForm.html" th:href="@{|/board/total_chimtubu|}">침투부</a>
+                        <ul>
                             <li><a href="boardForm.html" th:href="@{|/board/request_stream|}">📣방송 해줘요</a></li>
                             <li><a href="boardForm.html" th:href="@{|/board/find_chimtube|}">🍳침투부 찾아요</a></li>
                             <li><a href="boardForm.html" th:href="@{|/board/make_short|}">🎬쇼츠 만들어줘요</a></li>
@@ -78,10 +80,10 @@
                         </ul>
                     </li>
                 </ul>
-                <ul id="complain">
-                    <li><a href="">신고/건의</a>
-                    </li>
-                </ul>
+<!--                <ul id="complain">-->
+<!--                    <li><a href="">신고/건의</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
             </nav>
         </div>
     </header>

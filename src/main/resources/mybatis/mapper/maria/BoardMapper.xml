@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.dev.mybatis.BoardMapper">
+
+    <select id="findChimList" resultType="Board">
+
+        WITH TEMP AS (
+            SELECT ROWNUM() AS ROW_NUMB, A.*
+              FROM (
+                    SELECT * FROM devdb.BOARD
+                     WHERE POINT >= 10
+                       AND BOARD_CODE != 'notice'
+                     ORDER BY SEQ DESC
+              ) A
+        )
+        , NOTICE AS (
+            SELECT NULL AS ROW_NUMB, SEQ, BOARD_CODE, CATEGORY_CODE
+                 , TXTNAME, COMMENT, TAG, INSID, INSDT, UPTID, UPTDT
+                 , POINT, VIEW, NULL AS NICKNAME, NULL AS BLOCK_ID
+              FROM devdb.BOARD
+             WHERE BOARD_CODE = 'notice'
+               AND NOTICE_YN = 1
+             ORDER BY SEQ DESC
+        )
+        SELECT *
+          FROM NOTICE
+         WHERE CATEGORY_CODE = 998
+        UNION ALL
+        SELECT *
+          FROM (
+                SELECT *
+                  FROM NOTICE
+                 WHERE CATEGORY_CODE = 999
+                 ORDER BY INSDT DESC
+          ) A
+        UNION ALL
+        SELECT *
+          FROM (
+                SELECT A.ROW_NUMB, A.SEQ, A.BOARD_CODE, A.CATEGORY_CODE
+                     , (CASE WHEN C.BLOCK_ID IS NULL THEN A.TXTNAME ELSE '차단된 사용자의 게시글입니다.' END) AS TXTNAME
+                     , A.COMMENT, A.TAG, A.INSID, A.INSDT, A.UPTID, A.UPTDT, A.POINT, A.VIEW
+                     , B.NICKNAME, C.BLOCK_ID
+                  FROM TEMP A
+                  LEFT JOIN devdb.MEMBER_INFORMATION B ON A.INSID = B.ID
+                  LEFT JOIN devdb.BLOCK_TB C ON B.ID = C.BLOCK_ID AND C.ID = #{userId}
+                 WHERE #{min} &lt;= A.ROW_NUMB AND A.ROW_NUMB &lt;= #{max}
+                 ORDER BY A.ROW_NUMB
+          ) A
+
+    </select>
+
+    <select id="boardList" resultType="Board">
+
+        WITH TEMP AS (
+            SELECT ROWNUM() AS ROW_NUMB, A.*
+              FROM (
+                    SELECT * FROM devdb.BOARD WHERE 1=1
+                     <choose>
+                      <when test="'total_chim'.equals(titleCode)">
+                       AND BOARD_CODE IN ('chim', 'chim_jjal', 'chim_fanart')
+                      </when>
+                      <when test="'total_chimtubu'.equals(titleCode)">
+                       AND BOARD_CODE IN ('request_stream', 'find_chimtube', 'make_short', 'favorite_chimtubu')
+                      </when>
+                      <when test="titleCode != 'all'">
+                       AND BOARD_CODE = #{titleCode}
+                      </when>
+                      <when test="'all'.equals(titleCode)">
+                       AND BOARD_CODE != 'notice'
+                      </when>
+                     </choose>
+                     ORDER BY SEQ DESC
+              ) A
+        )
+       <if test="!'notice'.equals(titleCode)">
+        , NOTICE AS (
+            SELECT NULL AS ROW_NUMB, SEQ, BOARD_CODE, CATEGORY_CODE
+                 , TXTNAME, COMMENT, TAG, INSID, INSDT, UPTID, UPTDT
+                 , POINT, VIEW, NULL AS NICKNAME, NULL AS BLOCK_ID
+              FROM devdb.BOARD
+             WHERE BOARD_CODE = 'notice'
+               AND NOTICE_YN = 1
+             ORDER BY SEQ DESC
+        )
+        SELECT *
+          FROM NOTICE
+         WHERE CATEGORY_CODE = 998
+        UNION ALL
+        SELECT *
+          FROM (
+                SELECT *
+                  FROM NOTICE
+                 WHERE CATEGORY_CODE = 999
+                 ORDER BY INSDT DESC
+          ) A
+        UNION ALL
+       </if>
+        SELECT * FROM (
+                SELECT A.ROW_NUMB, A.SEQ, A.BOARD_CODE, A.CATEGORY_CODE
+                     , (CASE WHEN C.BLOCK_ID IS NULL THEN A.TXTNAME ELSE '차단된 사용자의 게시글입니다.' END) AS TXTNAME
+                     , A.COMMENT, A.TAG, A.INSID, A.INSDT, A.UPTID, A.UPTDT, A.POINT, A.VIEW
+                     , B.NICKNAME, C.BLOCK_ID
+                  FROM TEMP A
+                  LEFT JOIN devdb.MEMBER_INFORMATION B ON A.INSID = B.ID
+                  LEFT JOIN devdb.BLOCK_TB C ON B.ID = C.BLOCK_ID AND C.ID = #{userId}
+                 WHERE #{min} &lt;= A.ROW_NUMB AND A.ROW_NUMB &lt;= #{max}
+                 ORDER BY A.ROW_NUMB
+        ) A
+
+    </select>
+
+    <select id="findPost" resultType="Board">
+
+        SELECT A.SEQ, A.BOARD_CODE, A.CATEGORY_CODE
+             , (CASE WHEN E.BLOCK_ID IS NULL THEN A.TXTNAME ELSE '차단된 사용자의 게시글입니다.' END) AS TXTNAME
+             , (CASE WHEN E.BLOCK_ID IS NULL THEN A.COMMENT ELSE '차단된 사용자의 게시글입니다.' END) AS COMMENT
+             , A.TAG, A.INSID, A.INSDT, A.UPTID
+             , A.UPTDT, A.POINT, A.VIEW, A.BEFORE_SEQ, A.AFTER_SEQ
+             , NVL(B.CNT, 0) AS CNT, C.NICKNAME, C.PROFILE_NAME
+             , NVL(D.SCRAP_CNT, 0) AS SCRAP_CNT, E.BLOCK_ID, NVL(A.NOTICE_YN, 0) AS NOTICE_YN
+          FROM (
+                SELECT *
+                     , LAG(SEQ) OVER(ORDER BY SEQ DESC) AS BEFORE_SEQ
+                     , LEAD(SEQ) OVER(ORDER BY SEQ DESC) AS AFTER_SEQ
+                  FROM devdb.BOARD WHERE 1=1
+                 <choose>
+                  <when test="'notice'.equals(titleCode)">
+                   AND BOARD_CODE = 'notice'
+                  </when>
+                  <when test="'chimhaha'.equals(titleCode)">
+                   AND POINT >= 10
+                  </when>
+                  <when test="'total_chim'.equals(titleCode)">
+                   AND BOARD_CODE IN ('notice', 'chim', 'chim_jjal', 'chim_fanart')
+                  </when>
+                  <when test="'total_chimtubu'.equals(titleCode)">
+                   AND BOARD_CODE IN ('request_stream', 'find_chimtube', 'make_short', 'favorite_chimtubu')
+                  </when>
+                  <when test="titleCode != 'all'">
+                   AND BOARD_CODE = #{titleCode}
+                  </when>
+                 </choose>
+                 ORDER BY SEQ DESC
+          ) A
+          LEFT JOIN (
+                SELECT PARENT_SEQ, COUNT(*) AS CNT FROM devdb.LIKE_TB
+                 WHERE ID = NVL(#{userId}, '0') AND LIKE_TYPE = 'board'
+                 GROUP BY PARENT_SEQ) B ON A.SEQ = B.PARENT_SEQ
+          LEFT JOIN devdb.MEMBER_INFORMATION C ON A.INSID = C.ID
+          LEFT JOIN (
+                SELECT PARENT_SEQ, COUNT(*) AS SCRAP_CNT FROM devdb.LIKE_TB
+                 WHERE ID = NVL(#{userId}, '0') AND LIKE_TYPE = 'scrap'
+                 GROUP BY PARENT_SEQ) D ON A.SEQ = D.PARENT_SEQ
+          LEFT JOIN devdb.BLOCK_TB E ON A.INSID = E.BLOCK_ID AND E.ID = #{userId}
+         WHERE A.SEQ = #{seq}
+
+    </select>
+
+    <update id="updateView">
+
+        UPDATE devdb.BOARD SET VIEW = (SELECT VIEW FROM devdb.BOARD WHERE SEQ = #{seq}) + 1 WHERE SEQ = #{seq}
+
+    </update>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="seq">
+
+        INSERT INTO devdb.BOARD (
+            BOARD_CODE
+          , CATEGORY_CODE
+          , TXTNAME
+          , COMMENT
+          , TAG
+          , INSID
+          , INSDT
+          , NOTICE_YN
+        ) VALUES (
+            #{boardCode}
+          , #{categoryCode}
+          , #{txtName}
+          , #{comment}
+          , #{tag}
+          , #{insId}
+          , NOW()
+          , #{noticeYn}
+        )
+
+    </insert>
+
+    <insert id="saveImg" useGeneratedKeys="true" keyProperty="seq">
+
+        INSERT INTO devdb.ATTACH (
+            PARENT_SEQ
+          , SAVE_FILENAME
+          , PATH
+          , INSID
+          , INSDT
+        ) VALUES (
+            #{seq}
+          , #{saveFileName}
+          , #{path}
+          , #{insId}
+          , NOW()
+        )
+
+    </insert>
+
+    <update id="updatePost">
+
+        UPDATE devdb.BOARD
+           SET BOARD_CODE = #{board.boardCode}
+             , CATEGORY_CODE = #{board.categoryCode}
+             , TXTNAME = #{board.txtName}
+             , COMMENT = #{board.comment}
+             , TAG = #{board.tag}
+             , UPTID = #{userId}
+             , UPTDT = NOW()
+             , NOTICE_YN = #{board.noticeYn}
+         WHERE SEQ = #{board.seq}
+
+    </update>
+
+    <delete id="deletePost">
+
+        DELETE FROM devdb.BOARD WHERE SEQ = #{seq}
+
+    </delete>
+
+    <delete id="deleteImg">
+
+        DELETE FROM devdb.ATTACH WHERE PARENT_SEQ = #{seq}
+
+    </delete>
+
+    <delete id="deleteLike">
+
+        DELETE FROM devdb.LIKE_TB WHERE PARENT_SEQ = #{seq}
+            OR PARENT_SEQ = (SELECT SEQ FROM devdb.COMMENT WHERE BOARD_SEQ = #{seq})
+
+    </delete>
+
+    <update id="updateLike">
+
+        UPDATE devdb.BOARD SET POINT = (SELECT POINT FROM devdb.BOARD WHERE SEQ = #{seq}) + 1 WHERE SEQ = #{seq}
+
+    </update>
+
+    <update id="cancelLike">
+
+        UPDATE devdb.BOARD SET POINT = (SELECT POINT FROM devdb.BOARD WHERE SEQ = #{seq}) - 1 WHERE SEQ = #{seq}
+
+    </update>
+
+    <select id="search" resultType="Board">
+
+        SELECT A.SEQ, A.BOARD_CODE, A.CATEGORY_CODE
+             , (CASE WHEN B.BLOCK_ID IS NULL THEN A.TXTNAME ELSE '차단된 사용자의 게시글입니다.' END) AS TXTNAME
+             , A.COMMENT, A.TAG, A.INSID, A.INSDT, A.UPTID
+             , A.UPTDT, A.POINT, A.VIEW, B.BLOCK_ID
+          FROM devdb.BOARD A
+          LEFT JOIN devdb.BLOCK_TB B ON A.INSID = B.BLOCK_ID AND B.ID = #{userId}
+       <choose>
+        <when test="'title'.equals(searchType)">
+         WHERE A.TXTNAME LIKE '%' || #{searchKeyword} || '%'
+        </when>
+        <when test="'titleAndContent'.equals(searchType)">
+         WHERE A.TXTNAME LIKE '%' || #{searchKeyword} || '%' OR A.COMMENT LIKE '%' || #{searchKeyword} || '%'
+        </when>
+        <when test="'nickname'.equals(searchType)">
+         WHERE A.INSID = (SELECT ID FROM devdb.MEMBER_INFORMATION WHERE NICKNAME = #{searchKeyword})
+        </when>
+       </choose>
+         ORDER BY A.SEQ DESC
+
+    </select>
+
+    <select id="mypagePost" resultType="Board">
+
+        SELECT * FROM devdb.BOARD WHERE INSID = #{userId} ORDER BY INSDT
+
+    </select>
+
+    <select id="mypageComment" resultType="Board">
+
+        SELECT BOARD_SEQ AS SEQ, SEQ AS COMMENT_SEQ, CONTENT AS TXTNAME, INSDT FROM devdb.COMMENT WHERE ID = #{userId} ORDER BY INSDT
+
+    </select>
+
+    <select id="mypageLikePost" resultType="Board">
+
+        SELECT A.PARENT_SEQ AS SEQ, B.TXTNAME, B.INSID, B.INSDT
+          FROM devdb.LIKE_TB A
+          LEFT JOIN devdb.BOARD B ON A.PARENT_SEQ = B.SEQ
+         WHERE A.ID = #{userId} AND A.LIKE_TYPE = 'board'
+         ORDER BY B.INSDT
+
+    </select>
+
+    <select id="mypageLikeComment" resultType="Board">
+
+        SELECT B.BOARD_SEQ AS SEQ, A.PARENT_SEQ AS COMMENT_SEQ, B.CONTENT AS TXTNAME, B.ID, B.INSDT
+          FROM devdb.LIKE_TB A
+          LEFT JOIN devdb.COMMENT B ON A.PARENT_SEQ = B.SEQ
+         WHERE A.ID = #{userId} AND A.LIKE_TYPE = 'comment'
+         ORDER BY B.INSDT
+
+    </select>
+
+    <select id="mypageScrap" resultType="Board">
+
+        SELECT A.PARENT_SEQ AS SEQ, B.TXTNAME, B.INSID, B.INSDT
+          FROM devdb.LIKE_TB A
+          LEFT JOIN devdb.BOARD B ON A.PARENT_SEQ = B.SEQ
+         WHERE A.ID = #{userId} AND A.LIKE_TYPE = 'scrap'
+         ORDER BY B.INSDT
+
+    </select>
+
+    <select id="mypageBlock" resultType="Board">
+
+        SELECT A.SEQ, A.ID, A.BLOCK_ID AS TXTNAME, A.INSDT
+          FROM devdb.BLOCK_TB A
+         WHERE A.ID = #{userId}
+         ORDER BY A.INSDT
+
+    </select>
+
+    <select id="userPagePost" resultType="Board">
+
+        SELECT A.SEQ, A.BOARD_CODE, A.CATEGORY_CODE, A.TXTNAME, A.COMMENT, A.TAG, A.INSID
+             , A.INSDT, A.UPTID, A.UPTDT, A.POINT, A.VIEW, A.NOTICE_YN, B.SAVE_FILENAME
+          FROM devdb.BOARD A
+          LEFT JOIN (SELECT PARENT_SEQ, MAX(SAVE_FILENAME) AS SAVE_FILENAME FROM devdb.ATTACH) B ON A.SEQ = B.PARENT_SEQ
+         WHERE A.INSID = (SELECT ID FROM devdb.MEMBER_INFORMATION WHERE NICKNAME = #{nickName})
+         ORDER BY A.INSDT DESC
+
+    </select>
+
+    <select id="userPageComment" resultType="Board">
+
+        SELECT A.SEQ AS COMMENT_SEQ, A.ID, A.BOARD_SEQ AS SEQ, A.CONTENT AS TXTNAME
+             , A.TOP_SEQ, A.PARENT_SEQ, A.LVL, A.ORDER_ROW, A.POINT, A.INSDT, A.UPTDT
+          FROM devdb.COMMENT A
+         WHERE A.ID = (SELECT ID FROM devdb.MEMBER_INFORMATION WHERE NICKNAME = #{nickName})
+         ORDER BY A.INSDT DESC
+
+    </select>
+
+</mapper>
+

@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layout/defaultLayout}">
 <th:block layout:fragment="content">
-    <main>
+    <main id="post-main">
         <div class="content-box">
             <div>
                 <section class="post-head">
@@ -12,15 +12,16 @@
                         <span th:text="'[' + ${board.categoryName} + ']'"></span>
                         <span th:text="${board.txtName}"></span>
                     </div>
-                    <div class="nickname">
-                        <img th:src="'/images/' + ${board.profileName}" class="board-profile comment-profile">
+                    <div class="nickname" th:style="${board.blockId eq null ? 'display:block' : 'display:none'}">
+                        <img th:src="'/images/' + ${board.profileName}" class="board-profile comment-profile"
+                             th:if="${board.profileName} ne null">
                         <span th:text="${board.nickName}"></span>
                         <ul>
-                            <li><a href="">게시글 보기</a></li>
-                            <li><a href="">댓글 보기</a></li>
+                            <li><a href="userWriteForm.html" th:href="@{/userPage/{nickName}/post(nickName=${board.nickName})}">게시글 보기</a></li>
+                            <li><a href="userWriteForm.html" th:href="@{/userPage/{nickName}/comment(nickName=${board.nickName})}">댓글 보기</a></li>
                         </ul>
                     </div>
-                    <div class="nick-state">
+                    <div class="nick-state" th:style="${board.blockId eq null ? 'display:block' : 'display:none'}">
                         <span class="dot">·</span>
                         <span th:text="${board.insDt}"></span>
                         <span class="dot">·</span>
@@ -33,39 +34,44 @@
                     <div class="board-state" th:if="${session.member ne null}">
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                         <ul>
-                            <li>
-                                <form>
-                                    <button th:if="${member.userId} != ${board.insId} and ${member.userType} != 'admin'">
-                                        <i class="fa-regular fa-flag"></i>
-                                        신고
-                                    </button>
-                                </form>
+                            <li th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
+<!--                                <form th:if="${member.userId} != ${board.insId} and ${member.userType} != 'admin'">-->
+<!--                                    <button>-->
+<!--                                        <i class="fa-regular fa-flag"></i>-->
+<!--                                        신고-->
+<!--                                    </button>-->
+<!--                                </form>-->
                                 <form th:action="@{|/board/${board.titleCode}/${board.seq}/edit|}" method="get">
-                                    <button th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
+                                    <button>
                                         <i class="fa-regular fa-edit"></i>
                                         수정
                                     </button>
                                 </form>
                             </li>
                             <li>
-                                <form>
-                                    <button th:if="${member.userId} != ${board.insId} and ${member.userType} != 'admin'">
+                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/addBlock|}" method="post"
+                                      th:if="${member.userId} != ${board.insId} and ${board.blockId eq null} and ${member.userType} != 'admin'">
+                                    <input name="boardId" th:value="${board.insId}" type="text" style="display:none">
+                                    <button>
                                         <i class="fa-solid fa-ban"></i>
                                         차단
                                     </button>
                                 </form>
-                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/delete|}" method="post">
-                                    <button th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
+                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/deleteBlock|}" method="post"
+                                      th:if="${board.blockId ne null}">
+                                    <input name="blockId" th:value="${board.blockId}" type="text" style="display:none">
+                                    <button>
+                                        <i class="fa-solid fa-ban"></i>
+                                        차단해제
+                                    </button>
+                                </form>
+                                <form id="delete-board-form" th:action="@{|/board/${board.titleCode}/${board.seq}/delete|}" method="post"
+                                      th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
+                                    <button onclick="fnBoardDelete()" type="button">
                                         <i class="fa-regular fa-trash-alt"></i>
                                         삭제
                                     </button>
                                 </form>
-                            </li>
-                            <li>
-                                <button>
-                                    <i class="fa-solid fa-share-from-square"></i>
-                                    공유
-                                </button>
                             </li>
                         </ul>
                     </div>
@@ -107,10 +113,10 @@
                             }
                         }
                     </script>
-                    <div class="tag" th:text="'태그 : ' + ${board.tag}" th:if="${board.tag ne null} and ${board.tag ne ''}"></div>
+                    <div class="tag" th:text="'태그 : ' + ${board.tag}" th:if="${board.blockId eq null} and ${board.tag ne null} and ${board.tag ne ''}"></div>
                 </section>
                 <section>
-                    <div class="post-like">
+                    <div class="post-like" th:if="${board.blockId eq null}">
                         <form id="post-form" action="/${board.seq}/like" th:action="@{|/${board.seq}/like|}" method="post">
                             <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
 <!--                                <button class="like" type="button" onclick="updateLike()" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">-->
@@ -130,10 +136,21 @@
                                 침하하 취소<br>🤣
                             </button>
                         </form>
-                        <button class="scrap">
-                            스크랩<br>
-                            <i class="fa-regular fa-bookmark"></i>
-                        </button>
+
+                        <form action="/${board.seq}/scrapSave" th:action="@{|/${board.seq}/scrapSave|}" method="post">
+                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
+                            <button class="scrap" type="submit" th:if="${session.member eq null} or ${board.scrapCnt eq 0}">
+                                스크랩<br>
+                                <i class="fa-regular fa-bookmark"></i>
+                            </button>
+                        </form>
+                        <form action="/${board.seq}/scrapCancel" th:action="@{|/${board.seq}/scrapCancel|}" method="post">
+                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
+                            <button class="scrap" type="submit" th:if="${session.member ne null} and ${board.scrapCnt ne 0}">
+                                스크랩 취소<br>
+                                <i class="fa-solid fa-bookmark"></i>
+                            </button>
+                        </form>
                     </div>
                     <div class="post-list">
                         <div class="left"><button th:onclick="'location.href=\'' + @{${board.beforeSeq}} + '\''" type="button" th:if="${board.beforeSeq ne 0}">&lt;이전 글</button></div>
@@ -142,15 +159,17 @@
                         <div class="right"><button th:onclick="'location.href=\'' + @{${board.afterSeq}} + '\''" type="button" th:if="${board.afterSeq ne 0}">다음 글&gt;</button></div>
                     </div>
                 </section>
+
                 <h2>댓글</h2>
                 <section th:each="comment : ${comments}">
                     <div class="comment-all-div">
                         <div class="comment-div">
-                            <div class="comment-top">
+                            <div class="comment-top" th:style="${comment.blockId eq null ? 'display:flex' : 'display:none'}">
                                 <div class="comment-left">
                                     <div>
                                         <span>
-                                            <img th:src="'/images/' + ${comment.profileName}" class="comment-profile">
+                                            <img th:src="'/images/' + ${comment.profileName}" class="comment-profile"
+                                                 th:if="${comment.profileName} ne null">
                                         </span>
                                     </div>
                                     <div class="comment-nick-div">
@@ -182,47 +201,43 @@
                                     <div th:id="'comment' + ${comment.rownumb}" class="comment-state" th:if="${session.member ne null}" th:onclick="'fnComBox(' + ${comment.rownumb} + ')'">
                                         <i class="fa-solid fa-ellipsis-vertical"></i>
                                         <ul>
-                                            <li>
-                                                <form>
-                                                    <button th:if="${member.userId} != ${board.insId} and ${member.userType} != 'admin'">
-                                                        <i class="fa-regular fa-flag"></i>
-                                                        신고
-                                                    </button>
-                                                </form>
-                                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/edit|}" method="get">
-                                                    <button th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
-                                                        <i class="fa-regular fa-edit"></i>
-                                                        수정
-                                                    </button>
-                                                </form>
+                                            <li th:if="${member.userId} == ${comment.userId} or ${member.userType} == 'admin'">
+<!--                                                <form th:if="${member.userId} != ${comment.userId} and ${member.userType} != 'admin'">-->
+<!--                                                    <button class="comment-first-form">-->
+<!--                                                        <i class="fa-regular fa-flag"></i>-->
+<!--                                                        신고-->
+<!--                                                    </button>-->
+<!--                                                </form>-->
+                                                <button class="comment-first-form">
+                                                    <i class="fa-regular fa-edit"></i>
+                                                    수정
+                                                </button>
                                             </li>
                                             <li>
-                                                <form>
-                                                    <button th:if="${member.userId} != ${board.insId} and ${member.userType} != 'admin'">
+                                                <form th:id="'comment-second-form' + ${comment.rownumb}" th:if="${member.userId} != ${comment.userId} and ${member.userType} != 'admin'">
+                                                    <button th:id="'delete-comment-btn' + ${comment.rownumb}">
                                                         <i class="fa-solid fa-ban"></i>
                                                         차단
                                                     </button>
                                                 </form>
-                                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/delete|}" method="post">
-                                                    <button th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
+                                                <form th:id="'comment-second-form' + ${comment.rownumb}"
+                                                      th:action="@{|/board/${board.titleCode}/${board.seq}/${comment.seq}/delete|}" method="post"
+                                                      th:if="${member.userId} == ${comment.userId} or ${member.userType} == 'admin'">
+                                                    <button th:onclick="'fnCommentDelete(' + ${comment.rownumb} + ')'" type="button">
                                                         <i class="fa-regular fa-trash-alt"></i>
                                                         삭제
                                                     </button>
                                                 </form>
                                             </li>
-                                            <li>
-                                                <button>
-                                                    <i class="fa-solid fa-share-from-square"></i>
-                                                    공유
-                                                </button>
-                                            </li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-                            <div class="comment-content" th:text="${comment.content}">
-                            </div>
-
+                            <input class="comment-content" th:value="${comment.content}" type="text" readonly
+                                   th:class="${comment.profileName} eq null ? 'comment-content comment-content-neimg' : 'comment-content comment-content-img'"
+                                   th:if="${comment.blockId eq null}">
+                            <input class="comment-content" th:value="${comment.content}" type="text" readonly
+                                   th:if="${comment.blockId ne null}">
                             <form class="comment-input-form-re" action="/board/${board.titleCode}/${board.seq}/childComment"
                                   th:action="@{|/board/${board.titleCode}/${board.seq}/childComment|}" method="post">
                                 <input name="rownumb" th:value="${comment.rownumb}" type="text" style="display:none">
@@ -231,6 +246,7 @@
                                 <input name="seq" th:value="${comment.seq}" type="text" style="display:none">
                                 <input name="orderRow" th:value="${comment.orderRow}" type="text" style="display:none">
                                 <input name="lvl" th:value="${comment.lvl}" type="text" style="display:none">
+                                <input name="editType" th:value="${comment.editType}" type="text" style="display:none">
 
                                 <div class="comment-textarea-div">
                                     <textarea class="comment-textarea" name="content" placeholder="댓글을 작성해 주세요."></textarea>
@@ -265,7 +281,10 @@
                         var cnt = [[${comment.rownumb}]] - 1; // class item을 위해 위에서부터 카운트
 
                         var cls = document.getElementsByClassName('comment-all-div').item(cnt);
-                        cls.style.marginLeft = lvl * 20 + 'px';
+
+                        if ([[${comment.blockId}]] == null) {
+                            cls.style.marginLeft = lvl * 20 + 'px';
+                        }
                     </script>
                 </section>
 
@@ -497,10 +516,9 @@
 <!--    }-->
 
     $(document).ready(function(){
+        // 댓글 클릭 시 대댓글 박스 열림
         $('.comment-re').each(function(i){
             $(this).click(function(e){
-                console.log("11111111");
-
                 var cls = document.getElementsByClassName('comment-input-form-re').item(i);
                 var chkDisplay = cls.style.display;
 
@@ -510,6 +528,48 @@
                     cls.style.display = '';
                 }
             });
+
+            document.getElementsByName('editType').item(i).value = 'save';
+        });
+
+        $('.comment-first-form').each(function(i){
+            // 댓글 수정 클릭 시
+            $(this).click(function(e){
+                console.log(i);
+                // 댓글 박스 열림
+                var cls = document.getElementsByClassName('comment-input-form-re').item(i);
+                var chkDisplay = cls.style.display;
+
+                if (chkDisplay == '') {
+                    cls.style.display = 'flex';
+                } else {
+                    cls.style.display = '';
+                }
+
+                // 댓글 내용이 댓글 입력 박스에 들어가도록
+                document.getElementsByClassName('comment-textarea').item(i).value =
+                    document.getElementsByClassName('comment-content').item(i).value;
+
+                document.getElementsByName('editType').item(i).value = 'update';
+            });
         });
     });
+
+    // 게시글 삭제 시
+    function fnBoardDelete() {
+        if(confirm("게시글을 삭제하시겠습니까?")) {
+            document.getElementById('delete-board-form').submit();
+        } else {
+            return;
+        }
+    }
+
+    // 댓글 삭제
+    function fnCommentDelete(num) {
+        if(confirm("댓글을 삭제하시겠습니까?")) {
+            document.getElementById('comment-second-form' + num).submit();
+        } else {
+            return;
+        }
+    }
 </script>

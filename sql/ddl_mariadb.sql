@@ -1,0 +1,95 @@
+ALTER DATABASE devdb DEFAULT CHARACTER SET utf8mb4; // 데이터베이스 UTF-8 설정
+
+ALTER TABLE devdb.테이블명 CONVERT TO CHARACTER SET utf8mb4; // 테이블 UTF-8 설정
+
+-- 게시판 테이블
+CREATE TABLE devdb.BOARD (
+    SEQ MEDIUMINT AUTO_INCREMENT -- seq
+  , BOARD_CODE VARCHAR(20) -- 게시판 코드
+  , CATEGORY_CODE INT -- 카테고리 코드
+  , TXTNAME VARCHAR(50) -- 글 제목
+  , COMMENT VARCHAR(21000) -- 글 내용
+  , TAG VARCHAR(20) -- 태그
+  , INSID VARCHAR(10) -- 입력 유저 ID
+  , INSDT TIMESTAMP -- 입력 일자
+  , UPTID VARCHAR(10) -- 수정 유저 ID
+  , UPTDT TIMESTAMP -- 수정 일자
+  , POINT INT DEFAULT 0 -- 좋아요 횟수
+  , VIEW INT DEFAULT 0 -- 게시글 본 횟수
+  , NOTICE_YN BOOLEAN DEFAULT 0 -- 공지 유무
+  , PRIMARY KEY (SEQ)
+);
+
+-- 첨부파일 테이블
+CREATE TABLE devdb.ATTACH (
+    SEQ MEDIUMINT AUTO_INCREMENT -- seq
+  , PARENT_SEQ MEDIUMINT -- board seq
+  , FILENAME VARCHAR(50) -- 파일 이름
+  , SAVE_FILENAME VARCHAR(50) -- 서버에 저장하는 파일 이름
+  , PATH VARCHAR(100) -- 저장 경로
+  , INSID VARCHAR(10) -- 입력 유저 ID
+  , INSDT TIMESTAMP -- 입력 일자
+  , UPTID VARCHAR(10) -- 수정 유저 ID
+  , UPTDT TIMESTAMP -- 수정 일자
+  , PRIMARY KEY (SEQ)
+  , FOREIGN KEY(PARENT_SEQ) REFERENCES devdb.BOARD(SEQ)
+);
+
+-- 회원정보 테이블
+CREATE TABLE devdb.MEMBER_INFORMATION (
+    ID VARCHAR(10) PRIMARY KEY -- ID
+  , PASSWORD VARCHAR(20) -- 비밀번호
+  , USER_NAME VARCHAR(10) -- 이름
+  , BIRTH INT -- 생년월일
+  , PHONE_NUMBER VARCHAR(15) -- 휴대폰 번호
+  , NICKNAME VARCHAR(20) -- 닉네임
+  , TYPE VARCHAR(10) -- 타입
+  , INSDT TIMESTAMP -- 입력 일자
+  , PROFILE_NAME VARCHAR(100) -- 프로필 파일 이름
+  , PROFILE_PATH VARCHAR(100) -- 프로필 저장 경로
+);
+
+-- 좋아요 테이블
+CREATE TABLE devdb.LIKE_TB (
+    ID VARCHAR(10) -- ID
+  , PARENT_SEQ INT -- board seq
+  , LIKE_TYPE VARCHAR(10) -- 좋아요 타입
+  , INSDT TIMESTAMP -- 입력 일자
+  , PRIMARY KEY (ID, PARENT_SEQ, LIKE_TYPE)
+);
+
+-- 즐겨찾기 테이블
+CREATE TABLE devdb.FAVORITE (
+    ID VARCHAR(10) -- ID
+  , BOARD_CODE VARCHAR(20) -- 게시판 코드
+  , INSDT TIMESTAMP -- 입력일자
+  , PRIMARY KEY (ID, BOARD_CODE)
+  , FOREIGN KEY(ID) REFERENCES devdb.MEMBER_INFORMATION(ID)
+);
+
+-- 댓글 테이블
+CREATE TABLE devdb.COMMENT (
+    SEQ MEDIUMINT AUTO_INCREMENT -- seq
+  , ID VARCHAR(10) -- 유저 ID
+  , BOARD_SEQ MEDIUMINT -- board seq
+  , CONTENT VARCHAR(100) -- 글 내용
+  , TOP_SEQ INT -- 최상위 댓글 seq
+  , PARENT_SEQ INT -- 상위 댓글 seq
+  , LVL INT -- level
+  , ORDER_ROW INT -- 순서
+  , POINT INT DEFAULT 0 -- 좋아요 횟수
+  , INSDT TIMESTAMP -- 입력일자
+  , UPTDT TIMESTAMP -- 수정일자
+  , PRIMARY KEY (SEQ)
+  , FOREIGN KEY(BOARD_SEQ) REFERENCES devdb.BOARD(SEQ)
+);
+
+-- 차단 회원 테이블
+CREATE TABLE devdb.BLOCK_TB (
+    SEQ MEDIUMINT AUTO_INCREMENT -- seq
+  , ID VARCHAR(10) -- 유저 ID
+  , BLOCK_ID VARCHAR(10) -- 차단한 유저 ID
+  , INSDT TIMESTAMP -- 입력 일자
+  , PRIMARY KEY (SEQ)
+  , FOREIGN KEY(ID) REFERENCES devdb.MEMBER_INFORMATION(ID)
+);

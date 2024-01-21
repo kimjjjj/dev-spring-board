@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 import java.util.*;
 
 @Slf4j
 @Controller
 @RequestMapping("/")
 @RequiredArgsConstructor
-public class BoardController {
+public class BoardController implements BoardControllerInterface {
 
     private final BoardService boardService;
     private final MemberRepository memberRepository;
@@ -29,12 +28,13 @@ public class BoardController {
     private final CommentService commentService;
 
     // 첫 화면
+    @Override
     @GetMapping("/")
 //    @ResponseBody
     public String chimList(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Login login, @ModelAttribute Board board
             , @RequestParam(required = true, defaultValue = "1") Integer page
-            , HttpServletRequest request, Model model) throws SQLException {
+            , HttpServletRequest request, Model model) {
         log.info("<=====BoardController.chimList=====>");
 
         // 최근방문 게시판 조회
@@ -45,8 +45,14 @@ public class BoardController {
 
         model.addAttribute("board", board);
 
+        // 로그인 ID
+        String userId = null;
+        if (member != null) {
+            userId = member.getUserId();
+        }
+
         // 게시글 조회
-        model.addAttribute("boards", boardService.chimList(page));
+        model.addAttribute("boards", boardService.chimList(page, userId));
 
         // 세션에 회원 데이터가 없으면 home
         if (member == null) {
@@ -63,11 +69,12 @@ public class BoardController {
     }
 
     // 게시판 선택
+    @Override
     @GetMapping("/board/{titleCode}")
     public String boardList(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Board board, @PathVariable String titleCode
             , @RequestParam(required = true, defaultValue = "1") Integer page
-            , Model model, HttpServletRequest request, HttpServletResponse response) throws SQLException {
+            , Model model, HttpServletRequest request, HttpServletResponse response) {
         log.info("<=====BoardController.boardList=====>");
 
         // 최근방문 게시판 쿠키에 저장
@@ -79,8 +86,13 @@ public class BoardController {
         // 페이징
         board = boardService.setPage(board, page);
 
-        // 계정 포인트 조회
+        // 로그인 ID
+        String userId = null;
+
         if (member != null) {
+            userId = member.getUserId();
+
+            // 계정 포인트 조회
             member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
         } else {
             member = new Member();
@@ -91,9 +103,9 @@ public class BoardController {
         // 데이터 조회
         List<Board> boards = new ArrayList<>();
         if (!"chimhaha".equals(titleCode)) {
-            boards = boardService.boardList(titleCode, page); // 침하하 제외한 모든 게시판
+            boards = boardService.boardList(titleCode, page, userId); // 침하하 제외한 모든 게시판
         } else {
-            boards = boardService.chimList(page); // 침하하
+            boards = boardService.chimList(page, userId); // 침하하
         }
 
         // 게시글 목록
@@ -112,10 +124,11 @@ public class BoardController {
     }
 
     // 게시글보기
+    @Override
     @GetMapping("/board/{titleCode}/{seq}")
     public String boardPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
-            , Model model, HttpServletRequest request) throws SQLException {
+            , Model model, HttpServletRequest request) {
         log.info("<=====BoardController.boardPost=====> titleCode: {}, seq: {}", titleCode, seq);
 
         // 계정 포인트 조회
@@ -142,9 +155,10 @@ public class BoardController {
     }
 
     // 침하하
+    @Override
     @PostMapping("/{seq}/like")
     public String updateLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
-            , @PathVariable int seq, @RequestParam String titleCode, Model model) throws SQLException {
+            , @PathVariable int seq, @RequestParam String titleCode, Model model) {
         log.info("<=====BoardController.updateLike=====> titleCode : {}", titleCode);
 
         // 계정 없으면
@@ -171,10 +185,11 @@ public class BoardController {
     }
 
     // 침하하 취소
+    @Override
     @PostMapping("/{seq}/cancel")
 //    @ResponseBody
     public String cancelLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
-            , @PathVariable int seq, @RequestParam String titleCode, Model model) throws SQLException {
+            , @PathVariable int seq, @RequestParam String titleCode, Model model) {
         log.info("<=====BoardController.cancelLike=====>");
 
         // 계정이 있다면
@@ -203,10 +218,63 @@ public class BoardController {
         return "redirect:/board/" + titleCode + "/{seq}";
     }
 
+    // 스크랩
+    @Override
+    @PostMapping("/{seq}/scrapSave")
+    public String scrapSave(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , @PathVariable int seq, @RequestParam String titleCode, Model model) {
+        log.info("<=====BoardController.scrapSave=====> titleCode : {}", titleCode);
+
+        // 계정 없으면
+        if (member == null) {
+            // alert창 띄우기
+            model.addAttribute("message", "로그인이 필요합니다.");
+            model.addAttribute("searchUrl", "/login");
+
+            return "message";
+        }
+
+        // 스크랩 저장
+        memberService.scrapSave(member.getUserId(), seq);
+
+        // 계정 포인트 조회
+        member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
+        model.addAttribute("member", member);
+
+        return "redirect:/board/" + titleCode + "/{seq}";
+    }
+
+    // 스크랩 취소
+    @Override
+    @PostMapping("/{seq}/scrapCancel")
+    public String scrapCancel(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , @PathVariable int seq, @RequestParam String titleCode, Model model) {
+        log.info("<=====BoardController.scrapCancel=====>");
+
+        // 계정 없으면
+        if (member == null) {
+            // alert창 띄우기
+            model.addAttribute("message", "로그인이 필요합니다.");
+            model.addAttribute("searchUrl", "/login");
+
+            return "message";
+        }
+
+        // 스크랩 취소
+        memberService.scrapCancel(member.getUserId(), seq);
+
+        // 계정 포인트 조회
+        member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
+        model.addAttribute("member", member);
+
+        return "redirect:/board/" + titleCode + "/{seq}";
+    }
+
     // 글쓰기 페이지로 이동
+    @Override
     @GetMapping("/add")
     public String addForm(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
-            , Board board, Model model, HttpServletRequest request) throws SQLException {
+            , Board board, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.addForm=====>");
 
         // 계정 포인트 조회
@@ -224,30 +292,20 @@ public class BoardController {
     }
 
     // 게시글 저장
+    @Override
     @PostMapping("/add")
     public String save(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
-            , /*@ModelAttribute("board")*/ Board board, Model model) throws SQLException {
+            , /*@ModelAttribute("board")*/ Board board, Model model) {
         log.info("<=====BoardController.save=====>");
 
+        // 계정 포인트 조회
+        if (member != null) {
+            member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
+        }
+
+        model.addAttribute("member", member);
+
         board.setComment(board.getComment().replace("\r\n",""));
-
-        Map<String, String> errors = new HashMap<>();
-
-        if (!StringUtils.hasText(board.getBoardCode())) {
-            errors.put("boardCode", "게시판을 선택해 주세요!");
-        }
-
-        if (!StringUtils.hasText(board.getTxtName())) {
-            errors.put("txtName", "제목을 입력해 주세요!");
-        }
-
-        if (!errors.isEmpty()) {
-            log.info("error = {}", errors);
-
-            model.addAttribute("errors", errors);
-
-            return "addForm";
-        }
 
         // 계정
         board.setInsId(member.getUserId());
@@ -268,14 +326,19 @@ public class BoardController {
             boardService.saveImg(board, list);
         }
 
-        return "redirect:/board/all";
+        // alert창 띄우기
+        model.addAttribute("message", "게시글이 등록되었습니다.");
+        model.addAttribute("searchUrl", "/board/all");
+
+        return "message";
     }
 
     // 글수정 페이지로 이동
+    @Override
     @GetMapping("/board/{titleCode}/{seq}/edit")
     public String editForm(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
-            , Board board, Model model, HttpServletRequest request) throws SQLException {
+            , Board board, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.editForm=====>");
 
         // 계정 포인트 조회
@@ -293,16 +356,17 @@ public class BoardController {
         model.addAttribute("board", board);
 
         // 카테고리 세팅
-        model.addAttribute("categoryCodes", categoryC(board.getBoardNumber()));
+        model.addAttribute("categoryCodes", categoryC(board.getBoardCode()));
 
         return "editForm";
     }
 
     // 글수정
+    @Override
     @PostMapping("/board/{titleCode}/{seq}/edit")
     public String updatePost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
-            , Board board, Model model, HttpServletRequest request) throws SQLException {
+            , Board board, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.updatePost=====>");
 
         // 계정 포인트 조회
@@ -323,10 +387,11 @@ public class BoardController {
     }
 
     // 게시글 삭제
+    @Override
     @PostMapping("/board/{titleCode}/{seq}/delete")
     public String deletePost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
-            , Board board, Model model, HttpServletRequest request) throws SQLException {
+            , Board board, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.deletePost=====>");
 
         // 계정 포인트 조회
@@ -340,6 +405,11 @@ public class BoardController {
         board = boardService.getCookie(board, request, null);
         model.addAttribute("board", board);
 
+        // 좋아요 delete
+        boardService.deleteLike(seq);
+
+        // 댓글 delete
+        commentService.deleteCommentBoard(seq);
 
         // 첨부파일 delete
         boardService.deleteImg(seq);
@@ -351,13 +421,19 @@ public class BoardController {
     }
 
     // 검색
+    @Override
     @GetMapping("/search")
     public String search(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
-            , @ModelAttribute Board board, Model model, HttpServletRequest request) throws SQLException {
+            , @ModelAttribute Board board, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.search=====>");
+
+        // 로그인 ID
+        String userId = null;
 
         // 계정 포인트 조회
         if (member != null) {
+            userId = member.getUserId();
+
             member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
         } else {
             member = new Member();
@@ -379,15 +455,16 @@ public class BoardController {
         board = boardService.getCookie(board, request, null);
         model.addAttribute("board", board);
 
-        model.addAttribute("boards", boardService.search(board.getSearchKeyword(), board.getSearchType()));
+        model.addAttribute("boards", boardService.search(board.getSearchKeyword(), board.getSearchType(), userId));
 
         return "searchForm";
     }
 
     // 마이페이지 조회
+    @Override
     @GetMapping("/mypage/{mypageTitle}")
     public String mywrite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
-            , @ModelAttribute Board board, @PathVariable String mypageTitle, Model model, HttpServletRequest request) throws SQLException {
+            , @ModelAttribute Board board, @PathVariable String mypageTitle, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.mywrite=====>");
 
         // 계정 포인트 조회
@@ -409,10 +486,38 @@ public class BoardController {
         return "mywriteForm";
     }
 
+    // 유저 게시글, 댓글 조회
+    @Override
+    @GetMapping("/userPage/{nickName}/{userPageTitle}")
+    public String userPage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , @ModelAttribute Board board, @PathVariable String nickName, @PathVariable String userPageTitle, Model model) {
+        log.info("<=====BoardController.userPage=====>{}, {}", nickName, userPageTitle);
+
+        // 계정 포인트 조회
+        member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
+        model.addAttribute("member", member);
+
+        // 페이지 제목
+        board.setUserPageTitle(nickName + boardService.userPageTitle(userPageTitle));
+        model.addAttribute("board", board);
+
+        // 조회
+        List<Board> boards = boardService.userWrite(nickName, userPageTitle);
+        model.addAttribute("boards", boards);
+
+        return "userWriteForm";
+    }
+
     // 게시판 select박스
+    @Override
     @ModelAttribute("boardCodes")
-    public List<BoardCode> boardCodes() {
+    public List<BoardCode> boardCodes(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member) {
         log.info("<=====BoardController.boardCodes=====>");
+
+        if (member == null) {
+            member = new Member();
+        }
+
         List<BoardCode> boardCodes = new ArrayList<>();
 
         Map<String, String> codeMap = boardService.boardCodeSet(true);
@@ -425,10 +530,16 @@ public class BoardController {
         boardCodes.add(new BoardCode("make_short", codeMap.get("make_short")));
         boardCodes.add(new BoardCode("favorite_chimtubu", codeMap.get("favorite_chimtubu")));
 
+        // 계정 타입이 관리자인 경우
+        if ("admin".equals(member.getUserType())) {
+            boardCodes.add(new BoardCode("notice", codeMap.get("notice")));
+        }
+
         return boardCodes;
     }
 
     // 카테고리 select박스
+    @Override
     @GetMapping("/categoryCode")
     @ResponseBody
     public List<CategoryCode> categoryC(String boardCode) {
@@ -459,6 +570,9 @@ public class BoardController {
             categoryCodes.add(new CategoryCode(13, codeMap.get(13)));
         } else if ("favorite_chimtubu".equals(boardCode)) {
             categoryCodes.add(new CategoryCode(14, codeMap.get(14)));
+        } else if ("notice".equals(boardCode)) {
+            categoryCodes.add(new CategoryCode(998, codeMap.get(998)));
+            categoryCodes.add(new CategoryCode(999, codeMap.get(999)));
         }
 
         return categoryCodes;

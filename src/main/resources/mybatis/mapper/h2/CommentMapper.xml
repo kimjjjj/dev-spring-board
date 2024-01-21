@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.dev.mybatis.CommentMapper">
+
+    <select id="findComment" resultType="Comment">
+
+        SELECT A.SEQ, A.ID AS USERID
+             , (CASE WHEN D.BLOCK_ID IS NULL THEN A.CONTENT ELSE '차단된 사용자의 댓글입니다.' END) AS CONTENT
+             , A.TOP_SEQ, A.PARENT_SEQ, A.LVL, A.ORDER_ROW
+             , A.INSDT, B.NICKNAME, B.PROFILE_NAME, B.PROFILE_PATH
+             , NVL(C.CNT, 0) AS CNT, D.BLOCK_ID
+          FROM COMMENT A
+          LEFT JOIN MEMBER_INFORMATION B ON A.ID = B.ID
+          LEFT JOIN (
+                SELECT PARENT_SEQ, COUNT(*) AS CNT FROM LIKE_TB
+                 WHERE ID = #{userId} AND LIKE_TYPE = 'comment'
+                 GROUP BY PARENT_SEQ) C ON A.SEQ = C.PARENT_SEQ
+          LEFT JOIN BLOCK_TB D ON A.ID = D.BLOCK_ID AND D.ID = #{userId}
+         WHERE A.BOARD_SEQ = #{seq}
+         ORDER BY NVL(A.TOP_SEQ, 0), NVL(A.PARENT_SEQ, 0), A.LVL, A.ORDER_ROW, A.INSDT
+
+    </select>
+
+    <insert id="saveParentComment" useGeneratedKeys="true" keyProperty="seq">
+
+        INSERT INTO COMMENT (
+            ID
+          , BOARD_SEQ
+          , CONTENT
+          , LVL
+          , ORDER_ROW
+          , INSDT
+        ) VALUES (
+            #{userId}
+          , #{boardSeq}
+          , #{content}
+          , #{lvl}
+          , #{orderRow}
+          , NOW()
+        )
+
+    </insert>
+
+    <insert id="saveChildComment" useGeneratedKeys="true" keyProperty="seq">
+
+        INSERT INTO COMMENT (
+            ID
+          , BOARD_SEQ
+          , CONTENT
+          , TOP_SEQ
+          , PARENT_SEQ
+          , LVL
+          , ORDER_ROW
+          , INSDT
+        ) VALUES (
+            #{userId}
+          , #{boardSeq}
+          , #{content}
+          , #{topSeq}
+          , #{parentSeq}
+          , #{lvl}
+          , #{orderRow}
+          , NOW()
+        )
+
+    </insert>
+
+    <update id="editComment">
+
+        UPDATE COMMENT
+           SET CONTENT = #{content}
+         WHERE SEQ = #{seq}
+
+    </update>
+
+    <delete id="deleteComment">
+
+        DELETE FROM COMMENT WHERE SEQ = #{seq} OR TOP_SEQ = #{seq} OR PARENT_SEQ = #{seq}
+
+    </delete>
+
+    <delete id="deleteCommentBoard">
+
+        DELETE FROM COMMENT WHERE BOARD_SEQ = #{seq}
+
+    </delete>
+
+    <select id="chkComment" resultType="Integer">
+
+        SELECT COUNT(*) AS CNT FROM COMMENT
+         WHERE (SEQ = #{topSeq} OR TOP_SEQ = #{topSeq}) AND ORDER_ROW > #{orderRow}
+
+    </select>
+
+    <update id="updateComment">
+
+        UPDATE COMMENT SET ORDER_ROW = ORDER_ROW + 1
+         WHERE SEQ IN (
+                SELECT SEQ FROM COMMENT WHERE (SEQ = #{topSeq} OR TOP_SEQ = #{topSeq}) AND ORDER_ROW > #{orderRow})
+
+    </update>
+
+    <insert id="commentLike">
+
+        INSERT INTO LIKE_TB (
+            ID
+          , PARENT_SEQ
+          , LIKE_TYPE
+          , INSDT
+        ) VALUES (
+            #{userId}
+          , #{seq}
+          , 'comment'
+          , NOW()
+        )
+
+    </insert>
+
+    <update id="updateCommentPoint">
+
+        UPDATE COMMENT SET POINT = (SELECT POINT FROM COMMENT WHERE SEQ = #{seq}) + 1 WHERE SEQ = #{seq}
+
+    </update>
+
+    <delete id="commentCancel">
+
+        DELETE FROM LIKE_TB
+         WHERE PARENT_SEQ = #{seq} AND LIKE_TYPE = 'comment'
+           AND DECODE(ID, NULL, ID, NVL(#{userId}, '1')) = NVL(#{userId}, '1')
+
+    </delete>
+
+    <update id="cancelCommentPoint">
+
+        UPDATE COMMENT SET POINT = (SELECT POINT FROM COMMENT WHERE SEQ = #{seq}) - 1 WHERE SEQ = #{seq}
+
+    </update>
+
+</mapper>
+

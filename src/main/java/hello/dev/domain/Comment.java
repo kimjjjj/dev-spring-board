@@ -21,6 +21,8 @@ public class Comment {
     private String profileName; // 프로필 이미지 이름
     private String profilePath; // 프로필 이미지 저장경로
     private Integer rownumb;
+    private String blockId; // 차단한 ID
 
     private Integer cnt; // 좋아요 유무
+    private String editType; // save or update 구분
 }

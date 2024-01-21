@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+<th:block layout:fragment="content">
+    <main id="userWrite">
+        <div class="content-box">
+            <h2 th:text="${board.userPageTitle}"></h2>
+            <section th:each="boardList : ${boards}">
+                <a th:href="'/board/all/' + ${boardList.seq}">
+                    <div class="userWrite-div">
+                        <div class="userWrite-txtName-div">
+                            <span class="userWrite-txtCategory" th:text="${boardList.boardName}" th:if="${boardList.boardName ne null}"></span>
+                            <span><i class="fa-solid fa-file-image" th:if="${boardList.saveFileName ne null} and ${boardList.boardName ne null}"></i></span>
+                            <span><i class="fa-regular fa-file-lines" th:if="${boardList.saveFileName eq null} and ${boardList.boardName ne null}"></i></span>
+                            <span class="userWrite-txtName" th:text="'[' + ${boardList.categoryName} + ']'" th:if="${boardList.categoryName ne null}"></span>
+                            <span class="userWrite-txtName" th:text="${boardList.txtName}"></span>
+                        </div>
+                        <div class="userWrite-indDt-div">
+                            <span th:text="${boardList.insDt}"></span>
+                        </div>
+                    </div>
+                </a>
+<!--                <div class="write-div">-->
+<!--                    <div class="write-txtName-div">-->
+<!--                        <a th:href="'/boardList/all/' + ${boardList.seq}" th:text="${boardList.txtName}"></a>-->
+<!--                    </div>-->
+<!--                    <div style="display:none">-->
+<!--                        <p th:text="${boardList.commentSeq}"></p>-->
+<!--                    </div>-->
+<!--                    <div class="write-id-div" th:if="${board.userPageTitle ne '차단한 사용자'}">-->
+<!--                        <p th:text="${boardList.insId}"></p>-->
+<!--                    </div>-->
+<!--                    <div class="write-indDt-div" th:if="${board.userPageTitle ne '차단한 사용자'}">-->
+<!--                        <p th:text="${boardList.insDt}"></p>-->
+<!--                    </div>-->
+<!--                    <div class="mypage-block-div" th:if="${board.userPageTitle eq '차단한 사용자'}">-->
+<!--                        <input name="blockId" th:value="${boardList.txtName}" type="text" style="display:none">-->
+<!--                        <button class="mypage-block-btn" type="submit">차단 해제</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <hr class="hr">
+            </section>
+        </div>
+    </main>
+</th:block>
+</html>

@@ -36,18 +36,27 @@
                 }
 
             </script>
-            <section th:each="board : ${boards}">
-                <a href="postForm.html" th:href="@{|/board/${board.titleCode}/${board.seq}|}">
-                    <div class="img">
+            <section th:each="board : ${boards}" th:class="${board.titleCode eq 'notice'} ? '' : (${board.boardCode eq 'notice'} ? board-notice : '')">
+                <a th:href="${board.boardCode eq 'notice'} ? @{|/board/notice/${board.seq}|} : @{|/board/${board.titleCode}/${board.seq}|}"
+                   th:if="${board.blockId eq null}">
+                    <div class="img" th:if="${board.titleCode eq 'notice'} or ${board.boardCode ne 'notice'}">
                         <i class="fa-regular fa-file-lines fa-3x" th:if="${board.path eq null}"></i>
                         <img class="thumbnail" th:src="@{${board.path}}" th:unless="${board.path eq null}">
                     </div>
-                    <div class="cont">
+                    <div class="cont" th:class="${board.titleCode eq 'notice'} ? cont : (${board.boardCode eq 'notice'} ? cont-notice : cont)">
                         <div class="txt-title">
-                            <span class="txtCategory" th:text="${board.boardName}"></span>
+                            <span class="txtCategory" th:text="${board.boardName}"
+                                  th:if="${board.boardCode ne 'notice'} and
+                                      (${board.titleCode eq 'chimhaha'} or ${board.titleCode eq 'all'} or
+                                      ${board.titleCode eq 'total_chim'} or ${board.titleCode eq 'total_chimtubu'})"></span>
+                            <span class="txtCategory" th:text="${board.categoryName}"
+                                  th:class="${board.titleCode eq 'notice'} ? txtCategory : (${board.boardCode eq 'notice'} ? txtCategory-notice : txtCategory)"
+                                  th:if="${board.boardCode eq 'notice'} or ${board.titleCode eq 'notice'} or
+                                      (${board.titleCode ne 'chimhaha'} and ${board.titleCode ne 'all'} and
+                                      ${board.titleCode ne 'total_chim'} and ${board.titleCode ne 'total_chimtubu'})"></span>
                             <span class="txtName" th:text="${board.txtName}"></span>
                         </div>
-                        <div class="txt-etc">
+                        <div class="txt-etc" th:if="${board.titleCode eq 'notice'} or ${board.boardCode ne 'notice'}">
                             <span class="nick" th:text="${board.nickName}"></span>
                             <span class="dot">·</span>
                             <span class="txtTime" th:text="${board.insDt}"></span>
@@ -60,36 +69,30 @@
                         </div>
                     </div>
                 </a>
-<!--                <table class="table">-->
-<!--                    <thead>-->
-<!--                    <tr>-->
-<!--                        <th>seq</th>-->
-<!--                        <th>boardSub</th>-->
-<!--                        <th>category</th>-->
-<!--                        <th>txtName</th>-->
-<!--                        <th>comment</th>-->
-<!--                        <th>tag</th>-->
-<!--                        <th>insId</th>-->
-<!--                        <th>insDt</th>-->
-<!--                        <th>uptId</th>-->
-<!--                        <th>uptDt</th>-->
-<!--                    </tr>-->
-<!--                    </thead>-->
-<!--                    <tbody>-->
-<!--                    <tr th:each="board : ${boards}">-->
-<!--                        <td><a href="" th:text="${board.seq}"></a></td>-->
-<!--                        <td><a href="" th:text="${board.boardSub}"></a></td>-->
-<!--                        <td><a href="" th:text="${board.category}"></a></td>-->
-<!--                        <td><a href="" th:text="${board.txtName}"></a></td>-->
-<!--                        <td><a href="" th:text="${board.comment}"></a></td>-->
-<!--                        <td><a href="" th:text="${board.tag}"></a></td>-->
-<!--                        <td><a href="" th:text="${board.insId}"></a></td>-->
-<!--                        <td><a href="" th:text="${board.insDt}"></a></td>-->
-<!--                        <td><a href="" th:text="${board.uptId}"></a></td>-->
-<!--                        <td><a href="" th:text="${board.uptDt}"></a></td>-->
-<!--                    </tr>-->
-<!--                    </tbody>-->
-<!--                </table>-->
+                <a th:if="${board.blockId ne null}">
+                    <div class="img" th:if="${board.blockId eq null}">
+                        <i class="fa-regular fa-file-lines fa-3x" th:if="${board.path eq null}"></i>
+                        <img class="thumbnail" th:src="@{${board.path}}" th:unless="${board.path eq null}">
+                    </div>
+                    <div class="cont" th:class="${board.blockId eq null} ? cont : cont-block">
+                        <div class="txt-title">
+                            <span class="txtCategory" th:text="${board.boardName}"></span>
+                            <span class="txtName" th:text="${board.txtName}"></span>
+                        </div>
+                        <div class="txt-etc" th:if="${board.blockId eq null}">
+                            <span class="nick" th:text="${board.nickName}"></span>
+                            <span class="dot">·</span>
+                            <span class="txtTime" th:text="${board.insDt}"></span>
+                            <span class="dot">·</span>
+                            <span><i class="fa-solid fa-eye list-icon"></i></span>
+                            <span class="view" th:text="${board.view}"></span>
+                            <span class="dot">·</span>
+                            <span><i class="fa-regular fa-thumbs-up list-icon"></i></span>
+                            <span class="point" th:text="${board.point}"></span>
+                        </div>
+                    </div>
+                </a>
+                <hr class="hr" th:class="${board.boardCode eq 'notice'} ? hr-notice : 'hr'">
             </section>
 
             <nav>

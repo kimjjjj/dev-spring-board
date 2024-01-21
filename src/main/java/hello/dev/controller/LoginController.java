@@ -18,22 +18,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
+import java.util.Map;
 
 @Slf4j
 @Controller
 @RequestMapping("/")
 @RequiredArgsConstructor
-public class LoginController {
+public class LoginController implements LoginControllerInterface {
 
     private final LoginService loginService;
     private final BoardService boardService;
 
     // 로그인 페이지
+    @Override
     @GetMapping("/login")
     public String loginForm(@ModelAttribute Login login, Board board, Model model, HttpServletRequest request) {
         log.info("<=====LoginController.loginForm=====>");
@@ -45,10 +45,12 @@ public class LoginController {
         return "loginForm";
     }
 
+    @Override
     @PostMapping("/login")
     public String login(/*@Valid*/ @ModelAttribute Login login, @ModelAttribute Board board
             , BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request
-            , RedirectAttributes redirectAttributes) throws SQLException {
+            , RedirectAttributes redirectAttributes
+            , Model model) {
         log.info("<=====LoginController.loginForm=====>");
 
         // 최근방문 게시판 조회
@@ -56,21 +58,36 @@ public class LoginController {
         redirectAttributes.addFlashAttribute("board", board);
 
         // 아아디, 비밀번호 null 체크
-        bindingResult = loginService.checkError(login, bindingResult);
+//        bindingResult = loginService.checkError(login, bindingResult);
 
-        if (bindingResult.hasErrors()) {
-            log.info("error = {}", bindingResult);
+//        if (bindingResult.hasErrors()) {
+//            log.info("error = {}", bindingResult);
+//
+//            return "loginForm";
+//        }
+
+        // 아아디, 비밀번호 null 체크
+        Map<String, String> errors = loginService.checkError(login);
+
+        if (!errors.isEmpty()) {
+            log.info("error = {}", errors);
+
+            model.addAttribute("errors", errors);
 
             return "loginForm";
         }
 
-        // 계정 정보
+        // 계정 정보 조회
         Member member = loginService.login(login.getUserId(), login.getPassword());
 
-        if ("".equals(member.getUserId()) || member.getUserId() == "" || member.getUserId() == null) {
-            bindingResult.addError(new FieldError("login", "errorTxt",
-                    "아이디 또는 비밀번호를 잘못 입력했습니다."));
-            log.info("error = {}", bindingResult);
+        // 계정 정보 확인
+        errors = loginService.checkIdPassword(member);
+
+        if (!errors.isEmpty()) {
+            log.info("error = {}", errors);
+
+            model.addAttribute("errors", errors);
+
             return "loginForm";
         }
 
@@ -89,10 +106,11 @@ public class LoginController {
         return "redirect:/";
     }
 
+    @Override
     @PostMapping("/logout")
     public String logout(HttpServletResponse response, HttpServletRequest request) {
         log.info("<=====LoginController.logout=====>");
-//        expireCookie(response, "userId");
+
         HttpSession session = request.getSession(false);
 
         if (session != null) {
@@ -100,12 +118,5 @@ public class LoginController {
         }
 
         return "redirect:/";
-    }
-
-    private void expireCookie(HttpServletResponse response, String cookieName) {
-        log.info("<=====LoginController.expireCookie=====>");
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
     }
 }

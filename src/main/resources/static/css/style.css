@@ -20,6 +20,12 @@ a:hover {
     border: 0;
 }
 
+.hr-notice {
+    background: #E2E2E2;
+    height: 1px;
+    border: 0;
+}
+
 textarea {
     width:100%;
     height:auto;
@@ -134,7 +140,7 @@ textarea {
         color: black;
         width: max-content;
 		display: none;
-		position: absolute;
+		position: absolute; z-index: 99; // 겹치지 않게 항상 위(앞)에 놓이도록
 		font-size: 14px;
         text-align: left;
         padding-left: 15px;
@@ -315,6 +321,10 @@ textarea {
     margin-bottom: 19.9px;
 }
 
+.board-notice {
+    background: #F2F2F2;
+}
+
 #main .h2>button {
     background-color: transparent;
     width: 35px;
@@ -373,7 +383,7 @@ textarea {
     border: solid #B2B2B2;
     border-width: 1px;
     padding-left: 10px;
-    margin-top: 30px;
+    margin-top: 15px;
     margin-bottom: 15px;
 }
 
@@ -387,11 +397,18 @@ textarea {
     background: #E5E5E5;
 }
 
+.add-notice-div {
+    margin-top: 10px;
+    margin-left: 5px;
+    font-size: 16px;
+}
+
 /* 에러 발생 시 */
 /*.field-error {
     border: solid #dc3545;
 }*/
 
+/*----- boardForm -------------------------------------------------------------*/
 .img {
     float: left;
     width: 55px;
@@ -407,12 +424,38 @@ textarea {
     padding: 10px;
 }
 
+.cont-notice {
+    height: 25px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.cont-block {
+    height: 35px;
+    line-height: 35px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .txt-title {
     height: 57%;
 }
 
 .txtCategory {
     background: #F2F2F2;
+    vertical-align: middle;
+    border-radius: 5px;
+    /*margin-left: 13px;*/
+    padding: 4px;
+    font-size: 14px;
+}
+
+.txtCategory-notice {
+    background: #E2E2E2;
     vertical-align: middle;
     border-radius: 5px;
     /*margin-left: 13px;*/
@@ -439,7 +482,7 @@ textarea {
 }
 
 .nick {
-    margin-left: 13px;
+    margin-left: 3px;
     font-size: 12px;
     color: #A9A9A9;
 }
@@ -482,6 +525,7 @@ textarea {
     margin-left: 20px;
     border: solid #F2F2F2;
     border-width: 1px;
+    top: 350px;
 }
 
 .nickname>ul>li {
@@ -495,6 +539,11 @@ textarea {
 
 .nickname>ul>li:hover {
     background: #B9B9B9;
+}
+
+.board-profile {
+    position: relative;
+    top: 6px;
 }
 
 .nick-state {
@@ -533,10 +582,11 @@ textarea {
     border-radius: 7px;
     border: solid #F2F2F2;
     border-width: 1px;
+    top: 350px;
 }
 
 .board-state>ul>li {
-    width: 85px;
+    width: 95px;
     height: 35px;
     line-height: 35px;
     text-align: center;
@@ -582,27 +632,23 @@ textarea {
     display: flex;
 }
 
-.like {
+#post-main .post-like button {
     width: 115px;
     height: 70px;
     font-size: 16px;
     float: 1;
-    margin-left: 353px;
-    margin-bottom: 20px;
     border-radius: 7px;
     border-width: 0px;
     cursor: pointer;
 }
+.like {
+    margin-left: 353px;
+    margin-bottom: 10px;
+}
 
 .scrap {
-    width: 115px;
-    height: 70px;
-    font-size: 16px;
-    float: 1;
     margin-left: 23px;
-    border-radius: 7px;
-    border-width: 0px;
-    cursor: pointer;
+    margin-bottom: 8px;
 }
 
 .post-list {
@@ -696,6 +742,13 @@ textarea {
     border-radius: 7px;
     cursor: pointer;
     font-size: 25px;
+}
+
+.login-text-error {
+    /*display: block;*/
+    height: 20px;
+    margin-left: 280px;
+    color: red;
 }
 
 .loginBtn {
@@ -900,6 +953,22 @@ textarea {
     padding: 7px;
 }
 
+.mypage-block-div {
+    width: 20%;
+    text-align: right;
+    height: 35px;
+    line-height: 35px;
+}
+
+.mypage-block-btn {
+    width: 75px;
+    height: 80%;
+    background: transparent;
+    border-radius: 5px;
+    border: 1px solid #E2E2E2;
+    cursor: pointer;
+}
+
 /*----- 댓글 -------------------------------------------------------------*/
 .comment-textarea:focus {
     outline: none;
@@ -983,8 +1052,21 @@ textarea {
 }
 
 .comment-content {
+    font-size: 16px;
+    border: 0;
+    width: 80%;
+}
+
+.comment-content:focus {
+  outline: none;
+}
+
+.comment-content-neimg {
+    margin-left: 10px;
+}
+
+.comment-content-img {
     margin-left: 35px;
-    font-size: 15px;
 }
 
 .comment-top {
@@ -1016,6 +1098,41 @@ textarea {
 
 }
 
+.comment-state {
+    float: right;
+    width: 38%;
+    text-align: right;
+}
+
+.comment-state>ul {
+    display: none;
+    position: absolute;
+    border-radius: 7px;
+    border: solid #F2F2F2;
+    border-width: 1px;
+}
+
+.comment-state>ul>li {
+    width: 85px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    border-radius: 5px;
+    color: black;
+}
+
+.comment-state>ul>li button {
+    border: 0;
+    background: white;
+    border-radius: 5px;
+    font-size: 15px
+}
+
+.comment-state>ul>li button:hover {
+    background: #F2F2F2;
+    cursor: pointer;
+}
+
 .comment-input-form-re {
     display: none;
     background:#F2F2F2;
@@ -1024,4 +1141,31 @@ textarea {
     width: 100%;
     height:110px;
     margin-top: 10px;
+}
+
+/*----- 유저 게시글, 댓글 조회 userWriteForm-------------------------------------------------------------*/
+.userWrite-div {
+    display: flex;
+    height: 35px;
+    line-height: 35px;
+}
+
+.userWrite-txtName-div {
+    width: 90%;
+}
+
+.userWrite-txtCategory {
+    background: #F2F2F2;
+    border-radius: 5px;
+    padding: 4px;
+    font-size: 13px;
+}
+
+.userWrite-txtName {
+    font-size: 15px;
+}
+
+.userWrite-indDt-div {
+    width: 10%;
+    text-align: right;
 }

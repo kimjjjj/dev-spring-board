@@ -17,11 +17,11 @@
 </html>
 <script>
     // 게시판 세팅
-    $('#boardCode').val('[[${board.boardNumber}]]').prop("selected",true);
+    $('#boardCode').val('[[${board.boardCode}]]').prop("selected",true);
 
     // 카테고리 세팅
-    if([[${board.categoryNumber}]] != 0) {
-        $('#category').val([[${board.categoryNumber}]]).prop("selected",true);
+    if([[${board.categoryCode}]] != 0) {
+        $('#category').val([[${board.categoryCode}]]).prop("selected",true);
     }
 
     function categoryChange(e) {
@@ -39,4 +39,27 @@
             }
         });
     }
+
+    // 필수 입력 값 체크 후 등록
+    window.onload = function() {
+        document.getElementById('add-btn').onclick = function() {
+            if(document.getElementById('boardCode').value == null || document.getElementById('boardCode').value == '') {
+                alert('게시판을 선택해 주세요!');
+                return;
+            }
+
+            if(document.getElementById('txtName').value == null || document.getElementById('txtName').value == '') {
+                alert('제목을 입력해 주세요!');
+                return;
+            }
+
+            if(CKEDITOR.instances.comment.getData() == null || CKEDITOR.instances.comment.getData() == '') {
+                alert('내용을 입력해 주세요!');
+                return;
+            }
+
+            document.getElementById('add-form').submit();
+            return false;
+        };
+    };
 </script>

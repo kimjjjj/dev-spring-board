@@ -1,28 +1,24 @@
 package hello.dev.service;
 
-import hello.dev.domain.Board;
+import hello.dev.domain.Block;
 import hello.dev.domain.Member;
 import hello.dev.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService implements MemberServiceInterface {
 
     // 첨부파일 저장 경로
     @Value("${upload.path}")
@@ -31,13 +27,14 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final BoardService boardService;
 
-//    public Integer findByIdOrNick(String findColumn, String findValue) throws SQLException {
+//    public Integer findByIdOrNick(String findColumn, String findValue) {
 //        log.info("<=====MemberService.findByIdOrNick=====>");
 //        return memberRepository.findByIdOrNick(findColumn, findValue);
 //    }
 
     // 회원가입 저장
-    public Member save(Member member) throws SQLException {
+    @Override
+    public Member save(Member member) {
         log.info("<=====MemberService.save=====>");
 
         // 번호에 '-' 세팅 ex) 01012345678 -> 010-1234-5678
@@ -49,7 +46,8 @@ public class MemberService {
     }
 
     // 회원가입 시 에러 체크
-    public Map<String, String> checkError(Member member) throws SQLException {
+    @Override
+    public Map<String, String> checkError(Member member) {
         log.info("<=====MemberService.checkError=====>");
 
         Map<String, String> errors = new HashMap<>();
@@ -120,7 +118,8 @@ public class MemberService {
     }
 
     // 닉네임 변경 시 에러 체크
-    public Map<String, String> checkNick(String nickName) throws SQLException {
+    @Override
+    public Map<String, String> checkNick(String nickName) {
         log.info("<=====MemberService.checkNick=====>");
 
         Map<String, String> errors = new HashMap<>();
@@ -135,7 +134,8 @@ public class MemberService {
     }
 
     // 계정의 포인트 찾기
-    public Integer findByUserPoint(String userId) throws SQLException {
+    @Override
+    public Integer findByUserPoint(String userId) {
         log.info("<=====MemberService.findByUserPoint=====>");
 
 //        HttpSession session = request.getSession(false);
@@ -151,21 +151,40 @@ public class MemberService {
     }
 
     // 유저 포인트 plus
-    public String updateUserPoint(String userId, int seq) throws SQLException {
+    @Override
+    public void updateUserPoint(String userId, int seq) {
         log.info("<=====MemberService.updateUserPoint=====>");
 
-        return memberRepository.updateUserPoint(userId, seq);
+        memberRepository.updateUserPoint(userId, seq);
     }
 
     // 유저 포인트 minus
-    public String cancelUserPoint(String userId, int seq) throws SQLException {
+    @Override
+    public void cancelUserPoint(String userId, int seq) {
         log.info("<=====MemberService.cancelUserPoint=====>");
 
-        return memberRepository.cancelUserPoint(userId, seq);
+        memberRepository.cancelUserPoint(userId, seq);
+    }
+
+    // 스크랩 저장
+    @Override
+    public void scrapSave(String userId, int seq) {
+        log.info("<=====MemberService.scrapSave=====>");
+
+        memberRepository.scrapSave(userId, seq);
+    }
+
+    // 스크랩 취소
+    @Override
+    public void scrapCancel(String userId, int seq) {
+        log.info("<=====MemberService.scrapCancel=====>");
+
+        memberRepository.scrapCancel(userId, seq);
     }
 
     // 게시판 즐겨찾기
-    public Member addFavorite(String userId, String titleCode, Member member) throws SQLException {
+    @Override
+    public Member addFavorite(String userId, String titleCode, Member member) {
         log.info("<=====MemberService.addFavorite=====>");
 
         // DB insert
@@ -210,7 +229,8 @@ public class MemberService {
     }
     
     // 게시판 즐겨찾기 해제
-    public Member removeFavorite(String userId, String titleCode, Member member) throws SQLException {
+    @Override
+    public Member removeFavorite(String userId, String titleCode, Member member) {
         log.info("<=====MemberService.removeFavorite=====>");
 
         // DB delete
@@ -266,7 +286,8 @@ public class MemberService {
     }
 
     // 게시판 즐겨찾기 조회
-    public Member favoriteList(Member member, String userId) throws SQLException {
+    @Override
+    public Member favoriteList(Member member, String userId) {
         log.info("<=====MemberService.favoriteList=====>");
 
         member = memberRepository.favoriteList(member, userId);
@@ -289,6 +310,7 @@ public class MemberService {
     }
 
     // 게시판 즐겨찾기 map
+    @Override
     public Map<Integer, String> favoriteMap (Member member) {
         log.info("<=====MemberService.favoriteMap=====>");
 
@@ -309,7 +331,8 @@ public class MemberService {
     }
 
     // 회원정보 update
-    public Member saveMypage(Member member, String userId, String nickName, String profileName, String profilePath) throws SQLException {
+    @Override
+    public Member saveMypage(Member member, String userId, String nickName, String profileName, String profilePath) {
         log.info("<=====MemberService.saveMypage=====>");
 
         memberRepository.saveMypage(userId, nickName, profileName, profilePath);
@@ -320,6 +343,7 @@ public class MemberService {
     }
 
     // 파일을 경로에 저장
+    @Override
     public void setProfile(String uploadFileName, HttpServletRequest request) throws ServletException, IOException {
         log.info("<=====MemberService.setProfile=====>");
 
@@ -332,10 +356,27 @@ public class MemberService {
     }
 
     // 회원탈퇴
-    public void delete(String userId) throws SQLException {
+    @Override
+    public void delete(String userId) {
         log.info("<=====MemberService.delete=====>");
 
         memberRepository.deleteFavorite(userId); // 즐겨찾기 테이블 삭제
         memberRepository.deleteMember(userId); // 계정 테이블 삭제
+    }
+
+    // 사용자 차단
+    @Override
+    public void addBlock(Block block, String userId, String boardId) {
+        log.info("<=====MemberService.addBlock=====>");
+
+        memberRepository.addBlock(block, userId, boardId);
+    }
+
+    // 사용자 차단해제
+    @Override
+    public void deleteBlock(String userId, String blockId) {
+        log.info("<=====MemberService.deleteBlock=====>");
+
+        memberRepository.deleteBlock(userId, blockId);
     }
 }

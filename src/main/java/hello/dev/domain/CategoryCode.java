@@ -11,5 +11,4 @@ public class CategoryCode {
 
     private int code;
     private String displayName;
-//    private String boardCode;
 }

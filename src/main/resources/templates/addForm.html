@@ -16,6 +16,29 @@
 </th:block>
 </html>
 <script>
+    // 필수 입력 값 체크 후 등록
+    window.onload = function() {
+        document.getElementById('add-btn').onclick = function() {
+            if(document.getElementById('boardCode').value == null || document.getElementById('boardCode').value == '') {
+                alert('게시판을 선택해 주세요!');
+                return;
+            }
+
+            if(document.getElementById('txtName').value == null || document.getElementById('txtName').value == '') {
+                alert('제목을 입력해 주세요!');
+                return;
+            }
+
+            if(CKEDITOR.instances.comment.getData() == null || CKEDITOR.instances.comment.getData() == '') {
+                alert('내용을 입력해 주세요!');
+                return;
+            }
+
+            document.getElementById('add-form').submit();
+            return false;
+        };
+    };
+
     if([[${board.seq}]] == 0 || [[${board.seq}]] == null) {
         document.getElementById("category").disabled = 'disabled';
     }

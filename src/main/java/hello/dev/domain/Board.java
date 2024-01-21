@@ -21,6 +21,7 @@ public class Board {
     private String comment; // 내용
     private String tag; // 태그
     private String nickName; // 닉네임
+    private String profileName; // 프로필 이미지 이름
     private String insId; // 입력자 ID
     private String insDt; // 입력 일시
     private String uptId; // 수정자 ID
@@ -28,11 +29,16 @@ public class Board {
     private Integer view; // 글 본 횟수
     private Integer point; // 추천 횟수
     private Integer cnt; // 좋아요 유무
+    private Integer scrapCnt; // 스크랩 유무
     private String title; // view의 게시판 이름
     private String titleCode; // view의 게시판 코드
     private String searchKeyword; // 검색
     private String searchType; // 검색 콤보박스
+    private String blockId; // 차단한 ID
+    private Boolean noticeYn; // 공지 유무
+    private Boolean imgyn; // 이미지 유무
 
+    // 게시판, 카테고리 select박스
     private String boardCode; // 게시판 코드
     private String categoryCode; // 카테고리 코드
 
@@ -74,6 +80,8 @@ public class Board {
     // 마이페이지 제목
     private String mypageTitle;
 
+    // 유저페이지 제목
+    private String userPageTitle;
 
     public Board() {
     }

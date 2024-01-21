@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+    <!-- 로그 패턴에 색상 적용 %clr(pattern){color} https://logback.qos.ch/manual/layouts.html#coloring -->
+<!--    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />-->
+
+    <!-- springProfile 태그를 사용하여 profile 별 property 값 설정 -->
+    <springProfile name="local">
+        <!-- local log file path -->
+        <property name="LOG_PATH" value="D:/dev/Spring/dev/workspace/dev/log"/>
+    </springProfile>
+    <springProfile name="dev">
+        <!-- dev log file path -->
+        <property name="LOG_PATH" value="/home/ubuntu/devProject/log"/>
+    </springProfile>
+
+    <!-- log file name -->
+    <property name="LOG_FILE_NAME" value="log"/>
+
+    <!-- console log pattern -->
+    <property name="CONSOLE_LOG_PATTERN" value="%green([%d{yyyy-MM-dd HH:mm:ss}:%-3relative]) %magenta([%15.15thread]) %highlight(%-5level) ${PID:-} --- %cyan(%logger) : %yellow(%msg%n)"/>
+    <!-- file log pattern -->
+    <property name="FILE_LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] [%15.15thread] %-5level ${PID:-} --- %logger : %msg%n"/>
+
+    <!-- Console Appenders -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- File Appender -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 파일경로 설정 -->
+<!--        <file>${LOG_PATH}/%d{yyyy-MM-dd}.log</file>-->
+
+        <!-- 출력패턴 설정 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+
+        <!-- Rolling 정책 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- .gz .zip 등을 넣으면 자동 일자별 로그 파일 압축 -->
+<!--            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.gz</fileNamePattern>-->
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}_%i.txt</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- 파일당 최고 용량 kb, mb, gb -->
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 일자별 로그 파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거 -->
+            <maxHistory>30</maxHistory>
+            <!-- 전체 파일 크기를 제어하며, 전체 크기 제한을 조과하면 가장 오래된 파일을 삭제 -->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Logger -->
+    <logger name="jdbc.connection" level="OFF" /> <!-- 커넥션 open close 이벤트를 로그로 남긴다. -->
+    <logger name="jdbc.sqlonly" level="OFF" /> <!-- SQL문만을 로그로 남기며, PreparedStatement일 경우 관련된 argument 값으로 대체된 SQL문이 보여진다. -->
+    <logger name="jdbc.sqltiming" level="DEBUG" /> <!-- SQL문과 해당 SQL을 실행시키는데 수행된 시간 정보(milliseconds)를 포함한다. -->
+    <logger name="jdbc.audit" level="OFF" /> <!-- ResultSet을 제외한 모든 JDBC 호출 정보를 로그로 남긴다. 많은 양의 로그가 생성되므로 특별히 JDBC 문제를 추적해야 할 필요가 있는 경우를 제외하고는 사용을 권장하지 않는다. -->
+    <logger name="jdbc.resultset" level="OFF" /> <!-- ResultSet을 포함한 모든 JDBC 호출 정보를 로그로 남기므로 매우 방대한 양의 로그가 생성된다. -->
+    <logger name="jdbc.resultsettable" level="OFF" /> <!-- SQL 결과 조회된 데이터의 table을 로그로 남긴다. -->
+
+    <!-- Root Logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.dev.mybatis.LoginMapper">
+
+    <select id="login" resultType="Member">
+
+        WITH FAV AS (
+            SELECT ID, BOARD_CODE, ROWNUM AS ROW_NUMB
+              FROM (
+                    SELECT ID, BOARD_CODE
+                      FROM FAVORITE WHERE ID = #{userId}
+                     ORDER BY INSDT
+              )
+        )
+        SELECT A.ID AS USERID, A.PASSWORD, A.USER_NAME, A.BIRTH, A.PHONE_NUMBER
+             , A.NICKNAME, A.TYPE AS USERTYPE, A.INSDT, A.PROFILE_NAME, A.PROFILE_PATH
+             , NVL(B.POINT, 0) + NVL(C.POINT, 0) + NVL(D.POINT, 0) AS USER_POINT
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 1) AS FAVORITE_1
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 2) AS FAVORITE_2
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 3) AS FAVORITE_3
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 4) AS FAVORITE_4
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 5) AS FAVORITE_5
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 6) AS FAVORITE_6
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 7) AS FAVORITE_7
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 8) AS FAVORITE_8
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 9) AS FAVORITE_9
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 10) AS FAVORITE_10
+          FROM MEMBER_INFORMATION A
+          LEFT JOIN (
+                SELECT SUM(POINT) AS POINT, INSID FROM BOARD GROUP BY INSID
+          ) B ON A.ID = B.INSID
+          LEFT JOIN (
+                SELECT COUNT(*) AS POINT, ID FROM LIKE_TB GROUP BY ID
+          ) C ON A.ID = C.ID
+          LEFT JOIN (
+                SELECT SUM(POINT) AS POINT, ID FROM COMMENT GROUP BY ID
+          ) D ON A.ID = D.ID
+         WHERE A.ID = #{userId} AND A.PASSWORD = #{password}
+
+    </select>
+
+</mapper>
+

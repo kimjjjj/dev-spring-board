@@ -1,5 +1,6 @@
 package hello.dev.controller;
 
+import hello.dev.domain.Block;
 import hello.dev.domain.Board;
 import hello.dev.domain.Member;
 import hello.dev.domain.SessionConst;
@@ -15,20 +16,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 
 @Slf4j
 @Controller
 @RequestMapping("/")
 @RequiredArgsConstructor
-public class MemberController {
+public class MemberController implements MemberControllerInterface {
 
     private final MemberService memberService;
     private final BoardService boardService;
     private final ImageUploadController imageUploadController;
 
     // 회원가입 페이지
+    @Override
     @GetMapping("/join")
     public String joinForm(Board board, Model model, HttpServletRequest request) {
         log.info("<=====MemberController.joinForm=====>");
@@ -39,13 +40,14 @@ public class MemberController {
         board = boardService.getCookie(board, request, null);
         model.addAttribute("board", board);
 
-        return "joinForm";
+        return "JoinForm";
     }
 
     // id 중복 체크
+//    @Override
 //    @ResponseBody
 //    @GetMapping("/chkId/{userId}")
-//    public Integer chkId(@PathVariable String userId) throws SQLException {
+//    public Integer chkId(@PathVariable String userId) {
 //        log.info("<=====MemberController.chkId=====>");
 //        Integer cnt = memberService.findByIdOrNick(userId, "id");
 //
@@ -53,8 +55,9 @@ public class MemberController {
 //    }
 
     // 회원가입
+    @Override
     @PostMapping("/join")
-    public String save(/*@ModelAttribute("board")*/ Member member, @ModelAttribute Board board, Model model, HttpServletRequest request) throws SQLException {
+    public String save(/*@ModelAttribute("board")*/ Member member, @ModelAttribute Board board, Model model, HttpServletRequest request) {
         log.info("<=====MemberController.save=====>");
 
         // 최근방문 게시판 조회
@@ -68,20 +71,25 @@ public class MemberController {
 
             model.addAttribute("errors", errors);
 
-            return "joinForm";
+            return "JoinForm";
         }
 
         model.addAttribute("member", memberService.save(member));
 
-        return "redirect:/login";
+        // alert창 띄우기
+        model.addAttribute("message", "가입되었습니다.");
+        model.addAttribute("searchUrl", "/login");
+
+        return "message";
     }
 
     // 게시판 즐겨찾기
+    @Override
     @PostMapping("/favorite/{titleCode}")
     @ResponseBody
-//    public String favorite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, @PathVariable String titleCode, Model model) throws SQLException {
+//    public String favorite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, @PathVariable String titleCode, Model model) {
     public Map<String, String> favorite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member,
-                                           @PathVariable String titleCode, @RequestParam String type, Model model, HttpServletRequest request) throws SQLException {
+                                           @PathVariable String titleCode, @RequestParam String type, Model model, HttpServletRequest request) {
         log.info("<=====MemberController.favorite=====>");
 
         Map<String, String> map = new HashMap<>();
@@ -126,8 +134,9 @@ public class MemberController {
     }
 
     // 마이페이지
+    @Override
     @GetMapping("/mypage")
-    public String mypage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, @ModelAttribute Board board, Model model, HttpServletRequest request) throws SQLException {
+    public String mypage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, @ModelAttribute Board board, Model model, HttpServletRequest request) {
         log.info("<=====MemberController.mypage=====>{}", member.getProfileName());
 
         // 계정 포인트 조회
@@ -142,10 +151,11 @@ public class MemberController {
     }
 
     // 마이페이지 정보수정
+    @Override
     @PostMapping("/mypage")
     public String saveMypage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @RequestParam String nickName
-            , @ModelAttribute Board board, Model model, HttpServletRequest request) throws SQLException, ServletException, IOException {
+            , @ModelAttribute Board board, Model model, HttpServletRequest request) throws ServletException, IOException {
         log.info("<=====MemberController.saveMypage=====>{}", member.getProfileName());
 
         // 계정 포인트 조회
@@ -157,7 +167,6 @@ public class MemberController {
         // 닉네임 중복 체크
         Map<String, String> errors = memberService.checkNick(nickName);
 
-        model.addAttribute("member", member);
         model.addAttribute("board", board);
 
         // request에서 파일 이름 가져오기
@@ -197,8 +206,9 @@ public class MemberController {
     }
 
     // 회원탈퇴
+    @Override
     @PostMapping("/delete")
-    public String delete(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, HttpServletRequest request) throws SQLException {
+    public String delete(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, HttpServletRequest request) {
         log.info("<=====MemberController.delete=====>");
 
         // 데이터 삭제
@@ -212,5 +222,83 @@ public class MemberController {
         }
 
         return "redirect:/";
+    }
+
+    // 사용자 차단
+    @Override
+    @PostMapping("/board/{titleCode}/{seq}/addBlock")
+    public String addBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , @PathVariable String titleCode, @PathVariable int seq
+            , @ModelAttribute Block block, @RequestParam String boardId, Model model) {
+        log.info("<=====MemberController.addBlock=====>{}, {}", member.getUserId(), boardId);
+
+        if (member == null) {
+            // alert창 띄우기
+            model.addAttribute("message", "로그인이 필요합니다.");
+            model.addAttribute("searchUrl", "/login");
+
+            return "message";
+        }
+
+        if (block == null) {
+            block = new Block();
+        }
+
+        memberService.addBlock(block, member.getUserId(), boardId);
+
+        // alert창 띄우기
+        model.addAttribute("message", "차단 되었습니다.");
+        model.addAttribute("searchUrl", "/board/" + titleCode + "/" + seq);
+
+        return "message";
+    }
+
+    // 사용자 차단해제
+    @Override
+    @PostMapping("/board/{titleCode}/{seq}/deleteBlock")
+    public String deleteBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , @PathVariable String titleCode, @PathVariable int seq
+            , @RequestParam String blockId, Model model) {
+        log.info("<=====MemberController.deleteBlock=====> {}, {}", member.getUserId(), blockId);
+
+        if (member == null) {
+            // alert창 띄우기
+            model.addAttribute("message", "로그인이 필요합니다.");
+            model.addAttribute("searchUrl", "/login");
+
+            return "message";
+        }
+
+        memberService.deleteBlock(member.getUserId(), blockId);
+
+        // alert창 띄우기
+        model.addAttribute("message", "차단 해제되었습니다.");
+        model.addAttribute("searchUrl", "/board/" + titleCode + "/" + seq);
+
+        return "message";
+    }
+
+    // 마이페이지 사용자 차단해제
+    @Override
+    @PostMapping("/mypageDeleteBlock")
+    public String mypageDeleteBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , @RequestParam String blockId, Model model) {
+        log.info("<=====MemberController.deleteBlock=====>{}", blockId);
+
+        if (member == null) {
+            // alert창 띄우기
+            model.addAttribute("message", "로그인이 필요합니다.");
+            model.addAttribute("searchUrl", "/login");
+
+            return "message";
+        }
+
+        memberService.deleteBlock(member.getUserId(), blockId);
+
+        // alert창 띄우기
+        model.addAttribute("message", "차단 해제되었습니다.");
+        model.addAttribute("searchUrl", "/mypage/block");
+
+        return "message";
     }
 }

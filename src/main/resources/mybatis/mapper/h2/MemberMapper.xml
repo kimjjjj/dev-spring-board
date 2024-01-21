@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.dev.mybatis.MemberMapper">
+
+    <select id="findByIdOrNick" resultType="Integer">
+        
+      <choose>
+       <when test="'ID'.equals(findColumn)">
+        SELECT COUNT(*) AS CNT FROM MEMBER_INFORMATION WHERE ID = #{findValue}
+       </when>
+       <when test="'NICKNAME'.equals(findColumn)">
+        SELECT COUNT(*) AS CNT FROM MEMBER_INFORMATION WHERE NICKNAME = #{findValue}
+       </when>
+      </choose>
+
+    </select>
+
+    <insert id="save">
+
+        INSERT INTO MEMBER_INFORMATION (
+            ID
+          , PASSWORD
+          , USER_NAME
+          , BIRTH
+          , PHONE_NUMBER
+          , NICKNAME
+          , TYPE
+          , INSDT
+        ) VALUES (
+            #{userId}
+          , #{password}
+          , #{userName}
+          , #{birth}
+          , #{phoneNumber}
+          , #{nickName}
+          , 'normal'
+          , NOW()
+        )
+
+    </insert>
+
+    <select id="findByUserPoint" resultType="Integer">
+
+        SELECT NVL(B.POINT, 0) + NVL(C.POINT, 0) + NVL(D.POINT, 0) AS USER_POINT
+          FROM MEMBER_INFORMATION A
+          LEFT JOIN (
+                SELECT SUM(POINT) AS POINT, INSID FROM BOARD GROUP BY INSID
+          ) B ON A.ID = B.INSID
+          LEFT JOIN (
+                SELECT COUNT(*) AS POINT, ID FROM LIKE_TB GROUP BY ID
+          ) C ON A.ID = C.ID
+          LEFT JOIN (
+                SELECT SUM(POINT) AS POINT, ID FROM COMMENT GROUP BY ID
+          ) D ON A.ID = D.ID
+         WHERE A.ID = #{userId}
+
+    </select>
+
+    <insert id="updateUserPoint">
+
+        INSERT INTO LIKE_TB (
+            ID
+          , PARENT_SEQ
+          , LIKE_TYPE
+          , INSDT
+        ) VALUES (
+            #{userId}
+          , #{seq}
+          , 'board'
+          , NOW()
+        )
+
+    </insert>
+
+    <delete id="cancelUserPoint">
+
+        DELETE FROM LIKE_TB
+         WHERE PARENT_SEQ = #{seq} AND LIKE_TYPE = 'board'
+           AND DECODE(ID, NULL, ID, NVL(#{userId}, '1')) = NVL(#{userId}, '1')
+
+    </delete>
+
+    <insert id="addFavorite">
+
+        INSERT INTO FAVORITE (
+            ID
+          , BOARD_CODE
+          , INSDT
+        ) VALUES (
+            #{userId}
+          , #{titleCode}
+          , NOW()
+        )
+
+    </insert>
+
+    <delete id="removeFavorite">
+
+        DELETE FROM FAVORITE WHERE ID = #{userId} AND BOARD_CODE = #{titleCode}
+
+    </delete>
+
+    <select id="favoriteList" resultType="Member">
+
+        WITH FAV AS (
+            SELECT BOARD_CODE, ROWNUM AS ROW_NUMB
+              FROM (
+                    SELECT BOARD_CODE
+                      FROM FAVORITE
+                     WHERE ID = #{userId}
+                     ORDER BY INSDT
+              )
+        )
+        SELECT (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 1) AS FAVORITE_1
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 2) AS FAVORITE_2
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 3) AS FAVORITE_3
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 4) AS FAVORITE_4
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 5) AS FAVORITE_5
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 6) AS FAVORITE_6
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 7) AS FAVORITE_7
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 8) AS FAVORITE_8
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 9) AS FAVORITE_9
+             , (SELECT BOARD_CODE FROM FAV WHERE ROW_NUMB = 10) AS FAVORITE_10
+          FROM DUAL
+
+    </select>
+
+    <update id="saveMypage">
+
+        UPDATE MEMBER_INFORMATION
+           SET NICKNAME = #{nickName}
+             , PROFILE_NAME = #{profileName}
+             , PROFILE_PATH = #{profilePath}
+         WHERE ID = #{userId}
+
+    </update>
+
+    <delete id="deleteMember">
+
+        DELETE FROM MEMBER_INFORMATION WHERE ID = #{userId}
+
+    </delete>
+
+    <delete id="deleteFavorite">
+
+        DELETE FROM FAVORITE WHERE ID = #{userId}
+
+    </delete>
+
+    <insert id="addBlock" useGeneratedKeys="true" keyProperty="block.seq">
+
+        INSERT INTO BLOCK_TB (
+            ID
+          , BLOCK_ID
+          , INSDT
+        ) VALUES (
+            #{userId}
+          , #{boardId}
+          , NOW()
+        )
+
+    </insert>
+
+    <delete id="deleteBlock">
+
+        DELETE FROM BLOCK_TB
+         WHERE ID = #{userId} AND BLOCK_ID = #{blockId}
+
+    </delete>
+
+</mapper>
+

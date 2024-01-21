@@ -11,7 +11,8 @@
                 <form action="/mypage" th:action="@{|/mypage|}" th:object="${member}" method="post" enctype="multipart/form-data">
                     <div class="mypage-profile-div">
                         <img id="preview" th:src="'/images/' + *{profileName}" class="mypage-profile">
-                        <input type="file" name="file" class="mypage-profile-hidden" accept="image/*" th:field="*{profileName}" onchange="readURL(this);">
+                        <input type="file" name="file" class="mypage-profile-hidden" accept="image/*" onchange="readURL(this);">
+                        <input name="mypageProfileName" th:field="*{profileName}" type="text" style="display:none">
                     </div>
 
                     <div class="mypage-input-div" th:text="'포인트 : ' + ${member.userPoint}"></div>

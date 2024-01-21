@@ -26,18 +26,20 @@
                 </div>
             </section>
             <h2>침하하</h2>
-            <section th:each="board : ${boards}">
-                <a href="postForm.html" th:href="@{|/board/chimhaha/${board.seq}|}">
-                    <div class="img">
+            <section th:each="board : ${boards}" th:class="${board.boardCode eq 'notice'} ? board-notice : ''">
+                <a href="postForm.html" th:href="${board.boardCode eq 'notice'} ? @{|/board/notice/${board.seq}|} : @{|/board/chimhaha/${board.seq}|}"
+                   th:if="${board.blockId eq null}">
+                    <div class="img" th:if="${board.boardCode ne 'notice'}">
                         <i class="fa-regular fa-file-lines fa-3x" th:if="${board.path eq null}"></i>
                         <img class="thumbnail" th:src="@{${board.path}}" th:unless="${board.path eq null}">
                     </div>
-                    <div class="cont">
+                    <div class="cont" th:class="${board.boardCode eq 'notice'} ? cont-notice : 'cont'">
                         <div class="txt-title">
-                            <span class="txtCategory" th:text="${board.boardName}"></span>
+                            <span class="txtCategory" th:text="${board.boardName}" th:if="${board.boardCode ne 'notice'}"></span>
+                            <span class="txtCategory-notice" th:text="${board.categoryName}" th:if="${board.boardCode eq 'notice'}"></span>
                             <span class="txtName" th:text="${board.txtName}"></span>
                         </div>
-                        <div class="txt-etc">
+                        <div class="txt-etc" th:if="${board.boardCode ne 'notice'}">
                             <span class="nick" th:text="${board.nickName}"></span>
                             <span class="dot">·</span>
                             <span class="txtTime" th:text="${board.insDt}"></span>
@@ -50,36 +52,30 @@
                         </div>
                     </div>
                 </a>
-<!--                <table class="table">-->
-<!--                    <thead>-->
-<!--                    <tr>-->
-<!--                        <th>seq</th>-->
-<!--                        <th>boardSub</th>-->
-<!--                        <th>category</th>-->
-<!--                        <th>txtName</th>-->
-<!--                        <th>comment</th>-->
-<!--                        <th>tag</th>-->
-<!--                        <th>insId</th>-->
-<!--                        <th>insDt</th>-->
-<!--                        <th>uptId</th>-->
-<!--                        <th>uptDt</th>-->
-<!--                    </tr>-->
-<!--                    </thead>-->
-<!--                    <tbody>-->
-<!--                    <tr th:each="item : ${items}">-->
-<!--                        <td><a href="" th:text="${item.seq}"></a></td>-->
-<!--                        <td><a href="" th:text="${item.boardSub}"></a></td>-->
-<!--                        <td><a href="" th:text="${item.category}"></a></td>-->
-<!--                        <td><a href="" th:text="${item.txtName}"></a></td>-->
-<!--                        <td><a href="" th:text="${item.comment}"></a></td>-->
-<!--                        <td><a href="" th:text="${item.tag}"></a></td>-->
-<!--                        <td><a href="" th:text="${item.insId}"></a></td>-->
-<!--                        <td><a href="" th:text="${item.insDt}"></a></td>-->
-<!--                        <td><a href="" th:text="${item.uptId}"></a></td>-->
-<!--                        <td><a href="" th:text="${item.uptDt}"></a></td>-->
-<!--                    </tr>-->
-<!--                    </tbody>-->
-<!--                </table>-->
+                <a th:if="${board.blockId ne null}">
+                    <div class="img" th:if="${board.blockId eq null}">
+                        <i class="fa-regular fa-file-lines fa-3x" th:if="${board.path eq null}"></i>
+                        <img class="thumbnail" th:src="@{${board.path}}" th:unless="${board.path eq null}">
+                    </div>
+                    <div class="cont" th:class="${board.blockId eq null} ? cont : cont-block">
+                        <div class="txt-title">
+                            <span class="txtCategory" th:text="${board.boardName}"></span>
+                            <span class="txtName" th:text="${board.txtName}"></span>
+                        </div>
+                        <div class="txt-etc" th:if="${board.blockId eq null}">
+                            <span class="nick" th:text="${board.nickName}"></span>
+                            <span class="dot">·</span>
+                            <span class="txtTime" th:text="${board.insDt}"></span>
+                            <span class="dot">·</span>
+                            <span><i class="fa-solid fa-eye list-icon"></i></span>
+                            <span class="view" th:text="${board.view}"></span>
+                            <span class="dot">·</span>
+                            <span><i class="fa-regular fa-thumbs-up list-icon"></i></span>
+                            <span class="point" th:text="${board.point}"></span>
+                        </div>
+                    </div>
+                </a>
+                <hr class="hr" th:class="${board.boardCode eq 'notice'} ? hr-notice : 'hr'">
             </section>
 
             <nav>

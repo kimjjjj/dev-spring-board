@@ -16,9 +16,11 @@ public class Member {
     private String nickName; // 닉네임
     private String insDt; // 입력 일시
     private Integer userPoint; // 총 포인트
+    private String userType; // 계정 타입
     private String profileName; // 프로필 이미지 이름
     private String profilePath; // 프로필 이미지 경로
     private String errorTxt;
+    private Integer cnt; // ID와 닉네임이 존재하는지 체크
     
     
     // 즐겨찾기

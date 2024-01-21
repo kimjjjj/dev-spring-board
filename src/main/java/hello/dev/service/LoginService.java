@@ -9,22 +9,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LoginService {
+public class LoginService implements LoginServiceInterface {
 
     private final LoginRepository loginRepository;
     private final BoardService boardService;
 
-    public Member login(String userId, String password) throws SQLException {
+    @Override
+    public Member login(String userId, String password) {
         log.info("<=====LoginService.login=====>");
 
         // 계정 정보
         Member login = loginRepository.login(userId, password);
+
+        if (login == null) {
+            login = new Member();
+        }
 
         // 즐겨찾기 코드->이름 변환
         Map<String, String> favoriteMap = boardService.boardCodeSet(false);
@@ -43,13 +48,42 @@ public class LoginService {
         return login;
     }
 
-    public BindingResult checkError(Login login, BindingResult bindingResult) {
+//    @Override
+//    public BindingResult checkError(Login login, BindingResult bindingResult) {
+//        if ("".equals(login.getUserId()) || login.getUserId() == "" || login.getUserId() == null) {
+//            bindingResult.addError(new FieldError("login", "errorTxt", "아이디를 입력해 주세요."));
+//        } else if ("".equals(login.getPassword()) || login.getPassword() == "" || login.getPassword() == null) {
+//            bindingResult.addError(new FieldError("login", "errorTxt", "비밀번호를 입력해 주세요."));
+//        }
+//
+//        return bindingResult;
+//    }
+
+    @Override
+    public Map<String, String> checkError(Login login) {
+        log.info("<=====LoginService.checkError=====>");
+
+        Map<String, String> errors = new HashMap<>();
+
         if ("".equals(login.getUserId()) || login.getUserId() == "" || login.getUserId() == null) {
-            bindingResult.addError(new FieldError("login", "errorTxt", "아이디를 입력해 주세요."));
+            errors.put("userId", "아이디를 입력해 주세요.");
         } else if ("".equals(login.getPassword()) || login.getPassword() == "" || login.getPassword() == null) {
-            bindingResult.addError(new FieldError("login", "errorTxt", "비밀번호를 입력해 주세요."));
+            errors.put("password", "비밀번호를 입력해 주세요.");
         }
 
-        return bindingResult;
+        return errors;
+    }
+
+    @Override
+    public Map<String, String> checkIdPassword(Member member) {
+        log.info("<=====LoginService.checkIdPassword=====>");
+
+        Map<String, String> errors = new HashMap<>();
+
+        if ("".equals(member.getUserId()) || member.getUserId() == "" || member.getUserId() == null) {
+            errors.put("userId", "아이디 또는 비밀번호를 잘못 입력했습니다.");
+        }
+
+        return errors;
     }
 }

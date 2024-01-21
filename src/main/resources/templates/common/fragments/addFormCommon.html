@@ -2,8 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="addFormFragment">
     <div>
-        <select id="boardCode" th:class="${errors?.containsKey('boardCode')} ? 'add-box board field-error' : 'add-box board'"
-                class="add-box board" th:field="*{boardCode}" onchange="categoryChange(this)">
+        <select id="boardCode" class="add-box board" th:field="*{boardCode}" onchange="categoryChange(this)">
             <option value="" th:if="${board.seq eq null} or ${board.seq eq 0}">게시판을 선택해 주세요</option>
             <option th:each="boardCode : ${boardCodes}" th:value="${boardCode.code}" th:text="${boardCode.displayName}"></option>
         </select>
@@ -13,29 +12,31 @@
             <option th:each="categoryCode : ${categoryCodes}" th:value="${categoryCode.code}" th:text="${categoryCode.displayName}"></option>
         </select>
     </div>
-    <div><input type="text" id="txtName" th:field="*{txtName}"
-                th:class="${errors?.containsKey('txtName')} ? 'add-box add-input field-error' : 'add-box add-input'"
-                class="add-input" placeholder="제목"></div>
+    <div class="add-notice-div" th:if="${member.userType eq 'admin'}">
+        <label>공지</label>
+        <input type="checkbox" th:field="${board.noticeYn}">
+    </div>
+    <div><input type="text" id="txtName" th:field="*{txtName}" class="add-box add-input" placeholder="제목"></div>
     <textarea class="form-control" id="comment" name="comment" th:field="*{comment}"></textarea>
     <script type="text/javascript">
         CKEDITOR.replace('comment', {
             filebrowserUploadUrl:'imageUpload' // 파일업로드를 위한 URL
-            , uploadUrl: "/image/drag" // 이게 드래그 드롭을 위한 URL
-<!--            , height: 300-->
-            , toolbar: [
-                { name: 'styles', items: [ 'Font', 'FontSize' ] },
-                { name: 'insert', items: [ 'Image', 'Smiley', 'SpecialChar' ] },
-                { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-                { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
-                { name: 'paragraph', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', ] },
-                { name: 'clipboard', items: [ 'Undo', 'Redo' ] },
-                { name: 'document', items: [ 'Source' ] },
-            ]
-            , enterMode: CKEDITOR.ENTER_BR
+<!--            , uploadUrl: "/image/drag" // 이게 드래그 드롭을 위한 URL-->
+            , height: 300
+<!--            , toolbar: [-->
+<!--                { name: 'styles', items: [ 'Font', 'FontSize' ] },-->
+<!--                { name: 'insert', items: [ 'Image', 'Smiley', 'SpecialChar' ] },-->
+<!--                { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },-->
+<!--                { name: 'colors', items: [ 'TextColor', 'BGColor' ] },-->
+<!--                { name: 'paragraph', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', ] },-->
+<!--                { name: 'clipboard', items: [ 'Undo', 'Redo' ] },-->
+<!--                { name: 'document', items: [ 'Source' ] },-->
+<!--            ]-->
+<!--            , enterMode: CKEDITOR.ENTER_BR-->
             ,filebrowserUploadMethod: 'form'
         });
     </script>
     <div><input class="add-box add-input" type="text" id="tag" th:field="*{tag}" placeholder="태그"></div>
-    <div><button class="add-box" type="submit">등록</button></div>
+    <div><button id="add-btn" class="add-box" type="button">등록</button></div>
 </th:block>
 </html>
