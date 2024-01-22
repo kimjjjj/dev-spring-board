@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="true">
 
-    <!-- 로그 패턴에 색상 적용 %clr(pattern){color} https://logback.qos.ch/manual/layouts.html#coloring -->
-<!--    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />-->
-
     <!-- springProfile 태그를 사용하여 profile 별 property 값 설정 -->
     <springProfile name="local">
         <!-- local log file path -->
@@ -33,9 +30,6 @@
 
     <!-- File Appender -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 파일경로 설정 -->
-<!--        <file>${LOG_PATH}/%d{yyyy-MM-dd}.log</file>-->
-
         <!-- 출력패턴 설정 -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <charset>UTF-8</charset>
@@ -45,7 +39,6 @@
         <!-- Rolling 정책 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- .gz .zip 등을 넣으면 자동 일자별 로그 파일 압축 -->
-<!--            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.gz</fileNamePattern>-->
             <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}_%i.txt</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!-- 파일당 최고 용량 kb, mb, gb -->

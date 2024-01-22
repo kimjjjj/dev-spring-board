@@ -47,11 +47,9 @@
         // 게시판 선택에 따른 카테고리 disabled
         if (e.value == "") {
             // disabled 부여하는 방법
-<!--            document.getElementById("category").disabled = true;-->
             document.getElementById("category").disabled = 'disabled';
         } else {
             // disabled 해제하는 방법
-<!--            document.getElementById("category").disabled = false;-->
             document.getElementById("category").removeAttribute("disabled");
         }
 
@@ -69,26 +67,4 @@
             }
         });
     }
-
-<!--    function updatePost() {-->
-<!--        var urlLike = '/board/[[${board.titleCode}]]/[[${board.seq}]]';-->
-
-<!--        var data = {};-->
-<!--        data["boardCode"] = $("#boardCode").val();-->
-<!--        data["categoryCode"] = $("#category").val();-->
-<!--        data["txtName"] = $("#txtName").val();-->
-<!--        data["comment"] = $("#comment").val();-->
-<!--        data["tag"] = $("#tag").val();-->
-
-<!--        $.ajax({-->
-<!--            url : urlLike + '/edit',-->
-<!--            type : 'POST',-->
-<!--            dataType : "json",-->
-<!--            contentType: 'application/json',-->
-<!--            data : JSON.stringify(data),-->
-<!--            success: function(Data){-->
-<!--                location.href = urlLike;-->
-<!--            }-->
-<!--        });-->
-<!--    }-->
 </script>

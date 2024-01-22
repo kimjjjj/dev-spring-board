@@ -1,12 +1,10 @@
 package hello.dev.service;
 
 import hello.dev.domain.Board;
-import hello.dev.domain.Member;
 import hello.dev.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -200,23 +198,6 @@ public class BoardService implements BoardServiceInterface {
             boardRepository.saveImg(board);
         }
 
-//        int imgCnt = 0;
-//        String img = "";
-//
-//        for (String s : imgList) {
-//            Matcher matcher = nonValidPattern.matcher(s);
-//            while (matcher.find()) {
-//
-//                img = matcher.group(1);
-//                imgCnt++;
-//
-//                if (imgCnt == 1) {
-//                    break;
-//                }
-//            }
-//        }
-//
-//        img;
         return board;
     }
 

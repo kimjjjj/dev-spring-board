@@ -6,8 +6,6 @@ import hello.dev.repository.LoginRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,17 +45,6 @@ public class LoginService implements LoginServiceInterface {
 
         return login;
     }
-
-//    @Override
-//    public BindingResult checkError(Login login, BindingResult bindingResult) {
-//        if ("".equals(login.getUserId()) || login.getUserId() == "" || login.getUserId() == null) {
-//            bindingResult.addError(new FieldError("login", "errorTxt", "아이디를 입력해 주세요."));
-//        } else if ("".equals(login.getPassword()) || login.getPassword() == "" || login.getPassword() == null) {
-//            bindingResult.addError(new FieldError("login", "errorTxt", "비밀번호를 입력해 주세요."));
-//        }
-//
-//        return bindingResult;
-//    }
 
     @Override
     public Map<String, String> checkError(Login login) {

@@ -11,7 +11,6 @@
                             <button id="logoutBtn" type="submit">로그아웃</button>
                         </form>
                     </li>
-<!--                    <li><a href="" th:unless="${session.member eq null}">알림 없음</a></li>-->
                     <li><a href="mypageForm.html" th:href="@{|/mypage|}" th:unless="${session.member eq null}">마이페이지</a></li>
                     <li th:unless="${session.member eq null}" th:text="'포인트: ' + ${member.userPoint}"></li>
                     <script th:inline="javascript">
@@ -19,12 +18,7 @@
                         const menu = document.getElementById('top-menu');
                         if ([[${session.member}]] == null) {
                             menu.style.left = '1%';
-<!--                            menu.style.width = '10%';-->
                         }
-<!--                        else {-->
-<!--                            menu.style.left = '0.5%';-->
-<!--                            menu.style.width = '40%';-->
-<!--                        }-->
                     </script>
                 </ul>
             </nav>
@@ -38,7 +32,6 @@
                 <div id="search">
                     <form action="/search" th:action="@{|/search|}" th:object="${board}" method="get" th:if="${session.member ne null}">
                         <input id="searchInput" name="searchKeyword" type="text">
-<!--                        <input id="searchInput" type="text" th:field="*{searchKeyword}">-->
                         <button>
                             <i class="fa-solid fa-magnifying-glass fa-2x"></i>
                         </button>
@@ -80,10 +73,6 @@
                         </ul>
                     </li>
                 </ul>
-<!--                <ul id="complain">-->
-<!--                    <li><a href="">신고/건의</a>-->
-<!--                    </li>-->
-<!--                </ul>-->
             </nav>
         </div>
     </header>

@@ -1,7 +1,6 @@
 package hello.dev.controller;
 
 import hello.dev.domain.*;
-import hello.dev.repository.MemberRepository;
 import hello.dev.service.BoardService;
 import hello.dev.service.CommentService;
 import hello.dev.service.MemberService;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +21,6 @@ import java.util.*;
 public class BoardController implements BoardControllerInterface {
 
     private final BoardService boardService;
-    private final MemberRepository memberRepository;
     private final MemberService memberService;
     private final CommentService commentService;
 
@@ -203,16 +200,6 @@ public class BoardController implements BoardControllerInterface {
             // 계정 포인트 조회
             member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
             model.addAttribute("member", member);
-
-//        HashMap<String, String> resultMap = new HashMap<>();
-//
-//        // 계정이 있다면
-//        if (member.getUserId() != null) {
-//            resultMap.put("RESULT","SUCESS");
-//        } else {
-//            resultMap.put("RESULT","FAIL");
-//        }
-//        return resultMap;
         }
 
         return "redirect:/board/" + titleCode + "/{seq}";

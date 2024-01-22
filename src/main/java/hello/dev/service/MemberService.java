@@ -31,11 +31,6 @@ public class MemberService implements MemberServiceInterface {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
 
-//    public Integer findByIdOrNick(String findColumn, String findValue) {
-//        log.info("<=====MemberService.findByIdOrNick=====>");
-//        return memberRepository.findByIdOrNick(findColumn, findValue);
-//    }
-
     // 회원가입 저장
     @Override
     public Member save(Member member) {
@@ -141,15 +136,6 @@ public class MemberService implements MemberServiceInterface {
     @Override
     public Integer findByUserPoint(String userId) {
         log.info("<=====MemberService.findByUserPoint=====>");
-
-//        HttpSession session = request.getSession(false);
-//
-//        if (session != null) {
-//            Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
-//            member.setUserPoint(memberRepository.findByUserPoint(member.getUserId()));
-//
-//            return member;
-//        }
 
         return memberRepository.findByUserPoint(userId);
     }

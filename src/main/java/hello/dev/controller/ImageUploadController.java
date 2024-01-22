@@ -23,12 +23,6 @@ import java.util.UUID;
 @RequestMapping("/")
 public class ImageUploadController implements ImageUploadControllerInterface {
 
-    @Value("${upload.path}")
-    private String uploadPath;
-
-    @Value("${resource.handler}")
-    private String resourceHandler;
-
     // 컨트롤러클래스의 로그를 출력
     private static final Logger logger = LoggerFactory.getLogger(ImageUploadController.class);
 
@@ -65,16 +59,6 @@ public class ImageUploadController implements ImageUploadControllerInterface {
         response.setContentType("text/html; charset=utf-8");
 
         try {
-//            UUID uuid = UUID.randomUUID();
-//
-//            // 업로드한 파일명, 확장자명, 저장될 파일명
-//            String fileName = upload.getOriginalFilename();
-//            String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
-//            String uploadFileName = uuid + "." + ext;
-
-            // 이미지를 업로드할 디렉토리
-//            String imgUploadPath = uploadPath + "/images/" + uploadFileName;
-
             // 이미지 이름 세팅
             String uploadFileName = setFileName(upload.getOriginalFilename());
 
@@ -96,13 +80,6 @@ public class ImageUploadController implements ImageUploadControllerInterface {
             printWriter = response.getWriter();
 
             String fileUrl = "/images/" + uploadFileName;
-
-//            JsonObject json = new JsonObject();
-//            json.addProperty("uploaded", 1);
-//            json.addProperty("fileName", fileName);
-//            json.addProperty("url", fileUrl);
-//            printWriter.print(json);
-//            log.info("json = {}", json);
 
             // view에 띄어줌
             printWriter.println("<script>window.parent.CKEDITOR.tools.callFunction(" + callback + ",'" + fileUrl
@@ -165,7 +142,6 @@ public class ImageUploadController implements ImageUploadControllerInterface {
     public String setFilePath(String fileName) {
         log.info("<=====ImageUploadController.setFilePath=====>");
 
-//        return uploadPath + "/images/" + fileName;
         return System.getProperty("user.dir") + File.separator + "images" + File.separator + fileName;
     }
 }

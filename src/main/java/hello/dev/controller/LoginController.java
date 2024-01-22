@@ -58,15 +58,6 @@ public class LoginController implements LoginControllerInterface {
         redirectAttributes.addFlashAttribute("board", board);
 
         // 아아디, 비밀번호 null 체크
-//        bindingResult = loginService.checkError(login, bindingResult);
-
-//        if (bindingResult.hasErrors()) {
-//            log.info("error = {}", bindingResult);
-//
-//            return "loginForm";
-//        }
-
-        // 아아디, 비밀번호 null 체크
         Map<String, String> errors = loginService.checkError(login);
 
         if (!errors.isEmpty()) {
@@ -90,9 +81,6 @@ public class LoginController implements LoginControllerInterface {
 
             return "loginForm";
         }
-
-//        Cookie cookie = new Cookie("userId", member.getUserId());
-//        response.addCookie(cookie);
 
         // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
         HttpSession session = request.getSession();

@@ -38,16 +38,6 @@ public class CommentService implements CommentServiceInterface {
             }
         }
 
-//        for (Comment comment : Parentcomments) {
-//            log.info("{},{},{},{},{},{}", comment.getSeq(), comment.getContent(), comment.getTopSeq(), comment.getParentSeq(), comment.getLvl(), comment.getOrderRow());
-//        }
-//
-//        log.info("");
-//
-//        for (Comment comment : childcomments) {
-//            log.info("{},{},{},{},{},{}", comment.getSeq(), comment.getContent(), comment.getTopSeq(), comment.getParentSeq(), comment.getLvl(), comment.getOrderRow());
-//        }
-
         List<Comment> comments = new ArrayList<>();
         int cnt = 1; // 하위댓글(대댓글)은 들여쓰기가 되도록 위에서부터 카운트
         int len = childcomments.size();

@@ -1,7 +1,6 @@
 package hello.dev.mybatis;
 
 import hello.dev.domain.Comment;
-import hello.dev.domain.Member;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -43,17 +43,6 @@ public class MemberController implements MemberControllerInterface {
         return "JoinForm";
     }
 
-    // id 중복 체크
-//    @Override
-//    @ResponseBody
-//    @GetMapping("/chkId/{userId}")
-//    public Integer chkId(@PathVariable String userId) {
-//        log.info("<=====MemberController.chkId=====>");
-//        Integer cnt = memberService.findByIdOrNick(userId, "id");
-//
-//        return cnt;
-//    }
-
     // 회원가입
     @Override
     @PostMapping("/join")
@@ -96,11 +85,6 @@ public class MemberController implements MemberControllerInterface {
 
         // 계정이 있다면
         if (member == null) {
-            // alert창 띄우기
-//            model.addAttribute("message", "로그인이 필요합니다.");
-//            model.addAttribute("searchUrl", "/" + titleCode);
-//
-//            return "message";
             map.put("RESULT", "FAIL");
         } else {
             // 계정 포인트 조회
@@ -110,24 +94,14 @@ public class MemberController implements MemberControllerInterface {
                 member = memberService.addFavorite(member.getUserId(), titleCode, member);
                 map.put("RESULT", "ADD");
 
-//                memberService.favoriteList(member, member.getUserId());
-
-//                member = memberService.favoriteList(member, member.getUserId());
-//                HttpSession session = request.getSession();
             } else {
                 member = memberService.removeFavorite(member.getUserId(), titleCode, member);
                 map.put("RESULT", "REMOVE");
-
-//                memberService.favoriteList(member, member.getUserId());
-
-//                member = memberService.favoriteList(member, member.getUserId());
             }
             HttpSession session = request.getSession();
             session.setAttribute(SessionConst.LOGIN_MEMBER, member);
 
             model.addAttribute("member", member);
-
-//            return "redirect:/board/{titleCode}";
         }
 
         return map;

@@ -6,7 +6,6 @@
     /* 중앙정렬 */
     margin-left: auto;
     margin-right: auto;
-    /* background: #ff000020; */
 }
 
 /* 마우스를 올렸을 경우 밑줄 제거 */
@@ -32,20 +31,10 @@ textarea {
     resize:none;
 }
 
-#header {
-    /* background: #ffff0020; */
-}
-
     #top-menu {
         position: relative;
-        /*left: 65%;*/
         text-align: right;
-        /*width: 37%;*/
         width: 100%;
-        /*left: 595px;*/
-        /*left: 63.5%;
-        width: 38.5%;*/
-        /*height: 100%;*/
         height: 30px;
         line-height: 30px;
     }
@@ -58,7 +47,6 @@ textarea {
 
     #top-menu li {
         display: inline-block;
-        /*margin: 1%;*/
         margin-left: 1%;
     }
 
@@ -116,7 +104,6 @@ textarea {
     #menu {
         background: #1CA8AF;
 		font: bold 16px "malgun gothic";
-		/* width: 700px; */
 		height: 45px;
         line-height: 45px;
 		color: white;
@@ -157,23 +144,16 @@ textarea {
 	    background-color: transparent;
 	    border: 0;
 	    font-size: 16px;
-	    /*font: 16px "malgun gothic";*/
 	    cursor: pointer;
 	}
-
-#shortcut {
-    /* background: green; */
-}
 
     #shortcut nav {
         height: 35px;
         line-height: 35px;
-        /* background: #242526; */
         background: #F2F2F2;
     }
 
     .shortcut-title {
-        /* color: white; */
         color: black;
         font-size: 14px;
         padding-left: 15px;
@@ -182,10 +162,8 @@ textarea {
 
     #shortcut a {
         border-radius: 10px;
-        /* color: white; */
         color: black;
         font-size: 13px;
-        /* background: #2F3031; */
         background: #E6E6E6;
         padding: 5px;
     }
@@ -195,10 +173,6 @@ textarea {
         height: 1px;
         border: 0;
     }
-
-#main {
-    /* background:rgba(100%, 0%, 0%, 0.5); */
-}
 
     #number {
         text-align: right;
@@ -214,8 +188,6 @@ textarea {
         line-height: 70px;
     }
     #next a {
-        /* float: right; */
-        /* color: white; */
         color: black;
         padding-left: 10px;
     }
@@ -276,7 +248,6 @@ textarea {
     }
 
 #footer {
-    /* background:grey; */
     padding-top: 50px;
 }
 
@@ -294,6 +265,7 @@ textarea {
     display: flex;
     gap: 5px;
 }
+
 .chimtube {
     float: 1;
     width: 50%;
@@ -403,11 +375,6 @@ textarea {
     font-size: 16px;
 }
 
-/* 에러 발생 시 */
-/*.field-error {
-    border: solid #dc3545;
-}*/
-
 /*----- boardForm -------------------------------------------------------------*/
 .img {
     float: left;
@@ -419,7 +386,6 @@ textarea {
 }
 
 .cont {
-    /* background: yellow; */
     height: 50px;
     padding: 10px;
 }
@@ -449,7 +415,6 @@ textarea {
     background: #F2F2F2;
     vertical-align: middle;
     border-radius: 5px;
-    /*margin-left: 13px;*/
     padding: 4px;
     font-size: 14px;
 }
@@ -458,7 +423,6 @@ textarea {
     background: #E2E2E2;
     vertical-align: middle;
     border-radius: 5px;
-    /*margin-left: 13px;*/
     padding: 4px;
     font-size: 14px;
 }
@@ -513,7 +477,6 @@ textarea {
 .nickname {
     float: left;
     line-height: 60px;
-    /*margin-left: 13px;*/
     color: #A9A9A9;
     cursor: pointer;
 }
@@ -745,7 +708,6 @@ textarea {
 }
 
 .login-text-error {
-    /*display: block;*/
     height: 20px;
     margin-left: 280px;
     color: red;
@@ -757,16 +719,7 @@ textarea {
 }
 
 .joinBtn {
-    /*background: #1CA8AF;*/
-    /*background: #F2F2F2;
-    border-width: 0px;*/
-    /*color: white;*/
-    /*color: black;*/
     width: 398px;
-    /*height: 50px;
-    border-radius: 7px;
-    cursor: pointer;
-    font-size: 25px;*/
 }
 
 /*----- 회원가입 -------------------------------------------------------------*/
@@ -798,43 +751,19 @@ textarea {
     width: 98px;
 }
 
-/*중복확인 박스
-.idChk {
-    text-align: center;
-    height: 40px;
-    margin-top: 2px;
-}
-#chkbtn {
-    background: #F2F2F2;
-    border-width: 0px;
-    color: black;
-    width: 90px;
-    height: 30px;
-    border-radius: 7px;
-    cursor: pointer;
-    font-size: 15px;
-    margin-right: 33px;
-}*/
-
 .join-text-div {
     display: none;
 }
 
 .join-text-error {
-    /*display: block;*/
     height: 40px;
     margin-left: 280px;
     color: red;
 }
 
-/*.field-error {
-    border: solid #dc3545;
-}*/
-
 /*----- 마이페이지 -------------------------------------------------------------*/
 #mypage-grid {
     display: grid;
-    /* grid-template-columns: 237.5px 237.5px 237.5px 237.5px; */
     grid-template-columns: 24.76% 24.76% 24.76% 24.77%;
     grid-template-rows: 40px 40px;
     grid-gap: 3px 3px;
@@ -867,11 +796,7 @@ textarea {
 .mypage-profile-hidden {
     font-size: 29px;
     position: absolute;
-    /*right: 0px;*/
-    /*top: 0px;*/
     opacity: 0;
-    /*filter: alpha(opacity=0);*/
-    /*-ms-filter: alpha(opacity=0);*/
     width: 80px;
     height: 76px;
     right: 440px;
@@ -914,7 +839,6 @@ textarea {
 .mypage-text-error {
     height: 40px;
     color: red;
-    /* margin-right: 350px; */
     margin-left: 280px;
     text-align: left;
 }
@@ -985,8 +909,6 @@ textarea {
 }
 
 .comment-textarea-div {
-    /* background:#F2F2F2;
-    border-radius: 7px; */
     width: 88%;
     height:110px;
 }
@@ -996,15 +918,12 @@ textarea {
     height: 100%;
     background: transparent;
     border: 0;
-    /* border-radius: 7px; */
     padding-top: 10px;
     padding-left: 10px;
     font: 15px "malgun gothic";
 }
 
 .comment-btn-div {
-    /* background:#F2F2F2;
-    border-radius: 7px; */
     width: 12%;
     height:110px;
     text-align: center;
@@ -1023,7 +942,6 @@ textarea {
 .comment-profile {
     width: 30px;
     height: 30px;
-    /* border: solid; */
     border-radius: 100%;
     background: transparent;
 }

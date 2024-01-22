@@ -35,12 +35,6 @@
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                         <ul>
                             <li th:if="${member.userId} == ${board.insId} or ${member.userType} == 'admin'">
-<!--                                <form th:if="${member.userId} != ${board.insId} and ${member.userType} != 'admin'">-->
-<!--                                    <button>-->
-<!--                                        <i class="fa-regular fa-flag"></i>-->
-<!--                                        신고-->
-<!--                                    </button>-->
-<!--                                </form>-->
                                 <form th:action="@{|/board/${board.titleCode}/${board.seq}/edit|}" method="get">
                                     <button>
                                         <i class="fa-regular fa-edit"></i>
@@ -129,7 +123,6 @@
                                 침하하 불가<br>😐
                             </button>
                         </form>
-<!--                            <button class="like" type="button" onclick="cancelLike()" th:if="${session.member ne null} and ${board.cnt ne 0}">-->
                         <form action="/${board.seq}/cancel" th:action="@{|/${board.seq}/cancel|}" method="post">
                             <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
                             <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and ${session.member ne null} and ${board.cnt ne 0}">
@@ -154,7 +147,6 @@
                     </div>
                     <div class="post-list">
                         <div class="left"><button th:onclick="'location.href=\'' + @{${board.beforeSeq}} + '\''" type="button" th:if="${board.beforeSeq ne 0}">&lt;이전 글</button></div>
-<!--                        <div class="center"><button type="button">목록</button></div>-->
                         <div class="center"><a th:href="@{|/board/${board.titleCode}|}">목록</a></div>
                         <div class="right"><button th:onclick="'location.href=\'' + @{${board.afterSeq}} + '\''" type="button" th:if="${board.afterSeq ne 0}">다음 글&gt;</button></div>
                     </div>
@@ -202,12 +194,6 @@
                                         <i class="fa-solid fa-ellipsis-vertical"></i>
                                         <ul>
                                             <li th:if="${member.userId} == ${comment.userId} or ${member.userType} == 'admin'">
-<!--                                                <form th:if="${member.userId} != ${comment.userId} and ${member.userType} != 'admin'">-->
-<!--                                                    <button class="comment-first-form">-->
-<!--                                                        <i class="fa-regular fa-flag"></i>-->
-<!--                                                        신고-->
-<!--                                                    </button>-->
-<!--                                                </form>-->
                                                 <button class="comment-first-form">
                                                     <i class="fa-regular fa-edit"></i>
                                                     수정
@@ -254,23 +240,6 @@
                                 <div class="comment-btn-div">
                                     <button class="comment-btn" type="submit">등 록</button>
                                 </div>
-<!--                                <script th:inline="javascript">-->
-<!--                                    function reSaveComment() {-->
-<!--                                        const urlLike = [[${board.seq}]];-->
-<!--                                        console.log("00 => " + urlLike);-->
-<!--                                        console.log("333 => " + document.querySelector('textarea[name="content"]').value);-->
-<!--                                        const content = document.getElementsByClassName('comment-textarea').item(0).value;-->
-<!--                                        console.log("22 => " + content + "  " + [[${comment.topSeq}]]);-->
-<!--                                        $.ajax({-->
-<!--                                            url : urlLike + '/childCommentTemp',-->
-<!--                                            type : 'POST',-->
-<!--                                            data : {content: content, topSeq: [[${comment.topSeq}]]},-->
-<!--                                            success: function(Data){-->
-<!--                                                console.log("11 => " + Data);-->
-<!--                                            }-->
-<!--                                        });-->
-<!--                                    }-->
-<!--                                </script>-->
                             </form>
                         </div>
                         <hr class="hr">
@@ -320,12 +289,6 @@
             commentRight.style.left = `${375 + (window.innerWidth / 2)}px`;
         });
     }
-
-<!--    const commentRight = document.querySelector('.comment-state>ul');-->
-<!--    commentRight.style.left = `${375 + (window.innerWidth / 2)}px`;-->
-<!--    window.addEventListener('resize', () => {-->
-<!--        commentRight.style.left = `${375 + (window.innerWidth / 2)}px`;-->
-<!--    });-->
 
     <!-- 닉네임 클릭 시 게시글보기/댓글보기 박스 보이기 -->
     const nick = document.querySelector('.nickname');
@@ -418,26 +381,6 @@
         menuDisplay = commentMenu.style.display;
     }
 
-<!--    const comment = document.querySelector('.comment-state');-->
-<!--    const commentBanMenu = document.querySelector('.comment-state>ul');-->
-<!--    menuDisplay = commentBanMenu.style.display;-->
-<!--    chkBoard = false;-->
-
-<!--    comment.addEventListener('click', clickCommentEvent);-->
-<!--    function clickCommentEvent(event) {-->
-<!--        console.log("333 => " + menuDisplay);-->
-<!--        chkBoard = true;-->
-<!--        if (menuDisplay == '') {-->
-<!--            commentBanMenu.style.display = 'block';-->
-<!--            commentBanMenu.style.background = 'white';-->
-
-<!--        } else {-->
-<!--            commentBanMenu.style.display = '';-->
-<!--        }-->
-
-<!--        menuDisplay = commentBanMenu.style.display;-->
-<!--    }-->
-
     <!-- ...을 제외한 다른 곳 클릭 시 신고/수정/차단/삭제/공유 박스 끄기 -->
     body2 = document.querySelector("body");
     body2.addEventListener('click', clickBody2Event);
@@ -445,7 +388,6 @@
         if (chkBoard == false){
             if (menuDisplay == 'block') {
                 banMenu.style.display = '';
-<!--                commentMenu.style.display = '';-->
 
                 // 댓글 상태창 모두 닫기
                 for(var i=1; i<=document.getElementsByClassName('comment-state').length; i++) {
@@ -458,62 +400,6 @@
 
         chkBoard = false;
     }
-
-<!--    function updateLike() {-->
-<!--        var start = $('#post-form')[0].action.lastIndexOf("/")-2;-->
-<!--        var urlLike = $('#post-form')[0].action.substr(start);-->
-<!--        console.log("urlLike => " + urlLike);-->
-
-<!--        $.ajax({-->
-<!--            url : urlLike,-->
-<!--            type : 'POST',-->
-<!--            dataType : "json",-->
-<!--            contentType: 'application/json',-->
-<!--            data : {},-->
-<!--            success: function(Data){-->
-<!--                if (Data.RESULT == "FAIL") {-->
-<!--                    alert("로그인이 필요합니다.");-->
-<!--                } else {-->
-<!--                    if (document.querySelector('.like').innerText == "침하하") {-->
-<!--                        document.querySelector('.like').innerText = "침하하 취소";-->
-<!--                    } else {-->
-<!--                        document.querySelector('.like').innerText = "침하하";-->
-<!--                    }-->
-<!--                }-->
-<!--            },-->
-<!--            cache : false,-->
-<!--            processData : false-->
-<!--        });-->
-<!--    }-->
-
-<!--    function cancelLike() {-->
-<!--        var start = $('#post-form')[0].action.lastIndexOf("/")+1;-->
-<!--        var urlLike = $('#post-form')[0].action.substr(start);-->
-
-<!--        var form = $('#post-form')[0];-->
-<!--        var formData = new FormData(form);-->
-
-<!--        $.ajax({-->
-<!--            url : urlLike + '/cancel',-->
-<!--            type : 'POST',-->
-<!--            dataType : 'json',-->
-<!--            contentType: 'application/json',-->
-<!--            data : {},-->
-<!--            success: function(Data){-->
-<!--                if (Data.RESULT == "FAIL") {-->
-<!--                    alert("로그인이 필요합니다.");-->
-<!--                } else {-->
-<!--                    if (document.querySelector('.like').innerText == "침하하") {-->
-<!--                        document.querySelector('.like').innerText = "침하하 취소";-->
-<!--                    } else {-->
-<!--                        document.querySelector('.like').innerText = "침하하";-->
-<!--                    }-->
-<!--                }-->
-<!--            },-->
-<!--            cache : false,-->
-<!--            processData : false-->
-<!--        });-->
-<!--    }-->
 
     $(document).ready(function(){
         // 댓글 클릭 시 대댓글 박스 열림
