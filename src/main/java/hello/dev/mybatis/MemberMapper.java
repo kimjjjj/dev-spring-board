@@ -36,7 +36,9 @@ public interface MemberMapper {
 
     void deleteFavorite(String userId);
 
+    void deleteBlock(String userId);
+
     void addBlock(@Param("block") Block block, @Param("userId") String userId, @Param("boardId") String boardId);
 
-    void deleteBlock(@Param("userId") String userId, @Param("blockId") String blockId);
+    void cancelBlock(@Param("userId") String userId, @Param("blockId") String blockId);
 }

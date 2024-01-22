@@ -33,7 +33,9 @@ public interface MemberRepositoryInterface {
 
     void deleteFavorite(String userId);
 
+    void deleteBlock(String userId);
+
     void addBlock(Block block, String userId, String boardId);
 
-    void deleteBlock(String userId, String blockId);
+    void cancelBlock(String userId, String blockId);
 }

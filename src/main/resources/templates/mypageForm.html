@@ -33,9 +33,9 @@
                     </div>
                 </form>
 
-                <form action="/delete" th:action="@{|/delete|}" th:object="${member}" method="post">
+                <form id="mypage-delete-form" action="/delete" th:action="@{|/delete|}" th:object="${member}" method="post">
                     <div class="mypage-input-div">
-                        <button class="delete-btn">☠️회원 탈퇴☠️
+                        <button class="delete-btn" onclick="fnDelete()" type="button">☠️회원 탈퇴☠️
                         </button>
                     </div>
                 </form>
@@ -56,6 +56,15 @@
             reader.readAsDataURL(input.files[0]);
         } else {
             document.getElementById('preview').src = "";
+        }
+    }
+
+    // 회원 탈퇴
+    function fnDelete() {
+        if(confirm("회원 탈퇴하시겠습니까?")) {
+            document.getElementById('mypage-delete-form').submit();
+        } else {
+            return;
         }
     }
 </script>

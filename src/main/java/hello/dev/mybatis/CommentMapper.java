@@ -35,4 +35,6 @@ public interface CommentMapper {
     void commentCancel(@Param("userId") String userId, @Param("seq") int seq);
 
     void cancelCommentPoint(int seq);
+
+    void deleteCommentById(String userId);
 }

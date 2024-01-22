@@ -2,6 +2,8 @@ package hello.dev.service;
 
 import hello.dev.domain.Block;
 import hello.dev.domain.Member;
+import hello.dev.repository.BoardRepository;
+import hello.dev.repository.CommentRepository;
 import hello.dev.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,8 @@ public class MemberService implements MemberServiceInterface {
 
     private final MemberRepository memberRepository;
     private final BoardService boardService;
+    private final CommentRepository commentRepository;
+    private final BoardRepository boardRepository;
 
 //    public Integer findByIdOrNick(String findColumn, String findValue) {
 //        log.info("<=====MemberService.findByIdOrNick=====>");
@@ -360,7 +364,12 @@ public class MemberService implements MemberServiceInterface {
     public void delete(String userId) {
         log.info("<=====MemberService.delete=====>");
 
+        boardRepository.deleteLikeById(userId); // 좋아요 테이블 삭제
         memberRepository.deleteFavorite(userId); // 즐겨찾기 테이블 삭제
+        memberRepository.deleteBlock(userId); // 유저차단 테이블 삭제
+        commentRepository.deleteCommentById(userId); // 댓글 테이블 삭제
+        boardRepository.deleteAttachById(userId); // 첨부파일 테이블 삭제
+        boardRepository.deleteBoardById(userId); // 게시글 테이블 삭제
         memberRepository.deleteMember(userId); // 계정 테이블 삭제
     }
 
@@ -374,9 +383,9 @@ public class MemberService implements MemberServiceInterface {
 
     // 사용자 차단해제
     @Override
-    public void deleteBlock(String userId, String blockId) {
-        log.info("<=====MemberService.deleteBlock=====>");
+    public void cancelBlock(String userId, String blockId) {
+        log.info("<=====MemberService.cancelBlock=====>");
 
-        memberRepository.deleteBlock(userId, blockId);
+        memberRepository.cancelBlock(userId, blockId);
     }
 }

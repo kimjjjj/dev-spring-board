@@ -42,5 +42,5 @@ public interface MemberServiceInterface {
 
     void addBlock(Block block, String userId, String boardId);
 
-    void deleteBlock(String userId, String blockId);
+    void cancelBlock(String userId, String blockId);
 }

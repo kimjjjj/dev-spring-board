@@ -172,6 +172,12 @@
 
     </delete>
 
+    <delete id="deleteBlock">
+
+        DELETE FROM devdb.BLOCK_TB WHERE ID = #{userId}
+
+    </delete>
+
     <insert id="addBlock" useGeneratedKeys="true" keyProperty="block.seq">
 
         INSERT INTO devdb.BLOCK_TB (
@@ -186,7 +192,7 @@
 
     </insert>
 
-    <delete id="deleteBlock">
+    <delete id="cancelBlock">
 
         DELETE FROM devdb.BLOCK_TB
          WHERE ID = #{userId} AND BLOCK_ID = #{blockId}

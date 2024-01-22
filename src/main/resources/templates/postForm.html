@@ -57,7 +57,7 @@
                                         차단
                                     </button>
                                 </form>
-                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/deleteBlock|}" method="post"
+                                <form th:action="@{|/board/${board.titleCode}/${board.seq}/cancelBlock|}" method="post"
                                       th:if="${board.blockId ne null}">
                                     <input name="blockId" th:value="${board.blockId}" type="text" style="display:none">
                                     <button>

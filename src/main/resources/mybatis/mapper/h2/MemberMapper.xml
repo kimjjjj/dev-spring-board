@@ -148,6 +148,12 @@
 
     </delete>
 
+    <delete id="deleteBlock">
+
+        DELETE FROM BLOCK_TB WHERE ID = #{userId}
+
+    </delete>
+
     <insert id="addBlock" useGeneratedKeys="true" keyProperty="block.seq">
 
         INSERT INTO BLOCK_TB (
@@ -162,7 +168,7 @@
 
     </insert>
 
-    <delete id="deleteBlock">
+    <delete id="cancelBlock">
 
         DELETE FROM BLOCK_TB
          WHERE ID = #{userId} AND BLOCK_ID = #{blockId}

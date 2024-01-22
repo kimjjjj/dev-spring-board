@@ -208,7 +208,8 @@ public class MemberController implements MemberControllerInterface {
     // 회원탈퇴
     @Override
     @PostMapping("/delete")
-    public String delete(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, HttpServletRequest request) {
+    public String delete(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , HttpServletRequest request, Model model) {
         log.info("<=====MemberController.delete=====>");
 
         // 데이터 삭제
@@ -221,7 +222,11 @@ public class MemberController implements MemberControllerInterface {
             session.invalidate();
         }
 
-        return "redirect:/";
+        // alert창 띄우기
+        model.addAttribute("message", "탈퇴되었습니다.");
+        model.addAttribute("searchUrl", "/");
+
+        return "message";
     }
 
     // 사용자 차단
@@ -255,11 +260,11 @@ public class MemberController implements MemberControllerInterface {
 
     // 사용자 차단해제
     @Override
-    @PostMapping("/board/{titleCode}/{seq}/deleteBlock")
-    public String deleteBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    @PostMapping("/board/{titleCode}/{seq}/cancelBlock")
+    public String cancelBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
             , @RequestParam String blockId, Model model) {
-        log.info("<=====MemberController.deleteBlock=====> {}, {}", member.getUserId(), blockId);
+        log.info("<=====MemberController.cancelBlock=====> {}, {}", member.getUserId(), blockId);
 
         if (member == null) {
             // alert창 띄우기
@@ -269,7 +274,7 @@ public class MemberController implements MemberControllerInterface {
             return "message";
         }
 
-        memberService.deleteBlock(member.getUserId(), blockId);
+        memberService.cancelBlock(member.getUserId(), blockId);
 
         // alert창 띄우기
         model.addAttribute("message", "차단 해제되었습니다.");
@@ -280,10 +285,10 @@ public class MemberController implements MemberControllerInterface {
 
     // 마이페이지 사용자 차단해제
     @Override
-    @PostMapping("/mypageDeleteBlock")
-    public String mypageDeleteBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    @PostMapping("/mypageCancelBlock")
+    public String mypageCancelBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @RequestParam String blockId, Model model) {
-        log.info("<=====MemberController.deleteBlock=====>{}", blockId);
+        log.info("<=====MemberController.mypageCancelBlock=====>{}", blockId);
 
         if (member == null) {
             // alert창 띄우기
@@ -293,7 +298,7 @@ public class MemberController implements MemberControllerInterface {
             return "message";
         }
 
-        memberService.deleteBlock(member.getUserId(), blockId);
+        memberService.cancelBlock(member.getUserId(), blockId);
 
         // alert창 띄우기
         model.addAttribute("message", "차단 해제되었습니다.");

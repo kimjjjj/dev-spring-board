@@ -346,5 +346,23 @@
 
     </select>
 
+    <delete id="deleteBoardById">
+
+        DELETE FROM devdb.BOARD WHERE INSID = #{userId}
+
+    </delete>
+
+    <delete id="deleteAttachById">
+
+        DELETE FROM devdb.ATTACH WHERE PARENT_SEQ IN (SELECT SEQ FROM devdb.BOARD WHERE INSID = #{userId})
+
+    </delete>
+
+    <delete id="deleteLikeById">
+
+        DELETE FROM devdb.LIKE_TB WHERE ID = #{userId}
+
+    </delete>
+
 </mapper>
 

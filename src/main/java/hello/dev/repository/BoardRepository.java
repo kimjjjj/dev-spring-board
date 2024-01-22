@@ -181,4 +181,28 @@ public class BoardRepository implements BoardRepositoryInterface {
 
         return boardMapper.userPageComment(nickName);
     }
+
+    // 회원탈퇴 - 게시글 테이블 삭제
+    @Override
+    public void deleteBoardById(String userId) {
+        log.info("<=====BoardRepository.deleteBoardById=====>");
+
+        boardMapper.deleteBoardById(userId);
+    }
+
+    // 회원탈퇴 - 첨부파일 테이블 삭제
+    @Override
+    public void deleteAttachById(String userId) {
+        log.info("<=====BoardRepository.deleteAttachById=====>");
+
+        boardMapper.deleteAttachById(userId);
+    }
+
+    // 회원탈퇴 - 좋아요 테이블 삭제
+    @Override
+    public void deleteLikeById(String userId) {
+        log.info("<=====BoardRepository.deleteLikeById=====>");
+
+        boardMapper.deleteLikeById(userId);
+    }
 }

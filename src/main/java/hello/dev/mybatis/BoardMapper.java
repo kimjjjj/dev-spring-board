@@ -51,4 +51,10 @@ public interface BoardMapper {
     List<Board> userPagePost(String nickName);
 
     List<Board> userPageComment(String nickName);
+
+    void deleteBoardById(String userId);
+
+    void deleteAttachById(String userId);
+
+    void deleteLikeById(String userId);
 }

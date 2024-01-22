@@ -9,7 +9,7 @@
 
             <h2 th:text="${board.mypageTitle}"></h2>
             <section th:each="boardList : ${boards}">
-                <form th:action="@{/mypageDeleteBlock}" method="post">
+                <form th:action="@{/mypageCancelBlock}" method="post">
                     <div class="write-div">
                         <div class="write-txtName-div">
                             <a th:href="'/board/all/' + ${boardList.seq}" th:text="${boardList.txtName}"></a>

@@ -137,5 +137,11 @@
 
     </update>
 
+    <delete id="deleteCommentById">
+
+        DELETE FROM COMMENT WHERE ID = #{userId}
+
+    </delete>
+
 </mapper>
 

@@ -31,4 +31,6 @@ public interface CommentRepositoryInterface {
     void commentCancel(String userId, int seq);
 
     void cancelCommentPoint(int seq);
+
+    void deleteCommentById(String userId);
 }

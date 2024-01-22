@@ -27,16 +27,17 @@ public interface MemberControllerInterface {
             , @RequestParam String nickName
             , @ModelAttribute Board board, Model model, HttpServletRequest request) throws ServletException, IOException;
 
-    String delete(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, HttpServletRequest request);
+    String delete(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+            , HttpServletRequest request, Model model);
 
     String addBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
             , @ModelAttribute Block block, @RequestParam String boardId, Model model);
 
-    String deleteBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    String cancelBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
             , @RequestParam String blockId, Model model);
 
-    String mypageDeleteBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    String mypageCancelBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @RequestParam String blockId, Model model);
 }

@@ -112,4 +112,12 @@ public class CommentRepository implements CommentRepositoryInterface {
 
         commentMapper.cancelCommentPoint(seq);
     }
+
+    // 회원탈퇴 - 댓글 테이블 delete
+    @Override
+    public void deleteCommentById(String userId) {
+        log.info("<=====CommentRepository.deleteCommentById=====>");
+
+        commentMapper.deleteCommentById(userId);
+    }
 }

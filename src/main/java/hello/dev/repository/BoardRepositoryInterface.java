@@ -47,4 +47,10 @@ public interface BoardRepositoryInterface {
     List<Board> userPagePost(String boardId);
 
     List<Board> userPageComment(String boardId);
+
+    void deleteBoardById(String userId);
+
+    void deleteAttachById(String userId);
+
+    void deleteLikeById(String userId);
 }

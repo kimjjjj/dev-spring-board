@@ -124,6 +124,14 @@ public class MemberRepository implements MemberRepositoryInterface {
         memberMapper.deleteFavorite(userId);
     }
 
+    // 회원탈퇴 - 유저차단 테이블 삭제
+    @Override
+    public void deleteBlock(String userId) {
+        log.info("<=====MemberRepository.deleteBlock=====>");
+
+        memberMapper.deleteBlock(userId);
+    }
+
     // 사용자 차단
     @Override
     public void addBlock(Block block, String userId, String boardId) {
@@ -134,9 +142,9 @@ public class MemberRepository implements MemberRepositoryInterface {
 
     // 사용자 차단해제
     @Override
-    public void deleteBlock(String userId, String blockId) {
-        log.info("<=====MemberRepository.deleteBlock=====>");
+    public void cancelBlock(String userId, String blockId) {
+        log.info("<=====MemberRepository.cancelBlock=====>");
 
-        memberMapper.deleteBlock(userId, blockId);
+        memberMapper.cancelBlock(userId, blockId);
     }
 }
