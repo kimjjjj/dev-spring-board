@@ -27,7 +27,7 @@ public class BoardController {
     // 첫 화면
     @GetMapping("/")
 //    @ResponseBody
-    public String chimList(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String chimList(@hello.dev.argumentresolver.Login Member member
             , @ModelAttribute Login login, @ModelAttribute Board board
             , @RequestParam(required = true, defaultValue = "1") Integer page
             , HttpServletRequest request, Model model) {
@@ -66,7 +66,7 @@ public class BoardController {
 
     // 게시판 선택
     @GetMapping("/board/{titleCode}")
-    public String boardList(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String boardList(@hello.dev.argumentresolver.Login Member member
             , @ModelAttribute Board board, @PathVariable String titleCode
             , @RequestParam(required = true, defaultValue = "1") Integer page
             , Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -120,7 +120,7 @@ public class BoardController {
 
     // 게시글보기
     @GetMapping("/board/{titleCode}/{seq}")
-    public String boardPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String boardPost(@hello.dev.argumentresolver.Login Member member
             , @PathVariable String titleCode, @PathVariable int seq
             , Model model, HttpServletRequest request) {
         log.info("<=====BoardController.boardPost=====> titleCode: {}, seq: {}", titleCode, seq);
@@ -150,7 +150,7 @@ public class BoardController {
 
     // 침하하
     @PostMapping("/{seq}/like")
-    public String updateLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String updateLike(@hello.dev.argumentresolver.Login Member member
             , @PathVariable int seq, @RequestParam String titleCode, Model model) {
         log.info("<=====BoardController.updateLike=====> titleCode : {}", titleCode);
 
@@ -180,7 +180,7 @@ public class BoardController {
     // 침하하 취소
     @PostMapping("/{seq}/cancel")
 //    @ResponseBody
-    public String cancelLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String cancelLike(@hello.dev.argumentresolver.Login Member member
             , @PathVariable int seq, @RequestParam String titleCode, Model model) {
         log.info("<=====BoardController.cancelLike=====>");
 
@@ -202,7 +202,7 @@ public class BoardController {
 
     // 스크랩
     @PostMapping("/{seq}/scrapSave")
-    public String scrapSave(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String scrapSave(@hello.dev.argumentresolver.Login Member member
             , @PathVariable int seq, @RequestParam String titleCode, Model model) {
         log.info("<=====BoardController.scrapSave=====> titleCode : {}", titleCode);
 
@@ -227,7 +227,7 @@ public class BoardController {
 
     // 스크랩 취소
     @PostMapping("/{seq}/scrapCancel")
-    public String scrapCancel(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String scrapCancel(@hello.dev.argumentresolver.Login Member member
             , @PathVariable int seq, @RequestParam String titleCode, Model model) {
         log.info("<=====BoardController.scrapCancel=====>");
 
@@ -252,7 +252,7 @@ public class BoardController {
 
     // 글쓰기 페이지로 이동
     @GetMapping("/add")
-    public String addForm(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String addForm(@hello.dev.argumentresolver.Login Member member
             , Board board, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.addForm=====>");
 
@@ -272,7 +272,7 @@ public class BoardController {
 
     // 게시글 저장
     @PostMapping("/add")
-    public String save(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String save(@hello.dev.argumentresolver.Login Member member
             , /*@ModelAttribute("board")*/ Board board, Model model) {
         log.info("<=====BoardController.save=====>");
 
@@ -313,7 +313,7 @@ public class BoardController {
 
     // 글수정 페이지로 이동
     @GetMapping("/board/{titleCode}/{seq}/edit")
-    public String editForm(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String editForm(@hello.dev.argumentresolver.Login Member member
             , @PathVariable String titleCode, @PathVariable int seq
             , Board board, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.editForm=====>");
@@ -340,7 +340,7 @@ public class BoardController {
 
     // 글수정
     @PostMapping("/board/{titleCode}/{seq}/edit")
-    public String updatePost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String updatePost(@hello.dev.argumentresolver.Login Member member
             , @PathVariable String titleCode, @PathVariable int seq
             , Board board, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.updatePost=====>");
@@ -364,7 +364,7 @@ public class BoardController {
 
     // 게시글 삭제
     @PostMapping("/board/{titleCode}/{seq}/delete")
-    public String deletePost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String deletePost(@hello.dev.argumentresolver.Login Member member
             , @PathVariable String titleCode, @PathVariable int seq
             , Board board, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.deletePost=====>");
@@ -397,7 +397,7 @@ public class BoardController {
 
     // 검색
     @GetMapping("/search")
-    public String search(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String search(@hello.dev.argumentresolver.Login Member member
             , @ModelAttribute Board board, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.search=====>");
 
@@ -436,7 +436,7 @@ public class BoardController {
 
     // 마이페이지 조회
     @GetMapping("/mypage/{mypageTitle}")
-    public String mywrite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String mywrite(@hello.dev.argumentresolver.Login Member member
             , @ModelAttribute Board board, @PathVariable String mypageTitle, Model model, HttpServletRequest request) {
         log.info("<=====BoardController.mywrite=====>");
 
@@ -461,7 +461,7 @@ public class BoardController {
 
     // 유저 게시글, 댓글 조회
     @GetMapping("/userPage/{nickName}/{userPageTitle}")
-    public String userPage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String userPage(@hello.dev.argumentresolver.Login Member member
             , @ModelAttribute Board board, @PathVariable String nickName, @PathVariable String userPageTitle, Model model) {
         log.info("<=====BoardController.userPage=====>{}, {}", nickName, userPageTitle);
 
@@ -482,7 +482,7 @@ public class BoardController {
 
     // 게시판 select박스
     @ModelAttribute("boardCodes")
-    public List<BoardCode> boardCodes(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member) {
+    public List<BoardCode> boardCodes(@hello.dev.argumentresolver.Login Member member) {
         log.info("<=====BoardController.boardCodes=====>");
 
         if (member == null) {

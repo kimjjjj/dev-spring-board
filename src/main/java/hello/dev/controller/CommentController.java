@@ -25,7 +25,7 @@ public class CommentController {
 
     // 댓글 저장
     @PostMapping("/board/{titleCode}/{seq}/parentComment")
-    public String saveParentComment(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String saveParentComment(@hello.dev.argumentresolver.Login Member member
             , @ModelAttribute Board board, @ModelAttribute Comment comment
             , @PathVariable int seq, @RequestParam String content, Model model, HttpServletRequest request) {
         log.info("<=====CommentController.saveParentComment=====> {}, {}", seq, content);
@@ -67,7 +67,7 @@ public class CommentController {
 
     // 대댓글 저장&수정
     @PostMapping("/board/{titleCode}/{boardSeq}/childComment")
-    public String saveChildComment(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String saveChildComment(@hello.dev.argumentresolver.Login Member member
             , @ModelAttribute Board board, @ModelAttribute Comment comment
             , @PathVariable int boardSeq, @RequestParam String content, @RequestParam int seq, @RequestParam String editType
             , Model model, HttpServletRequest request) {
@@ -107,7 +107,7 @@ public class CommentController {
 
     // 댓글 삭제
     @PostMapping("/board/{titleCode}/{seq}/{commentSeq}/delete")
-    public String deleteComment(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String deleteComment(@hello.dev.argumentresolver.Login Member member
             , @ModelAttribute Board board, @ModelAttribute Comment comment
             , @PathVariable int seq, @PathVariable int commentSeq
             , Model model, HttpServletRequest request) {
@@ -130,7 +130,7 @@ public class CommentController {
 
     // 댓글 침하하
     @PostMapping("/{boardSeq}/commentLike")
-    public String commentLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String commentLike(@hello.dev.argumentresolver.Login Member member
             , @PathVariable int boardSeq, @RequestParam int commentSeq
             , @RequestParam String titleCode, Model model) {
         log.info("<=====CommentController.commentLike=====>{}", boardSeq);
@@ -159,7 +159,7 @@ public class CommentController {
 
     // 댓글 침하하 취소
     @PostMapping("/{boardSeq}/commentCancel")
-    public String cancelCommentLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String cancelCommentLike(@hello.dev.argumentresolver.Login Member member
             , @PathVariable int boardSeq, @RequestParam int commentSeq
             , @RequestParam String titleCode, Model model) {
         log.info("<=====CommentController.commentCancel=====>");

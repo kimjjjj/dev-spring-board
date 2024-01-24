@@ -73,8 +73,8 @@ public class MemberController {
     // 게시판 즐겨찾기
     @PostMapping("/favorite/{titleCode}")
     @ResponseBody
-//    public String favorite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, @PathVariable String titleCode, Model model) {
-    public Map<String, String> favorite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member,
+//    public String favorite(@hello.dev.argumentresolver.Login Member member, @PathVariable String titleCode, Model model) {
+    public Map<String, String> favorite(@hello.dev.argumentresolver.Login Member member,
                                            @PathVariable String titleCode, @RequestParam String type, Model model, HttpServletRequest request) {
         log.info("<=====MemberController.favorite=====>");
 
@@ -106,7 +106,7 @@ public class MemberController {
 
     // 마이페이지
     @GetMapping("/mypage")
-    public String mypage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, @ModelAttribute Board board, Model model, HttpServletRequest request) {
+    public String mypage(@hello.dev.argumentresolver.Login Member member, @ModelAttribute Board board, Model model, HttpServletRequest request) {
         log.info("<=====MemberController.mypage=====>{}", member.getProfileName());
 
         // 계정 포인트 조회
@@ -122,7 +122,7 @@ public class MemberController {
 
     // 마이페이지 정보수정
     @PostMapping("/mypage")
-    public String saveMypage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String saveMypage(@hello.dev.argumentresolver.Login Member member
             , @RequestParam String nickName
             , @ModelAttribute Board board, Model model, HttpServletRequest request) throws ServletException, IOException {
         log.info("<=====MemberController.saveMypage=====>{}", member.getProfileName());
@@ -176,7 +176,7 @@ public class MemberController {
 
     // 회원탈퇴
     @PostMapping("/delete")
-    public String delete(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String delete(@hello.dev.argumentresolver.Login Member member
             , HttpServletRequest request, Model model) {
         log.info("<=====MemberController.delete=====>");
 
@@ -199,7 +199,7 @@ public class MemberController {
 
     // 사용자 차단
     @PostMapping("/board/{titleCode}/{seq}/addBlock")
-    public String addBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String addBlock(@hello.dev.argumentresolver.Login Member member
             , @PathVariable String titleCode, @PathVariable int seq
             , @ModelAttribute Block block, @RequestParam String boardId, Model model) {
         log.info("<=====MemberController.addBlock=====>{}, {}", member.getUserId(), boardId);
@@ -227,7 +227,7 @@ public class MemberController {
 
     // 사용자 차단해제
     @PostMapping("/board/{titleCode}/{seq}/cancelBlock")
-    public String cancelBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String cancelBlock(@hello.dev.argumentresolver.Login Member member
             , @PathVariable String titleCode, @PathVariable int seq
             , @RequestParam String blockId, Model model) {
         log.info("<=====MemberController.cancelBlock=====> {}, {}", member.getUserId(), blockId);
@@ -251,7 +251,7 @@ public class MemberController {
 
     // 마이페이지 사용자 차단해제
     @PostMapping("/mypageCancelBlock")
-    public String mypageCancelBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
+    public String mypageCancelBlock(@hello.dev.argumentresolver.Login Member member
             , @RequestParam String blockId, Model model) {
         log.info("<=====MemberController.mypageCancelBlock=====>{}", blockId);
 
