@@ -13,12 +13,11 @@ import java.util.Map;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class LoginRepository implements LoginRepositoryInterface {
+public class LoginRepository {
 
     private final LoginMapper loginMapper;
     private static final Map<Integer, Board> board = new HashMap<>();
 
-    @Override
     public Member login(String userId, String password) {
         log.info("<=====LoginRepository.login=====>");
 

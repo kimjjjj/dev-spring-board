@@ -20,7 +20,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberService implements MemberServiceInterface {
+public class MemberService {
 
     // 첨부파일 저장 경로
     @Value("${upload.path}")
@@ -32,7 +32,6 @@ public class MemberService implements MemberServiceInterface {
     private final BoardRepository boardRepository;
 
     // 회원가입 저장
-    @Override
     public Member save(Member member) {
         log.info("<=====MemberService.save=====>");
 
@@ -45,7 +44,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 회원가입 시 에러 체크
-    @Override
     public Map<String, String> checkError(Member member) {
         log.info("<=====MemberService.checkError=====>");
 
@@ -117,7 +115,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 닉네임 변경 시 에러 체크
-    @Override
     public Map<String, String> checkNick(String nickName) {
         log.info("<=====MemberService.checkNick=====>");
 
@@ -133,7 +130,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 계정의 포인트 찾기
-    @Override
     public Integer findByUserPoint(String userId) {
         log.info("<=====MemberService.findByUserPoint=====>");
 
@@ -141,7 +137,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 유저 포인트 plus
-    @Override
     public void updateUserPoint(String userId, int seq) {
         log.info("<=====MemberService.updateUserPoint=====>");
 
@@ -149,7 +144,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 유저 포인트 minus
-    @Override
     public void cancelUserPoint(String userId, int seq) {
         log.info("<=====MemberService.cancelUserPoint=====>");
 
@@ -157,7 +151,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 스크랩 저장
-    @Override
     public void scrapSave(String userId, int seq) {
         log.info("<=====MemberService.scrapSave=====>");
 
@@ -165,7 +158,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 스크랩 취소
-    @Override
     public void scrapCancel(String userId, int seq) {
         log.info("<=====MemberService.scrapCancel=====>");
 
@@ -173,7 +165,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 게시판 즐겨찾기
-    @Override
     public Member addFavorite(String userId, String titleCode, Member member) {
         log.info("<=====MemberService.addFavorite=====>");
 
@@ -219,7 +210,6 @@ public class MemberService implements MemberServiceInterface {
     }
     
     // 게시판 즐겨찾기 해제
-    @Override
     public Member removeFavorite(String userId, String titleCode, Member member) {
         log.info("<=====MemberService.removeFavorite=====>");
 
@@ -276,7 +266,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 게시판 즐겨찾기 조회
-    @Override
     public Member favoriteList(Member member, String userId) {
         log.info("<=====MemberService.favoriteList=====>");
 
@@ -300,7 +289,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 게시판 즐겨찾기 map
-    @Override
     public Map<Integer, String> favoriteMap (Member member) {
         log.info("<=====MemberService.favoriteMap=====>");
 
@@ -321,7 +309,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 회원정보 update
-    @Override
     public Member saveMypage(Member member, String userId, String nickName, String profileName, String profilePath) {
         log.info("<=====MemberService.saveMypage=====>");
 
@@ -333,7 +320,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 파일을 경로에 저장
-    @Override
     public void setProfile(String uploadFileName, HttpServletRequest request) throws ServletException, IOException {
         log.info("<=====MemberService.setProfile=====>");
 
@@ -346,7 +332,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 회원탈퇴
-    @Override
     public void delete(String userId) {
         log.info("<=====MemberService.delete=====>");
 
@@ -360,7 +345,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 사용자 차단
-    @Override
     public void addBlock(Block block, String userId, String boardId) {
         log.info("<=====MemberService.addBlock=====>");
 
@@ -368,7 +352,6 @@ public class MemberService implements MemberServiceInterface {
     }
 
     // 사용자 차단해제
-    @Override
     public void cancelBlock(String userId, String blockId) {
         log.info("<=====MemberService.cancelBlock=====>");
 

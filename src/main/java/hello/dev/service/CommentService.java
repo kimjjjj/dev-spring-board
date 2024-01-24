@@ -13,12 +13,11 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CommentService implements CommentServiceInterface {
+public class CommentService {
 
     private final CommentRepository commentRepository;
 
     // 댓글 조회
-    @Override
     public List<Comment> findComment(String userId, Integer seq) {
         log.info("<=====CommentService.findComment=====>");
 
@@ -71,7 +70,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 댓글 저장
-    @Override
     public void saveParentComment(Comment comment, String userId, Integer boardSeq, String content
             , Integer lvl, Integer orderRow) {
         log.info("<=====CommentService.saveParentComment=====>");
@@ -80,7 +78,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 대댓글 저장
-    @Override
     public void saveChildComment(Comment comment, String userId, Integer boardSeq, String content, Integer topSeq
             , Integer parentSeq, Integer lvl, Integer orderRow) {
         log.info("<=====CommentService.saveChildComment=====>");
@@ -93,7 +90,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 댓글 수정
-    @Override
     public void editComment(Integer seq, String content) {
         log.info("<=====CommentService.editComment=====>");
 
@@ -101,7 +97,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 댓글 삭제
-    @Override
     public void deleteComment(Integer seq) {
         log.info("<=====CommentService.deleteComment=====>");
 
@@ -109,7 +104,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 게시글 삭제 시 댓글 삭제
-    @Override
     public void deleteCommentBoard(Integer seq) {
         log.info("<=====CommentService.deleteCommentBoard=====>");
 
@@ -117,7 +111,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 상위 댓글의 ORDER_ROW보다 이후 ORDER_ROW가 있으면 +1
-    @Override
     public void updateComment(Integer topSeq, Integer orderRow) {
         log.info("<=====CommentService.updateComment=====>");
 
@@ -129,7 +122,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 좋아요 테이블 insert
-    @Override
     public void commentLike(String userId, Integer seq) {
         log.info("<=====CommentService.commentLike=====>");
 
@@ -137,7 +129,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 댓글 포인트 plus
-    @Override
     public void updateCommentPoint(Integer seq) {
         log.info("<=====CommentService.updateCommentPoint=====>");
 
@@ -145,7 +136,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 좋아요 테이블 delete
-    @Override
     public void commentCancel(String userId, Integer seq) {
         log.info("<=====CommentService.commentCancel=====>");
 
@@ -153,7 +143,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 댓글 포인트 minus
-    @Override
     public void cancelCommentPoint(Integer seq) {
         log.info("<=====CommentService.cancelCommentPoint=====>");
 
@@ -161,7 +150,6 @@ public class CommentService implements CommentServiceInterface {
     }
 
     // 현재시간부터 글 작성시간 까지 계산
-    @Override
     public Comment setDteTime(Comment comment) {
         log.info("<=====CommentService.setDteTime=====>");
 

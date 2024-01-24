@@ -17,14 +17,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 @RequiredArgsConstructor
-public class CommentController implements CommentControllerInterface {
+public class CommentController {
 
     private final CommentService commentService;
     private final MemberService memberService;
     private final BoardService boardService;
 
     // 댓글 저장
-    @Override
     @PostMapping("/board/{titleCode}/{seq}/parentComment")
     public String saveParentComment(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Board board, @ModelAttribute Comment comment
@@ -67,7 +66,6 @@ public class CommentController implements CommentControllerInterface {
     }
 
     // 대댓글 저장&수정
-    @Override
     @PostMapping("/board/{titleCode}/{boardSeq}/childComment")
     public String saveChildComment(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Board board, @ModelAttribute Comment comment
@@ -108,7 +106,6 @@ public class CommentController implements CommentControllerInterface {
     }
 
     // 댓글 삭제
-    @Override
     @PostMapping("/board/{titleCode}/{seq}/{commentSeq}/delete")
     public String deleteComment(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Board board, @ModelAttribute Comment comment
@@ -132,7 +129,6 @@ public class CommentController implements CommentControllerInterface {
     }
 
     // 댓글 침하하
-    @Override
     @PostMapping("/{boardSeq}/commentLike")
     public String commentLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable int boardSeq, @RequestParam int commentSeq
@@ -158,12 +154,10 @@ public class CommentController implements CommentControllerInterface {
         member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
         model.addAttribute("member", member);
 
-//        return "redirect:/{boardSeq}";
         return "redirect:/board/" + titleCode + "/{boardSeq}";
     }
 
     // 댓글 침하하 취소
-    @Override
     @PostMapping("/{boardSeq}/commentCancel")
     public String cancelCommentLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable int boardSeq, @RequestParam int commentSeq
@@ -183,7 +177,6 @@ public class CommentController implements CommentControllerInterface {
             model.addAttribute("member", member);
         }
 
-//        return "redirect:/{boardSeq}";
         return "redirect:/board/" + titleCode + "/{boardSeq}";
     }
 }

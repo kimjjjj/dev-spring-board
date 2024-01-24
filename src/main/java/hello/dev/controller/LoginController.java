@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,13 +26,12 @@ import java.util.Map;
 @Controller
 @RequestMapping("/")
 @RequiredArgsConstructor
-public class LoginController implements LoginControllerInterface {
+public class LoginController {
 
     private final LoginService loginService;
     private final BoardService boardService;
 
     // 로그인 페이지
-    @Override
     @GetMapping("/login")
     public String loginForm(@ModelAttribute Login login, Board board, Model model, HttpServletRequest request) {
         log.info("<=====LoginController.loginForm=====>");
@@ -45,7 +43,6 @@ public class LoginController implements LoginControllerInterface {
         return "loginForm";
     }
 
-    @Override
     @PostMapping("/login")
     public String login(/*@Valid*/ @ModelAttribute Login login, @ModelAttribute Board board
             , BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request
@@ -94,7 +91,6 @@ public class LoginController implements LoginControllerInterface {
         return "redirect:/";
     }
 
-    @Override
     @PostMapping("/logout")
     public String logout(HttpServletResponse response, HttpServletRequest request) {
         log.info("<=====LoginController.logout=====>");

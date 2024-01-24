@@ -13,13 +13,12 @@ import java.util.*;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class MemberRepository implements MemberRepositoryInterface {
+public class MemberRepository {
 
     private final MemberMapper memberMapper;
     private static final Map<Integer, Board> board = new HashMap<>();
 
     // ID와 닉네임이 존재하는지 체크
-    @Override
     public Integer findByIdOrNick(String findColumn, String findValue) {
         log.info("<=====MemberRepository.findByIdOrNick=====>");
 
@@ -27,7 +26,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 회원가입
-    @Override
     public Member save(Member member) {
         log.info("<=====MemberRepository.save=====>");
 
@@ -37,7 +35,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 계정의 포인트 찾기
-    @Override
     public Integer findByUserPoint(String userId) {
         log.info("<=====MemberRepository.findByUserPoint=====>");
 
@@ -45,7 +42,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 유저 포인트 plus
-    @Override
     public void updateUserPoint(String userId, int seq) {
         log.info("<=====MemberRepository.updateUserPoint=====>");
 
@@ -53,7 +49,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 유저 포인트 minus
-    @Override
     public void cancelUserPoint(String userId, int seq) {
         log.info("<=====MemberRepository.cancelUserPoint=====>");
 
@@ -61,7 +56,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 스크랩 저장
-    @Override
     public void scrapSave(String userId, int seq) {
         log.info("<=====MemberRepository.scrapSave=====>");
 
@@ -69,7 +63,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 스크랩 취소
-    @Override
     public void scrapCancel(String userId, int seq) {
         log.info("<=====MemberRepository.scrapCancel=====>");
 
@@ -77,7 +70,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 게시판 즐겨찾기
-    @Override
     public void addFavorite(String userId, String titleCode) {
         log.info("<=====MemberRepository.addFavorite=====> userId : {}, titleCode : {}", userId, titleCode);
 
@@ -85,7 +77,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 게시판 즐겨찾기 해제
-    @Override
     public void removeFavorite(String userId, String titleCode) {
         log.info("<=====MemberRepository.removeFavorite=====> userId : {}, titleCode : {}", userId, titleCode);
 
@@ -93,7 +84,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 게시판 즐겨찾기 조회
-    @Override
     public Member favoriteList(Member member, String userId) {
         log.info("<=====MemberRepository.favoriteList=====>");
 
@@ -101,7 +91,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 마이페이지 정보수정
-    @Override
     public void saveMypage(String userId, String nickName, String profileName, String profilePath) {
         log.info("<=====MemberRepository.saveMypage=====>");
 
@@ -109,7 +98,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 회원탈퇴 - 계정 테이블 삭제
-    @Override
     public void deleteMember(String userId) {
         log.info("<=====MemberRepository.deleteMember=====>");
 
@@ -117,7 +105,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 회원탈퇴 - 즐겨찾기 테이블 삭제
-    @Override
     public void deleteFavorite(String userId) {
         log.info("<=====MemberRepository.deleteFavorite=====>");
 
@@ -125,7 +112,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 회원탈퇴 - 유저차단 테이블 삭제
-    @Override
     public void deleteBlock(String userId) {
         log.info("<=====MemberRepository.deleteBlock=====>");
 
@@ -133,7 +119,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 사용자 차단
-    @Override
     public void addBlock(Block block, String userId, String boardId) {
         log.info("<=====MemberRepository.addBlock=====>");
 
@@ -141,7 +126,6 @@ public class MemberRepository implements MemberRepositoryInterface {
     }
 
     // 사용자 차단해제
-    @Override
     public void cancelBlock(String userId, String blockId) {
         log.info("<=====MemberRepository.cancelBlock=====>");
 

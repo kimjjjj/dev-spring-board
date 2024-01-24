@@ -11,12 +11,11 @@ import java.util.List;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class CommentRepository implements CommentRepositoryInterface {
+public class CommentRepository {
 
     private final CommentMapper commentMapper;
 
     // 댓글 조회
-    @Override
     public List<Comment> findComment(String userId, Integer seq) {
         log.info("<=====CommentRepository.findComment=====>");
 
@@ -24,7 +23,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 댓글 등록
-    @Override
     public void saveParentComment(Comment comment, String userId, Integer boardSeq, String content
             , Integer lvl, Integer orderRow) {
         log.info("<=====CommentRepository.saveParentComment=====>");
@@ -33,7 +31,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 대댓글 등록
-    @Override
     public void saveChildComment(Comment comment, String userId, Integer boardSeq, String content, Integer topSeq
             , Integer parentSeq, Integer lvl, Integer orderRow) {
         log.info("<=====CommentRepository.saveChildComment=====>");
@@ -42,7 +39,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 댓글 수정
-    @Override
     public void editComment(Integer seq, String content) {
         log.info("<=====CommentRepository.editComment=====>");
 
@@ -50,7 +46,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 댓글 삭제
-    @Override
     public void deleteComment(Integer seq) {
         log.info("<=====CommentRepository.deleteComment=====>");
 
@@ -58,7 +53,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 게시글 삭제 시 댓글 삭제
-    @Override
     public void deleteCommentBoard(Integer seq) {
         log.info("<=====CommentRepository.deleteCommentBoard=====>");
 
@@ -66,7 +60,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 상위 댓글의 ORDER_ROW보다 이후 ORDER_ROW가 있는지 체크
-    @Override
     public Integer chkComment(Integer topSeq, Integer orderRow) {
         log.info("<=====CommentRepository.chkComment=====>");
 
@@ -74,7 +67,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 댓글 ORDER_ROW 업데이트
-    @Override
     public void updateComment(Integer topSeq, Integer orderRow) {
         log.info("<=====CommentRepository.updateComment=====>");
 
@@ -82,7 +74,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 좋아요 테이블 insert
-    @Override
     public void commentLike(String userId, Integer seq) {
         log.info("<=====CommentRepository.commentLike=====>");
 
@@ -90,7 +81,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 댓글 포인트 plus
-    @Override
     public void updateCommentPoint(int seq) {
         log.info("<=====CommentRepository.updateCommentPoint=====>");
 
@@ -98,7 +88,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 좋아요 테이블 delete
-    @Override
     public void commentCancel(String userId, int seq) {
         log.info("<=====CommentRepository.commentCancel=====>");
 
@@ -106,7 +95,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 댓글 포인트 minus
-    @Override
     public void cancelCommentPoint(int seq) {
         log.info("<=====CommentRepository.cancelCommentPoint=====>");
 
@@ -114,7 +102,6 @@ public class CommentRepository implements CommentRepositoryInterface {
     }
 
     // 회원탈퇴 - 댓글 테이블 delete
-    @Override
     public void deleteCommentById(String userId) {
         log.info("<=====CommentRepository.deleteCommentById=====>");
 

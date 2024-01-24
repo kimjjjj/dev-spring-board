@@ -13,12 +13,11 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LoginService implements LoginServiceInterface {
+public class LoginService {
 
     private final LoginRepository loginRepository;
     private final BoardService boardService;
 
-    @Override
     public Member login(String userId, String password) {
         log.info("<=====LoginService.login=====>");
 
@@ -46,7 +45,6 @@ public class LoginService implements LoginServiceInterface {
         return login;
     }
 
-    @Override
     public Map<String, String> checkError(Login login) {
         log.info("<=====LoginService.checkError=====>");
 
@@ -61,7 +59,6 @@ public class LoginService implements LoginServiceInterface {
         return errors;
     }
 
-    @Override
     public Map<String, String> checkIdPassword(Member member) {
         log.info("<=====LoginService.checkIdPassword=====>");
 

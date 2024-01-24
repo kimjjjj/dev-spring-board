@@ -22,14 +22,13 @@ import java.util.*;
 @Controller
 @RequestMapping("/")
 @RequiredArgsConstructor
-public class MemberController implements MemberControllerInterface {
+public class MemberController {
 
     private final MemberService memberService;
     private final BoardService boardService;
     private final ImageUploadController imageUploadController;
 
     // 회원가입 페이지
-    @Override
     @GetMapping("/join")
     public String joinForm(Board board, Model model, HttpServletRequest request) {
         log.info("<=====MemberController.joinForm=====>");
@@ -44,7 +43,6 @@ public class MemberController implements MemberControllerInterface {
     }
 
     // 회원가입
-    @Override
     @PostMapping("/join")
     public String save(/*@ModelAttribute("board")*/ Member member, @ModelAttribute Board board, Model model, HttpServletRequest request) {
         log.info("<=====MemberController.save=====>");
@@ -73,7 +71,6 @@ public class MemberController implements MemberControllerInterface {
     }
 
     // 게시판 즐겨찾기
-    @Override
     @PostMapping("/favorite/{titleCode}")
     @ResponseBody
 //    public String favorite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, @PathVariable String titleCode, Model model) {
@@ -108,7 +105,6 @@ public class MemberController implements MemberControllerInterface {
     }
 
     // 마이페이지
-    @Override
     @GetMapping("/mypage")
     public String mypage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, @ModelAttribute Board board, Model model, HttpServletRequest request) {
         log.info("<=====MemberController.mypage=====>{}", member.getProfileName());
@@ -125,7 +121,6 @@ public class MemberController implements MemberControllerInterface {
     }
 
     // 마이페이지 정보수정
-    @Override
     @PostMapping("/mypage")
     public String saveMypage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @RequestParam String nickName
@@ -180,7 +175,6 @@ public class MemberController implements MemberControllerInterface {
     }
 
     // 회원탈퇴
-    @Override
     @PostMapping("/delete")
     public String delete(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , HttpServletRequest request, Model model) {
@@ -204,7 +198,6 @@ public class MemberController implements MemberControllerInterface {
     }
 
     // 사용자 차단
-    @Override
     @PostMapping("/board/{titleCode}/{seq}/addBlock")
     public String addBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
@@ -233,7 +226,6 @@ public class MemberController implements MemberControllerInterface {
     }
 
     // 사용자 차단해제
-    @Override
     @PostMapping("/board/{titleCode}/{seq}/cancelBlock")
     public String cancelBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
@@ -258,7 +250,6 @@ public class MemberController implements MemberControllerInterface {
     }
 
     // 마이페이지 사용자 차단해제
-    @Override
     @PostMapping("/mypageCancelBlock")
     public String mypageCancelBlock(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @RequestParam String blockId, Model model) {

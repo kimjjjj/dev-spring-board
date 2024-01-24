@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BoardService implements BoardServiceInterface {
+public class BoardService {
 
     private final BoardRepository boardRepository;
 
@@ -29,7 +29,6 @@ public class BoardService implements BoardServiceInterface {
     int pageLimit = 5;
 
     // 침하하 게시판
-    @Override
     public List<Board> chimList(Integer page, String userId) {
         log.info("<=====BoardService.chimList=====>");
 
@@ -85,7 +84,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 침하하 제외한 게시판
-    @Override
     public List<Board> boardList(String titleCode, Integer page, String userId) {
         log.info("<=====BoardService.boardList=====>");
 
@@ -140,7 +138,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 게시글 조회
-    @Override
     public Board boardPost(String userId, int seq, String titleCode) {
         log.info("<=====BoardService.boardPost=====>");
 
@@ -173,14 +170,12 @@ public class BoardService implements BoardServiceInterface {
         return board;
     }
 
-    @Override
     public Board save(Board board) {
         log.info("<=====BoardService.save=====>");
 
         return boardRepository.save(board);
     }
 
-    @Override
     public Board saveImg(Board board, List<String > imgList) {
         log.info("<=====BoardService.saveImg=====>");
 
@@ -202,7 +197,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 게시글 수정 이동
-    @Override
     public Board editBoardPost(String userId, int seq, String titleCode) {
         log.info("<=====BoardService.editBoardPost=====>");
 
@@ -222,7 +216,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 게시글 수정
-    @Override
     public void updatePost(Board board, String userId) {
         log.info("<=====BoardService.updatePost=====>");
 
@@ -231,7 +224,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 게시글 삭제
-    @Override
     public void deletePost(Integer seq) {
         log.info("<=====BoardService.deletePost=====>");
 
@@ -240,7 +232,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 첨부파일 삭제
-    @Override
     public void deleteImg(Integer seq) {
         log.info("<=====BoardService.deleteImg=====>");
 
@@ -249,7 +240,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 게시글 삭제 시 좋아요 삭제
-    @Override
     public void deleteLike(Integer seq) {
         log.info("<=====BoardService.deleteLike=====>");
 
@@ -258,7 +248,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 게시글 포인트 plus
-    @Override
     public void updateLike(int seq) {
         log.info("<=====BoardService.updateLike=====>");
 
@@ -266,7 +255,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 게시글 포인트 minus
-    @Override
     public void cancelLike(int seq) {
         log.info("<=====BoardService.cancelLike=====>");
 
@@ -274,7 +262,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 검색
-    @Override
     public List<Board> search(String searchKeyword, String searchType, String userId) {
         log.info("<=====BoardService.search=====>");
 
@@ -319,7 +306,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 최근방문게시판(쿠키) 저장
-    @Override
     public void saveCookie(String titleCode, HttpServletRequest request, HttpServletResponse response) {
         log.info("<=====BoardService.saveCookie=====>");
 
@@ -357,7 +343,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 최근방문게시판(쿠키) 조회
-    @Override
     public Board getCookie(Board board, HttpServletRequest request, String titleCode) {
         log.info("<=====BoardService.getCookie=====>");
 
@@ -411,7 +396,6 @@ public class BoardService implements BoardServiceInterface {
         return board;
     }
 
-    @Override
     public Board setPage(Board board, Integer page) {
         log.info("<=====BoardService.setPage=====>");
 
@@ -431,7 +415,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 마이페이지 제목
-    @Override
     public String mypageTitle(String mypageTitle) {
         log.info("<=====BoardService.mypageTitle=====>");
 
@@ -447,7 +430,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 마이페이지 조회
-    @Override
     public List<Board> mywrite(String userId, String mypageTitle) {
         log.info("<=====BoardService.mywrite=====>");
 
@@ -475,7 +457,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 현재시간부터 글 작성시간 까지 계산
-    @Override
     public Board setDteTime(Board board) {
         log.info("<=====BoardService.setDteTime=====>");
 
@@ -517,7 +498,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 유저게시글 제목
-    @Override
     public String userPageTitle(String userPageTitle) {
         log.info("<=====BoardService.userPageTitle=====>");
 
@@ -529,7 +509,6 @@ public class BoardService implements BoardServiceInterface {
     }
     
     // 유저 게시글, 댓글 조회
-    @Override
     public List<Board> userWrite(String nickName, String userPageTitle) {
         log.info("<=====BoardService.userWrite=====>");
 
@@ -558,7 +537,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 게시판 코드, 이름 세팅
-    @Override
     public Map<String, String> boardCodeSet(Boolean use) {
         log.info("<=====BoardService.boardCodeSet=====>");
 
@@ -600,7 +578,6 @@ public class BoardService implements BoardServiceInterface {
     }
 
     // 카테고리 코드, 이름 세팅
-    @Override
     public Map<Integer, String> categoryCodeSet() {
         log.info("<=====BoardService.categoryCodeSet=====>");
 

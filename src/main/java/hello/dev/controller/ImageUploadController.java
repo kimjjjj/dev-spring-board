@@ -21,13 +21,12 @@ import java.util.UUID;
 @Slf4j
 @Controller
 @RequestMapping("/")
-public class ImageUploadController implements ImageUploadControllerInterface {
+public class ImageUploadController {
 
     // 컨트롤러클래스의 로그를 출력
     private static final Logger logger = LoggerFactory.getLogger(ImageUploadController.class);
 
     // 게시글 신규 등록에 이미지 업로드
-    @Override
     @PostMapping("/imageUpload")
     public void addImageUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam MultipartFile upload) {
         log.info("<=====ImageUploadController.addImageUpload=====>");
@@ -36,7 +35,6 @@ public class ImageUploadController implements ImageUploadControllerInterface {
     }
 
     // 게시글 수정에 이미지 업로드
-    @Override
     @PostMapping("/board/{titleCode}/{seq}/imageUpload")
     public void editImageUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam MultipartFile upload) {
         log.info("<=====ImageUploadController.editImageUpload=====>");
@@ -45,7 +43,6 @@ public class ImageUploadController implements ImageUploadControllerInterface {
     }
 
     //MultipartFile 타입은 ckedit에서 upload란 이름으로 저장하게 된다
-    @Override
     public void imageUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam MultipartFile upload) {
         log.info("<=====ImageUploadController.imageUpload=====>");
 
@@ -105,7 +102,6 @@ public class ImageUploadController implements ImageUploadControllerInterface {
     }
 
     // request에서 이미지 이름 가져오기
-    @Override
     public String getFileName(String fileName, HttpServletRequest request) throws ServletException, IOException {
         log.info("<=====ImageUploadController.getFileName=====>");
 
@@ -123,7 +119,6 @@ public class ImageUploadController implements ImageUploadControllerInterface {
     }
 
     // 이미지 이름 세팅
-    @Override
     public String setFileName(String fileName) {
         log.info("<=====ImageUploadController.setFileName=====>");
 
@@ -138,7 +133,6 @@ public class ImageUploadController implements ImageUploadControllerInterface {
     }
 
     // 이미지 경로 세팅
-    @Override
     public String setFilePath(String fileName) {
         log.info("<=====ImageUploadController.setFilePath=====>");
 

@@ -18,14 +18,13 @@ import java.util.*;
 @Controller
 @RequestMapping("/")
 @RequiredArgsConstructor
-public class BoardController implements BoardControllerInterface {
+public class BoardController {
 
     private final BoardService boardService;
     private final MemberService memberService;
     private final CommentService commentService;
 
     // 첫 화면
-    @Override
     @GetMapping("/")
 //    @ResponseBody
     public String chimList(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
@@ -66,7 +65,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 게시판 선택
-    @Override
     @GetMapping("/board/{titleCode}")
     public String boardList(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Board board, @PathVariable String titleCode
@@ -121,7 +119,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 게시글보기
-    @Override
     @GetMapping("/board/{titleCode}/{seq}")
     public String boardPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
@@ -152,7 +149,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 침하하
-    @Override
     @PostMapping("/{seq}/like")
     public String updateLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable int seq, @RequestParam String titleCode, Model model) {
@@ -182,7 +178,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 침하하 취소
-    @Override
     @PostMapping("/{seq}/cancel")
 //    @ResponseBody
     public String cancelLike(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
@@ -206,7 +201,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 스크랩
-    @Override
     @PostMapping("/{seq}/scrapSave")
     public String scrapSave(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable int seq, @RequestParam String titleCode, Model model) {
@@ -232,7 +226,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 스크랩 취소
-    @Override
     @PostMapping("/{seq}/scrapCancel")
     public String scrapCancel(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable int seq, @RequestParam String titleCode, Model model) {
@@ -258,7 +251,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 글쓰기 페이지로 이동
-    @Override
     @GetMapping("/add")
     public String addForm(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , Board board, Model model, HttpServletRequest request) {
@@ -279,7 +271,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 게시글 저장
-    @Override
     @PostMapping("/add")
     public String save(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , /*@ModelAttribute("board")*/ Board board, Model model) {
@@ -321,7 +312,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 글수정 페이지로 이동
-    @Override
     @GetMapping("/board/{titleCode}/{seq}/edit")
     public String editForm(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
@@ -349,7 +339,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 글수정
-    @Override
     @PostMapping("/board/{titleCode}/{seq}/edit")
     public String updatePost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
@@ -374,7 +363,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 게시글 삭제
-    @Override
     @PostMapping("/board/{titleCode}/{seq}/delete")
     public String deletePost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @PathVariable String titleCode, @PathVariable int seq
@@ -408,7 +396,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 검색
-    @Override
     @GetMapping("/search")
     public String search(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Board board, Model model, HttpServletRequest request) {
@@ -448,7 +435,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 마이페이지 조회
-    @Override
     @GetMapping("/mypage/{mypageTitle}")
     public String mywrite(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Board board, @PathVariable String mypageTitle, Model model, HttpServletRequest request) {
@@ -474,7 +460,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 유저 게시글, 댓글 조회
-    @Override
     @GetMapping("/userPage/{nickName}/{userPageTitle}")
     public String userPage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member
             , @ModelAttribute Board board, @PathVariable String nickName, @PathVariable String userPageTitle, Model model) {
@@ -496,7 +481,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 게시판 select박스
-    @Override
     @ModelAttribute("boardCodes")
     public List<BoardCode> boardCodes(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member) {
         log.info("<=====BoardController.boardCodes=====>");
@@ -526,7 +510,6 @@ public class BoardController implements BoardControllerInterface {
     }
 
     // 카테고리 select박스
-    @Override
     @GetMapping("/categoryCode")
     @ResponseBody
     public List<CategoryCode> categoryC(String boardCode) {
