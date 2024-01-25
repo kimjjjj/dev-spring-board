@@ -45,8 +45,6 @@
     - jar에 포함된 이미지를 불러오지 못해서 workspace의 images 폴더에 이미지 업로드, 이미지 불러오도록 변경
     - file:/// + System.getProperty("user.dir") 활용
 
-3. 에디터로 사용한 ckeditor가 awe에서 cors에러 발생
-    - ckeditor를 cdn으로 사용하는 방법에서 설치하여 사용하는 방법으로 변경
 
 
 🛠️ 남은 과제
