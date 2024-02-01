@@ -1,4 +1,5 @@
 @import url("reset.css");
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
 
 .content-box {
     height: inherit;
@@ -55,28 +56,36 @@ textarea {
     }
 
     #title>#logo {
-        height: inherit;
-        width: 70%;
+        height: 60px;
+        line-height: 70px;
+        width: 60%;
         text-align: right;
-        margin-right: 60px;
+        margin-right: 55px;
+    }
+
+    #title>#logo>#logo_title{
+        font-size: 50px;
+        font-family: "Black Han Sans", sans-serif;
     }
 
     #title>#search {
         height: inherit;
-        width: 30%;
+        width: 40%;
         font-size: 30px;
     }
 
     #search form {
         position: relative;
         height: 100%;
+        width: 250px;
+        margin-left: 110px;
     }
 
     #search #searchInput {
         position: absolute;
         width: 80%;
-        height: 40%;
-        bottom: 0px;
+        height: 60%;
+        bottom: 3px;
         right: 0%;
         border: solid #1CA8AF;
         outline: none;
@@ -93,7 +102,7 @@ textarea {
         height: 44%;
         right: 0%;
         position: absolute;
-        bottom: 0px;
+        bottom: 12px;
         background-color: transparent;
         border: 0;
         cursor: pointer;
