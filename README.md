@@ -21,7 +21,7 @@
     - Thymleaf
 
 3. Cloud
-    - awe
+    - aws
 
 </details>
 
