@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.util.*;
@@ -26,21 +27,41 @@ public class MemberService {
     @Value("${upload.path}")
     private String filePath;
 
+    // 네이버 로그인 api client_id
+    @Value("${api.naver.client_id}")
+    private String client_id;
+
+    // 네이버 로그인 api client_secret
+    @Value("${api.naver.client_secret}")
+    private String client_secret;
+
+    // 네이버 로그인 api url
+    @Value("${api.naver.url}")
+    private String url;
+
+    // 네이버 로그인 api callback
+    @Value("${api.naver.callback}")
+    private String callback;
+
     private final MemberRepository memberRepository;
     private final BoardService boardService;
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+    private final LoginService loginService;
 
     // 회원가입 저장
     public Member save(Member member) {
         log.info("<=====MemberService.save=====>");
 
-        // 번호에 '-' 세팅 ex) 01012345678 -> 010-1234-5678
-        String phone = member.getPhoneNumber();
-        phone = phone.substring(0, 3) + '-' + phone.substring(3, 7) + '-' + phone.substring(7, 11);
-        member.setPhoneNumber(phone);
-
         return memberRepository.save(member);
+    }
+
+    // 휴대폰번호 '-' 세팅
+    public String phoneSetting(String phone) {
+        log.info("<=====MemberService.phoneSetting=====>");
+
+        // 번호에 '-' 세팅 ex) 01012345678 -> 010-1234-5678
+        return phone.substring(0, 3) + '-' + phone.substring(3, 7) + '-' + phone.substring(7, 11);
     }
 
     // 회원가입 시 에러 체크
@@ -120,6 +141,12 @@ public class MemberService {
 
         Map<String, String> errors = new HashMap<>();
 
+        if ("".equals(nickName)) {
+            errors.put("nickName", "닉네임: 필수 정보입니다.");
+
+            return errors;
+        }
+
         Integer cnt = memberRepository.findByIdOrNick("NICKNAME", nickName);
 
         if (cnt == 1) {
@@ -127,6 +154,13 @@ public class MemberService {
         }
 
         return errors;
+    }
+
+    // ID 중복 체크
+    public Integer checkId(String userId) {
+        log.info("<=====MemberService.checkId=====>");
+
+        return memberRepository.findByIdOrNick("ID", userId);
     }
 
     // 계정의 포인트 찾기
@@ -332,8 +366,22 @@ public class MemberService {
     }
 
     // 회원탈퇴
-    public void delete(String userId) {
+    public void delete(String userId, HttpSession session) throws IOException {
         log.info("<=====MemberService.delete=====>");
+
+        // 네이버 로그인 체크
+        int cntId = checkId(userId);
+
+        // 네이버 로그인 계정이면 연결 삭제
+        if (cntId != 0) {
+            String apiURL = url + "token?grant_type=delete&";
+            apiURL += "client_id=" + client_id;
+            apiURL += "&client_secret=" + client_secret;
+            apiURL += "&access_token=" + session.getAttribute("currentAT");
+            apiURL += "&service_provider=NAVER";
+
+            loginService.requestToServer(apiURL, "");
+        }
 
         boardRepository.deleteLikeById(userId); // 좋아요 테이블 삭제
         memberRepository.deleteFavorite(userId); // 즐겨찾기 테이블 삭제

@@ -36,7 +36,10 @@
           LEFT JOIN (
                 SELECT SUM(POINT) AS POINT, ID FROM devdb.COMMENT GROUP BY ID
           ) D ON A.ID = D.ID
-         WHERE A.ID = #{userId} AND A.PASSWORD = #{password}
+         WHERE A.ID = #{userId} AND A.PROVIDER = #{provider}
+          <if test="'web'.equals(provider)">
+           AND A.PASSWORD = #{password}
+          </if>
 
     </select>
 

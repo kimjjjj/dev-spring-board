@@ -10,7 +10,7 @@ CREATE TABLE devdb.BOARD (
   , TXTNAME VARCHAR(50) -- 글 제목
   , COMMENT VARCHAR(21000) -- 글 내용
   , TAG VARCHAR(20) -- 태그
-  , INSID VARCHAR(10) -- 입력 유저 ID
+  , INSID VARCHAR(60) -- 입력 유저 ID
   , INSDT TIMESTAMP -- 입력 일자
   , UPTID VARCHAR(10) -- 수정 유저 ID
   , UPTDT TIMESTAMP -- 수정 일자
@@ -28,7 +28,7 @@ CREATE TABLE devdb.ATTACH (
   , FILENAME VARCHAR(50) -- 파일 이름
   , SAVE_FILENAME VARCHAR(50) -- 서버에 저장하는 파일 이름
   , PATH VARCHAR(100) -- 저장 경로
-  , INSID VARCHAR(10) -- 입력 유저 ID
+  , INSID VARCHAR(60) -- 입력 유저 ID
   , INSDT TIMESTAMP -- 입력 일자
   , UPTID VARCHAR(10) -- 수정 유저 ID
   , UPTDT TIMESTAMP -- 수정 일자
@@ -38,21 +38,22 @@ CREATE TABLE devdb.ATTACH (
 
 -- 회원정보 테이블
 CREATE TABLE devdb.MEMBER_INFORMATION (
-    ID VARCHAR(10) PRIMARY KEY -- ID
+    ID VARCHAR(60) PRIMARY KEY -- ID
   , PASSWORD VARCHAR(20) -- 비밀번호
   , USER_NAME VARCHAR(10) -- 이름
   , BIRTH INT -- 생년월일
   , PHONE_NUMBER VARCHAR(15) -- 휴대폰 번호
-  , NICKNAME VARCHAR(20) -- 닉네임
+  , NICKNAME VARCHAR(40) -- 닉네임
   , TYPE VARCHAR(10) -- 타입
   , INSDT TIMESTAMP -- 입력 일자
   , PROFILE_NAME VARCHAR(100) -- 프로필 파일 이름
   , PROFILE_PATH VARCHAR(100) -- 프로필 저장 경로
+  , PROVIDER VARCHAR(20) -- 회원가입 경로
 );
 
 -- 좋아요 테이블
 CREATE TABLE devdb.LIKE_TB (
-    ID VARCHAR(10) -- ID
+    ID VARCHAR(60) -- ID
   , PARENT_SEQ INT -- board seq
   , LIKE_TYPE VARCHAR(10) -- 좋아요 타입
   , INSDT TIMESTAMP -- 입력 일자
@@ -62,7 +63,7 @@ CREATE TABLE devdb.LIKE_TB (
 
 -- 즐겨찾기 테이블
 CREATE TABLE devdb.FAVORITE (
-    ID VARCHAR(10) -- ID
+    ID VARCHAR(60) -- ID
   , BOARD_CODE VARCHAR(20) -- 게시판 코드
   , INSDT TIMESTAMP -- 입력일자
   , PRIMARY KEY (ID, BOARD_CODE)
@@ -72,7 +73,7 @@ CREATE TABLE devdb.FAVORITE (
 -- 댓글 테이블
 CREATE TABLE devdb.COMMENT (
     SEQ MEDIUMINT AUTO_INCREMENT -- seq
-  , ID VARCHAR(10) -- 유저 ID
+  , ID VARCHAR(60) -- 유저 ID
   , BOARD_SEQ MEDIUMINT -- board seq
   , CONTENT VARCHAR(100) -- 글 내용
   , TOP_SEQ INT -- 최상위 댓글 seq
@@ -90,7 +91,7 @@ CREATE TABLE devdb.COMMENT (
 -- 차단 회원 테이블
 CREATE TABLE devdb.BLOCK_TB (
     SEQ MEDIUMINT AUTO_INCREMENT -- seq
-  , ID VARCHAR(10) -- 유저 ID
+  , ID VARCHAR(60) -- 유저 ID
   , BLOCK_ID VARCHAR(10) -- 차단한 유저 ID
   , INSDT TIMESTAMP -- 입력 일자
   , PRIMARY KEY (SEQ)

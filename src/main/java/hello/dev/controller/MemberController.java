@@ -61,6 +61,12 @@ public class MemberController {
             return "JoinForm";
         }
 
+        // 휴대폰번호 '-' 세팅
+        member.setPhoneNumber(memberService.phoneSetting(member.getPhoneNumber()));
+
+        // 회원가입 - 자체
+        member.setProvider("web");
+
         model.addAttribute("member", memberService.save(member));
 
         // alert창 띄우기
@@ -125,7 +131,7 @@ public class MemberController {
     public String saveMypage(@hello.dev.argumentresolver.Login Member member
             , @RequestParam String nickName
             , @ModelAttribute Board board, Model model, HttpServletRequest request) throws ServletException, IOException {
-        log.info("<=====MemberController.saveMypage=====>{}", member.getProfileName());
+        log.info("<=====MemberController.saveMypage=====>");
 
         // 계정 포인트 조회
         member.setUserPoint(memberService.findByUserPoint(member.getUserId()));
@@ -133,7 +139,7 @@ public class MemberController {
         // 최근방문 게시판 조회
         board = boardService.getCookie(board, request, null);
 
-        // 닉네임 중복 체크
+        // 닉네임 에러 체크
         Map<String, String> errors = memberService.checkNick(nickName);
 
         model.addAttribute("board", board);
@@ -141,8 +147,16 @@ public class MemberController {
         // request에서 파일 이름 가져오기
         String fileName = imageUploadController.getFileName(null, request);
 
+        if (!errors.isEmpty()) {
+            log.info("error = {}", errors);
+
+            model.addAttribute("errors", errors);
+            model.addAttribute("member", member);
+
+            return "mypageForm";
+        }
         // 프로필 이미지 이름&경로 세팅
-        if ("".equals(member.getProfileName()) || member.getProfileName() == null || (!"".equals(fileName) && member.getProfileName() != fileName)) {
+        else if ("".equals(member.getProfileName()) || member.getProfileName() == null || (!"".equals(fileName) && member.getProfileName() != fileName)) {
             // 이미지 이름 세팅
             String uploadFileName = imageUploadController.setFileName(fileName);
 
@@ -154,12 +168,6 @@ public class MemberController {
 
             memberService.setProfile(imgUploadPath, request);
 
-        } else if (!"".equals(member.getProfileName()) && member.getProfileName() != null && !errors.isEmpty()) {
-            log.info("error = {}", errors);
-
-            model.addAttribute("errors", errors);
-
-            return "mypageForm";
         }
 
         // 회원정보 update
@@ -177,14 +185,14 @@ public class MemberController {
     // 회원탈퇴
     @PostMapping("/delete")
     public String delete(@hello.dev.argumentresolver.Login Member member
-            , HttpServletRequest request, Model model) {
+            , HttpServletRequest request, Model model, HttpSession session) throws IOException {
         log.info("<=====MemberController.delete=====>");
 
         // 데이터 삭제
-        memberService.delete(member.getUserId());
+        memberService.delete(member.getUserId(), session);
 
         // 세션 제거
-        HttpSession session = request.getSession(false);
+        session = request.getSession(false);
 
         if (session != null) {
             session.invalidate();

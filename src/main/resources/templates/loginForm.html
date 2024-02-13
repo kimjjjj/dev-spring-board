@@ -35,6 +35,13 @@
                 <div class="loginBtn">
                     <button onclick="location.href='joinForm.html'" th:onclick="|location.href='@{/join}'|" type="button" class="joinBtn">회원가입</button>
                 </div>
+
+                <!-- 네이버 로그인 버튼 노출 영역 -->
+                <div id="naver_login" class="loginBtn" th:if="${session.currentUser eq null}">
+                    <button type="button" class="naver_login_btn joinBtn" th:onclick="|location.href='@{${apiURL}}'|">
+                        <img width="200" height="49" src="./images/btnG_완성형.png">
+                    </button>
+                </div>
             </form>
         </div>
     </main>

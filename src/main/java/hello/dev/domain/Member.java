@@ -19,6 +19,7 @@ public class Member {
     private String userType; // 계정 타입
     private String profileName; // 프로필 이미지 이름
     private String profilePath; // 프로필 이미지 경로
+    private String provider; // 회원가입 경로
     private String errorTxt;
     private Integer cnt; // ID와 닉네임이 존재하는지 체크
     

@@ -18,9 +18,9 @@ public class LoginRepository {
     private final LoginMapper loginMapper;
     private static final Map<Integer, Board> board = new HashMap<>();
 
-    public Member login(String userId, String password) {
+    public Member login(String userId, String password, String provider) {
         log.info("<=====LoginRepository.login=====>");
 
-        return loginMapper.login(userId, password);
+        return loginMapper.login(userId, password, provider);
     }
 }
