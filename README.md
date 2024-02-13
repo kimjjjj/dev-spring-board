@@ -29,7 +29,7 @@
 <details>
   <summary>접기/펼치기</summary>
 
-![1](https://github.com/kimjjjj/Algorithm_study/assets/102236761/6ebf44d5-b6ac-494b-b344-8e031294fa0f)
+![1](https://github.com/kimjjjj/Algorithm_study/assets/102236761/e8138dbb-6209-40e1-b135-8aac45fd8934)
 
 </details>
 
