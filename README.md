@@ -21,7 +21,7 @@
     - Thymleaf
 
 3. Cloud
-    - awe
+    - aws
 
 </details>
 
@@ -38,10 +38,10 @@
 <details>
   <summary>접기/펼치기</summary>
 
-1. 로컬에서는 콘솔에서 로그를 보기때문에 문제가 없었지만 awe에 올린 후에는 에러를 보기 어려움
+1. 로컬에서는 콘솔에서 로그를 보기때문에 문제가 없었지만 aws에 올린 후에는 에러를 보기 어려움
     - logback-spring.xml에 일자별로 로그파일을 생성하도록 추가
 
-2. awe에서 이미지를 불러오지 못하는 현상 발생
+2. aws에서 이미지를 불러오지 못하는 현상 발생
     - jar에 포함된 이미지를 불러오지 못해서 workspace의 images 폴더에 이미지 업로드, 이미지 불러오도록 변경
     - file:/// + System.getProperty("user.dir") 활용
 
