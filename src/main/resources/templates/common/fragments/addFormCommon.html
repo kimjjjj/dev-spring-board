@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="addFormFragment">
-    <div>
+    <div class="board-category-div">
         <select id="boardCode" class="add-box board" th:field="*{boardCode}" onchange="categoryChange(this)">
             <option value="" th:if="${board.seq eq null} or ${board.seq eq 0}">게시판을 선택해 주세요</option>
             <option th:each="boardCode : ${boardCodes}" th:value="${boardCode.code}" th:text="${boardCode.displayName}"></option>

@@ -24,8 +24,24 @@
             </nav>
             <hr class="hr">
             <nav id="title">
+                <div id="menu-btn-div">
+                    <div><i class="fa-solid fa-bars fa-2x" onclick="mobile_menu()"></i></div>
+                </div>
+                <script>
+                    function mobile_menu() {
+                        if ($("#menu").is(':visible')) {
+                            // $("#menu").hide();
+                            $("#menu").removeClass("mobile-menu");
+                        } else {
+                            // $("#menu").show();
+                            $("#menu").addClass("mobile-menu");
+                        }
+                    }
+                </script>
                 <div id="logo">
-                    <a id="logo_title" href="/">침하하</a>
+                    <a id="logo_title" href="/">침하하
+                        <!-- <img src="/images/logo.png" alt="침하하"> -->
+                    </a>
                 </div>
                 <div id="search">
                     <form action="/search" th:action="@{|/search|}" th:object="${board}" method="get" th:if="${session.member ne null}">
@@ -34,27 +50,84 @@
                             <i class="fa-solid fa-magnifying-glass fa-2x"></i>
                         </button>
                     </form>
+                    <button type="button" onclick="mSearch()" th:if="${session.member ne null}">
+                        <i class="fa-solid fa-magnifying-glass fa-2x"></i>
+                    </button>
+                    <script>
+                        function mSearch() {
+                            if ($("#mobile_search").is(':visible')) {
+                                $("#mobile_search").addClass("none_mobile_search");
+                                $("#mobile_search").removeClass("mobile_search");
+                                $("#mobileSearchInput").blur();
+                            } else {
+                                $("#mobile_search").addClass("mobile_search");
+                                $("#mobile_search").removeClass("none_mobile_search");
+                                $("#mobileSearchInput").focus();
+                            }
+                        }
+                    </script>
                 </div>
             </nav>
+            <div id="mobile_search" class="none_mobile_search">
+                <form action="/search" th:action="@{|/search|}" th:object="${board}" method="get">
+                    <input id="mobileSearchInput" name="searchKeyword" type="text">
+                    <button>
+                        <i class="fa-solid fa-magnifying-glass fa-xl"></i>
+                    </button>
+                </form>
+            </div>
 
             <nav id="menu">
+                <div id="mobile-mypage-grid">
+                    <div class="mypage-item" th:unless="${session.member eq null}">
+                        <button class="mobile-logout-btn" onclick="location.href='mypageForm.html'" th:onclick="|location.href='@{/mypage}'|" type="button">마이페이지</button>
+                    </div>
+                    <div class="mypage-item" th:if="${session.member eq null}">
+                        <button class="mobile-logout-btn" onclick="location.href='joinForm.html'" th:onclick="|location.href='@{/login}'|" type="button">로그인</button>
+                    </div>
+                    <div class="mypage-item" th:unless="${session.member eq null}">
+                        <form th:action="@{/logout}" method="post">
+                            <button class="mobile-logout-btn" type="submit">로그아웃</button>
+                        </form>
+                    </div>
+                    <div class="mypage-item" th:unless="${session.member eq null}"><a th:text="'포인트: ' + ${member.userPoint}"></a></div>
+                </div>
                 <ul>
-                    <li><a href="boardForm.html" th:href="@{|/board/chimhaha|}">침하하</a>
-                        <ul>
+                    <li>
+                        <div class="mobile-chimhaha-head">
+                            <a href="boardForm.html" th:href="@{|/board/chimhaha|}">침하하</a>
+                            <!-- <div class="mobile-dropdown" onclick="mDropdown()"> -->
+                            <div class="mobile-dropdown">
+                                <i class="fa-solid fa-caret-up"></i>
+                            </div>
+                        </div>
+                        <ul class="mobile-chimhaha-ul">
                             <li><a href="boardForm.html" th:href="@{|/board/chimhaha|}">👍침하하</a></li>
                         </ul>
                     </li>
                 </ul>
                 <ul>
-                    <li><a onclick="updateLike(this)" href="boardForm.html" th:href="@{|/board/all|}">전체글</a>
-                        <ul>
+                    <li>
+                        <div class="mobile-menu-head">
+                            <a onclick="updateLike(this)" href="boardForm.html" th:href="@{|/board/all|}">전체글</a>
+                            <div class="mobile-dropdown">
+                                <i class="fa-solid fa-caret-up"></i>
+                            </div>
+                        </div>
+                        <ul class="mobile-all-ul">
                             <li><a href="boardForm.html" th:href="@{|/board/all|}">📄전체글</a></li>
                         </ul>
                     </li>
                 </ul>
                 <ul>
-                    <li><a href="boardForm.html" th:href="@{|/board/total_chim|}">침착맨</a>
-                        <ul>
+                    <li>
+                        <div class="mobile-menu-head">
+                            <a href="boardForm.html" th:href="@{|/board/total_chim|}">침착맨</a>
+                            <div class="mobile-dropdown">
+                                <i class="fa-solid fa-caret-up"></i>
+                            </div>
+                        </div>
+                        <ul class="mobile-chim-ul">
                             <li><a href="boardForm.html" th:href="@{|/board/notice|}">👀방송일정 및 공지</a></li>
                             <hr class="hr">
                             <li><a href="boardForm.html" th:href="@{|/board/chim|}">😊침착맨</a></li>
@@ -62,8 +135,14 @@
                             <li><a href="boardForm.html" th:href="@{|/board/chim_fanart|}">🎨침착맨 팬아트</a></li>
                         </ul>
                     </li>
-                    <li><a href="boardForm.html" th:href="@{|/board/total_chimtubu|}">침투부</a>
-                        <ul>
+                    <li>
+                        <div class="mobile-menu-head">
+                            <a href="boardForm.html" th:href="@{|/board/total_chimtubu|}">침투부</a>
+                            <div class="mobile-dropdown">
+                                <i class="fa-solid fa-caret-up"></i>
+                            </div>
+                        </div>
+                        <ul class="mobile-chimtubu-ul">
                             <li><a href="boardForm.html" th:href="@{|/board/request_stream|}">📣방송 해줘요</a></li>
                             <li><a href="boardForm.html" th:href="@{|/board/find_chimtube|}">🍳침투부 찾아요</a></li>
                             <li><a href="boardForm.html" th:href="@{|/board/make_short|}">🎬쇼츠 만들어줘요</a></li>
@@ -72,6 +151,37 @@
                     </li>
                 </ul>
             </nav>
+            <script>
+                // 모바일 메뉴 드랍다운 이벤트
+                $('.mobile-dropdown').on('click', function() {
+
+                    if ($('.mobile-dropdown').index(this) == 0) {
+                        if ($('.mobile-chimhaha-ul').is(':visible')) {
+                            $('.mobile-chimhaha-ul').hide();
+                        } else {
+                            $('.mobile-chimhaha-ul').show();
+                        }
+                    } else if ($('.mobile-dropdown').index(this) == 1) {
+                        if ($('.mobile-all-ul').is(':visible')) {
+                            $('.mobile-all-ul').hide();
+                        } else {
+                            $('.mobile-all-ul').show();
+                        }
+                    } else if ($('.mobile-dropdown').index(this) == 2) {
+                        if ($('.mobile-chim-ul').is(':visible')) {
+                            $('.mobile-chim-ul').hide();
+                        } else {
+                            $('.mobile-chim-ul').show();
+                        }
+                    } else if ($('.mobile-dropdown').index(this) == 3) {
+                        if ($('.mobile-chimtubu-ul').is(':visible')) {
+                            $('.mobile-chimtubu-ul').hide();
+                        } else {
+                            $('.mobile-chimtubu-ul').show();
+                        }
+                    }
+                });
+            </script>
         </div>
     </header>
 

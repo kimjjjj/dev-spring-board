@@ -123,25 +123,32 @@
                 SELECT *
                      , LAG(SEQ) OVER(ORDER BY SEQ DESC) AS BEFORE_SEQ
                      , LEAD(SEQ) OVER(ORDER BY SEQ DESC) AS AFTER_SEQ
-                  FROM devdb.BOARD WHERE 1=1
-                 <choose>
-                  <when test="'notice'.equals(titleCode)">
-                   AND BOARD_CODE = 'notice'
-                  </when>
-                  <when test="'chimhaha'.equals(titleCode)">
-                   AND POINT >= 10
-                  </when>
-                  <when test="'total_chim'.equals(titleCode)">
-                   AND BOARD_CODE IN ('notice', 'chim', 'chim_jjal', 'chim_fanart')
-                  </when>
-                  <when test="'total_chimtubu'.equals(titleCode)">
-                   AND BOARD_CODE IN ('request_stream', 'find_chimtube', 'make_short', 'favorite_chimtubu')
-                  </when>
-                  <when test="titleCode != 'all'">
-                   AND BOARD_CODE = #{titleCode}
-                  </when>
-                 </choose>
-                 ORDER BY SEQ DESC
+                  FROM (
+                        SELECT *
+                          FROM devdb.BOARD WHERE 1=1
+                         <choose>
+                          <when test="'notice'.equals(titleCode)">
+                           AND BOARD_CODE = 'notice'
+                          </when>
+                          <when test="'chimhaha'.equals(titleCode)">
+                           AND POINT >= 10
+                          </when>
+                          <when test="'total_chim'.equals(titleCode)">
+                           AND BOARD_CODE IN ('notice', 'chim', 'chim_jjal', 'chim_fanart')
+                          </when>
+                          <when test="'total_chimtubu'.equals(titleCode)">
+                           AND BOARD_CODE IN ('request_stream', 'find_chimtube', 'make_short', 'favorite_chimtubu')
+                          </when>
+                          <when test="titleCode != 'all'">
+                           AND BOARD_CODE = #{titleCode}
+                          </when>
+                         </choose>
+                        UNION
+                        SELECT *
+                          FROM devdb.BOARD WHERE SEQ = #{seq}
+                         ORDER BY SEQ DESC
+                  ) A
+                  ORDER BY A.SEQ DESC
           ) A
           LEFT JOIN (
                 SELECT PARENT_SEQ, COUNT(*) AS CNT FROM devdb.LIKE_TB
@@ -253,23 +260,33 @@
 
     <select id="search" resultType="Board">
 
-        SELECT A.SEQ, A.BOARD_CODE, A.CATEGORY_CODE
+        WITH TEMP AS (
+            SELECT ROWNUM() AS ROW_NUMB, A.*
+              FROM (
+                    SELECT A.*, B.NICKNAME FROM devdb.BOARD A
+                      LEFT JOIN devdb.MEMBER_INFORMATION B ON A.INSID = B.ID
+                     WHERE A.BOARD_CODE != 'notice'
+                     <choose>
+                      <when test="'title'.equals(searchType)">
+                       AND A.TXTNAME LIKE CONCAT('%', #{searchKeyword}, '%')
+                      </when>
+                      <when test="'titleAndContent'.equals(searchType)">
+                       AND A.TXTNAME LIKE CONCAT('%', #{searchKeyword}, '%') OR A.COMMENT LIKE CONCAT('%', #{searchKeyword}, '%')
+                      </when>
+                      <when test="'nickname'.equals(searchType)">
+                       AND B.NICKNAME = #{searchKeyword}
+                      </when>
+                     </choose>
+                     ORDER BY A.SEQ DESC
+              ) A
+        )
+        SELECT A.ROW_NUMB, A.SEQ, A.BOARD_CODE, A.CATEGORY_CODE
              , (CASE WHEN B.BLOCK_ID IS NULL THEN A.TXTNAME ELSE '차단된 사용자의 게시글입니다.' END) AS TXTNAME
              , A.COMMENT, A.TAG, A.INSID, A.INSDT, A.UPTID
-             , A.UPTDT, A.POINT, A.VIEW, B.BLOCK_ID
-          FROM devdb.BOARD A
+             , A.UPTDT, A.POINT, A.VIEW, A.NICKNAME, B.BLOCK_ID
+          FROM TEMP A
           LEFT JOIN devdb.BLOCK_TB B ON A.INSID = B.BLOCK_ID AND B.ID = #{userId}
-       <choose>
-        <when test="'title'.equals(searchType)">
-         WHERE A.TXTNAME LIKE CONCAT('%', #{searchKeyword}, '%')
-        </when>
-        <when test="'titleAndContent'.equals(searchType)">
-         WHERE A.TXTNAME LIKE CONCAT('%', #{searchKeyword}, '%') OR A.COMMENT LIKE CONCAT('%', #{searchKeyword}, '%')
-        </when>
-        <when test="'nickname'.equals(searchType)">
-         WHERE A.INSID = (SELECT ID FROM devdb.MEMBER_INFORMATION WHERE NICKNAME = #{searchKeyword})
-        </when>
-       </choose>
+         WHERE #{min} &lt;= A.ROW_NUMB AND A.ROW_NUMB &lt;= #{max}
          ORDER BY A.SEQ DESC
 
     </select>

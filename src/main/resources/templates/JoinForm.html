@@ -5,7 +5,7 @@
 <th:block layout:fragment="content">
     <main id="join-main">
         <div class="content-box">
-            <h2>회원가입</h2>
+            <h2 class="h2">회원가입</h2>
             <form id="join-form" name="join-form" action="/join" th:action th:object="${member}" method="post">
                 <div class="loginDiv">
                     <div th:class="${errors?.containsKey('userId')} ? 'login-input-div field-error' : 'login-input-div'"

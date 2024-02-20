@@ -6,7 +6,7 @@
     <main id="mypage">
         <div class="content-box">
             <th:block th:replace="common/fragments/mypageHeader :: mypageHeaderFragment"></th:block>
-            <h2>회원 정보 변경</h2>
+            <h2 class="h2">회원 정보 변경</h2>
             <div class="mypage-div">
                 <form action="/mypage" th:action="@{|/mypage|}" th:object="${member}" method="post" enctype="multipart/form-data">
                     <div class="mypage-profile-div">

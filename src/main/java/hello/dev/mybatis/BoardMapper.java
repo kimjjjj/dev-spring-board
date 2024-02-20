@@ -34,7 +34,9 @@ public interface BoardMapper {
     void cancelLike(int seq);
 
     List<Board> search(@Param("searchKeyword") String searchKeyword
-            , @Param("searchType") String searchType, @Param("userId") String userId);
+            , @Param("searchType") String searchType
+            , @Param("min") Integer min, @Param("max") Integer max
+            , @Param("userId") String userId);
 
     List<Board> mypagePost(String userId);
 

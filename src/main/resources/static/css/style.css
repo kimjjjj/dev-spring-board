@@ -55,12 +55,19 @@ textarea {
         display: flex;
     }
 
+    #menu-btn-div {
+        width: 30%;
+    }
+
+    #menu-btn-div>div {
+        display: none;
+    }
+
     #title>#logo {
         height: 60px;
         line-height: 70px;
-        width: 60%;
-        text-align: right;
-        margin-right: 55px;
+        width: 40%;
+        text-align: center;
     }
 
     #title>#logo>#logo_title{
@@ -70,15 +77,13 @@ textarea {
 
     #title>#search {
         height: inherit;
-        width: 40%;
+        width: 30%;
         font-size: 30px;
     }
 
     #search form {
         position: relative;
         height: 100%;
-        width: 250px;
-        margin-left: 110px;
     }
 
     #search #searchInput {
@@ -97,7 +102,7 @@ textarea {
         margin-bottom: 5px;
     }
 
-    #search button {
+    #search>form>button {
         width: 20%;
         height: 44%;
         right: 0%;
@@ -108,6 +113,10 @@ textarea {
         cursor: pointer;
         color: #1CA8AF;
         margin-bottom: 5px;
+    }
+
+    #search>button {
+        display: none;
     }
 
     #menu {
@@ -132,17 +141,18 @@ textarea {
     }
 
     #menu>ul>li>ul {
+        /* z-index: 99; */
         background: white;
         color: black;
-        width: max-content;
-		display: none;
-		position: absolute; z-index: 99; // 겹치지 않게 항상 위(앞)에 놓이도록
+        /* width: max-content; */
+		/* display: none; */
+		/* position: absolute; */
 		font-size: 14px;
-        text-align: left;
+        /* text-align: left; */
         padding-left: 15px;
         padding-right: 15px;
-        border: solid #1CA8AF;
-        border-width: 4px;
+        /* border: solid #1CA8AF; */
+        /* border-width: 4px; */
 	}
 
     #menu>ul>li:hover>ul {
@@ -183,19 +193,29 @@ textarea {
         border: 0;
     }
 
+    #main .page-div {
+        display: flex;
+        justify-content: center;
+    }
+
     #number {
         text-align: right;
         float: left;
         position: relative;
-        width: 60%;
         height: 70px;
         line-height: 70px;
     }
 
-    #next {
+    .pre_next_page {
         height: 70px;
         line-height: 70px;
     }
+
+    #previous a {
+        color: black;
+        padding-right: 10px;
+    }
+
     #next a {
         color: black;
         padding-left: 10px;
@@ -248,12 +268,13 @@ textarea {
         width: 10%;
     }
 
-    #write a {
+    #write button {
         background: #F2F2F2;
         border-radius: 10px;
         border: 0;
         font-size: 14px;
         padding: 13px;
+        cursor: pointer;
     }
 
 #footer {
@@ -319,6 +340,7 @@ textarea {
 .fa-star {
     color: #1CA8AF;
     cursor: pointer;
+    font-size: 2em;
 }
 
 #main #number a {
@@ -343,6 +365,11 @@ textarea {
 }
 
 /*----- addForm -------------------------------------------------------------*/
+.board-category-div {
+    display: flex;
+    gap: 10px;
+}
+
 .add-box {
     width: 100%;
     height: 40px;
@@ -440,6 +467,10 @@ textarea {
     vertical-align: middle;
 }
 
+.post-div {
+    margin: 0px 10px 0px 10px;
+}
+
 .post-head {
     overflow: hidden;
 }
@@ -497,7 +528,6 @@ textarea {
     margin-left: 20px;
     border: solid #F2F2F2;
     border-width: 1px;
-    top: 350px;
 }
 
 .nickname>ul>li {
@@ -554,7 +584,6 @@ textarea {
     border-radius: 7px;
     border: solid #F2F2F2;
     border-width: 1px;
-    top: 350px;
 }
 
 .board-state>ul>li {
@@ -598,13 +627,30 @@ textarea {
 }
 
 .post-like {
-    align-items: center;
     height: 90px;
     line-height: 90px;
-    display: flex;
 }
 
-#post-main .post-like button {
+#like-scrap-form {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    gap: 10px;
+}
+
+#post-main .post-like > #like-scrap-form > div {
+    width: 50%;
+}
+.like-div {
+    text-align: right;
+}
+
+.scrap-div {
+    text-align: left;
+}
+
+#post-main .post-like > #like-scrap-form > div > button {
     width: 115px;
     height: 70px;
     font-size: 16px;
@@ -613,14 +659,9 @@ textarea {
     border-width: 0px;
     cursor: pointer;
 }
-.like {
-    margin-left: 353px;
-    margin-bottom: 10px;
-}
 
-.scrap {
-    margin-left: 23px;
-    margin-bottom: 8px;
+.like {
+    margin-bottom: 2px;
 }
 
 .post-list {
@@ -714,6 +755,7 @@ textarea {
     border-radius: 7px;
     cursor: pointer;
     font-size: 25px;
+    line-height: 50px;
 }
 
 .login-text-error {
@@ -729,6 +771,11 @@ textarea {
 
 .joinBtn {
     width: 398px;
+}
+
+.naver_login_btn {
+    background: #03C75A !important;
+    color: white !important;
 }
 
 /*----- 회원가입 -------------------------------------------------------------*/
@@ -935,13 +982,13 @@ textarea {
 .comment-btn-div {
     width: 12%;
     height:110px;
+    line-height: 110px;
     text-align: center;
 }
 
 .comment-btn {
-    width: 100px;
-    height: 55px;
-    margin-top: 27.5px;
+    width: 95%;
+    height: 80%;
     border-radius: 7px;
     border: 0;
     cursor: pointer;
@@ -1095,4 +1142,344 @@ textarea {
 .userWrite-indDt-div {
     width: 10%;
     text-align: right;
+}
+
+/*----- 반응형 -------------------------------------------------------------*/
+@media (max-width: 950px) {
+
+    /* 즐겨찾기 별 */
+    .fa-star {
+        font-size: 1.5em;
+    }
+
+    /*----- 헤더-header -----*/
+    #header {
+        background: #1CA8AF;
+    }
+    .content-box {
+        width: auto;
+    }
+
+    #top-menu {
+        display: none;
+    }
+
+    #menu-btn-div {
+        width: 10%;
+    }
+
+    #menu-btn-div>div {
+        display: block;
+        height: 100%;
+        margin-top: 15px;
+        margin-left: 10px;
+    }
+
+    .fa-bars{
+        color: white;
+        cursor: pointer;
+    }
+
+    #title>#logo {
+        width: 80%;
+        text-align: center;
+        margin-right: 0px;
+    }
+
+    #title>#logo>#logo_title{
+        color: white;
+    }
+
+    #title>#search {
+        width: 10%;
+    }
+
+    #search>form {
+        display: none;
+    }
+
+    #search>button {
+        display: block;
+        width: 40px;
+        right: 0%;
+        position: absolute;
+        background-color: transparent;
+        border: 0;
+        cursor: pointer;
+        color: white;
+        margin-top: 15px;
+        text-align: left;
+    }
+
+    #mobile_search {
+        width: 100%;
+        height: 40px;
+    }
+
+    .mobile_search {
+        display: block;
+    }
+    .none_mobile_search {
+        display: none;
+    }
+
+    #mobile_search>form {
+        height: 90%;
+        background: #1CA8AF;
+        position: relative;
+        text-align: center;
+    }
+
+    #mobileSearchInput {
+        width: calc(99% - 40px);
+        height: 100%;
+        border-radius: 30px;
+        border: 0;
+        margin-left: 2px;
+        padding-left: 40px;
+        font-size: 15px;
+    }
+
+    #mobileSearchInput:focus {
+        outline: none;
+    }
+
+    #mobile_search>form>button {
+        position: absolute;
+        background-color: transparent;
+        border: 0;
+        cursor: pointer;
+        color: #1CA8AF;
+        left: 0;
+        bottom: 6px;
+        margin-bottom: 2px;
+        margin-left: 10px;
+    }
+
+    #menu {
+        display: none;
+        position: fixed;
+        width: 70%;
+        height: 100%;
+        z-index: 99;
+        /* top: 1px; */
+    }
+
+    .mobile-menu {
+        display: block !important;
+    }
+
+    #mobile-mypage-grid {
+        display: grid;
+        /* grid-template-columns: 48% 48%; */
+        grid-template-columns: 100%;
+        /* grid-template-rows: 40px 40px; */
+        grid-template-rows: 40px;
+        /* grid-gap: 10px 10px; */
+        grid-gap: 10px;
+        text-align: center;
+        line-height: 40px;
+        font-size: 14px;
+        margin: 5px 12px 5px 12px;
+    }
+
+    .mobile-logout-btn {
+        background: transparent;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        color: white;
+        font: bold 14px "malgun gothic";
+        cursor: pointer;
+    }
+
+    .mobile-chimhaha-head {
+        background: #0B4C5F;
+        display: flex;
+    }
+
+    .mobile-menu-head {
+        display: flex;
+    }
+
+    .mobile-dropdown {
+        width: 10%;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    #menu>ul>li {
+        width: 100%;
+        text-align: left;
+    }
+
+    #menu>ul>li a {
+        padding-left: 5px;
+        width: 90%;
+    }
+
+    #menu>ul>li>ul {
+        /* z-index: 99; */
+        /* width: max-content; */
+		/* position: absolute; */
+        /* text-align: left; */
+        /* border: solid #1CA8AF; */
+        /* border-width: 4px; */
+        /* display: block; */
+	}
+
+    .hr {
+        width: 100%;
+    }
+
+    /*----- 헤더-shortcut -----*/
+    #shortcut>.content-box {
+        width: 960px;
+    }
+
+    #shortcut>.content-box>nav {
+        background: #1CA8AF;
+        border: solid black;
+        border-width: 1px 0px 0px 0px;
+    }
+
+    #shortcut>.content-box>hr~nav {
+        border-top-width: 0px;
+    }
+
+    #shortcut>.content-box>nav>span {
+        color: white;
+        font-weight: bold;
+    }
+
+    #shortcut>.content-box>nav>span>a {
+        background: #19979D;
+        color: white;
+        font-weight: normal;
+    }
+
+    /*----- home -----*/
+    .youtube {
+        display: none;
+    }
+
+    .h2 {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 5px 0 5px 8px;
+    }
+
+    .board-notice {
+        width: 960px;
+    }
+
+    .cont {
+        width: 960px;
+    }
+
+    /*----- home-search -----*/
+    .search-form {
+        width: 100%;
+        height: 40px;
+    }
+
+    .search {
+        width: 100%;
+        text-align: center;
+    }
+
+    .search-form>.search>form {
+        width: 100%;
+        display: flex;
+    }
+
+    #main select {
+        margin: 0 5px 0 1.5%;
+    }
+
+    #main input {
+        width: 78%;
+    }
+
+    #main .search-form>.search button{
+        margin: 0 1.5% 0 5px;
+    }
+
+    #write{
+        width: 100%;
+    }
+
+    #write button {
+        width: 97%;
+    }
+
+    /*----- 마이페이지 header -----*/
+    #mypage-grid {
+        grid-template-columns: 50% 50%;
+        margin: 15px 5px 0px 5px;
+    }
+
+    .write-indDt-div {
+        margin-right: 5px;
+    }
+
+    .mypage-block-div {
+        margin-right: 5px;
+    }
+
+    /*----- 게시글 작성 -----*/
+    .post-txt-title{
+        height: 40px;
+        line-height: 40px;
+        font-size: 17px;
+    }
+
+    .post-txtCategory {
+        padding: 6px;
+        font-size: 11px;
+    }
+
+    .nickname {
+        font-size: 14px;
+    }
+
+    .nick-state {
+        font-size: 14px;
+    }
+
+    .comment-textarea-div {
+        width: 78%;
+    }
+
+    .comment-btn-div {
+        width: 22%;
+    }
+}
+
+@media (min-width: 951px) {
+    #mobile-mypage-grid {
+        display: none;
+    }
+
+    .mobile-dropdown {
+        display: none;
+    }
+
+    #menu>ul>li>ul {
+        z-index: 99;
+        width: max-content;
+		display: none;
+		position: absolute;
+        text-align: left;
+        border: solid #1CA8AF;
+        border-width: 4px;
+	}
+
+    .mobile_search {
+        display: none;
+    }
+
+    .none_mobile_search {
+        display: none;
+    }
 }

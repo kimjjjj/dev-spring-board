@@ -5,7 +5,7 @@
 <th:block layout:fragment="content">
     <main id="main">
         <div class="content-box">
-            <h2 th:text="${board.title} + ' 검색결과'"></h2>
+            <h2 class="h2" th:text="${board.title} + ' 검색결과'"></h2>
             <section th:each="board : ${boards}">
                 <a href="postForm.html" th:href="@{|/board/all/${board.seq}|}">
                     <div class="img">
@@ -18,7 +18,7 @@
                             <span class="txtName" th:text="${board.txtName}"></span>
                         </div>
                         <div class="txt-etc">
-                            <span class="nick" th:text="${board.insId}"></span>
+                            <span class="nick" th:text="${board.nickName}"></span>
                             <span class="dot">·</span>
                             <span class="txtTime" th:text="${board.insDt}"></span>
                             <span class="dot">·</span>
@@ -31,16 +31,33 @@
                 <hr class="hr">
             </section>
 
-            <nav>
-                <div id="number">
-                    <a href="">1</a>
-                    <a href="">2</a>
-                    <a href="">3</a>
-                    <a href="">4</a>
-                    <a href="">5</a>
+            <nav class="page-div">
+                <div id="previous" class="pre_next_page">
+                    <a href="home.html" th:href="@{/search(searchType=${board.searchType}, searchKeyword=${board.searchKeyword}, page=${board.page1} - 1)}" th:if="${board.page1} > 5">이전</a>
                 </div>
-                <div id="next">
-                    <a href="">다음</a>
+                <div id="number">
+                    <a class="none_page" href="home.html" th:text="${board.page1}" th:if="${board.page1} != ${board.currentPage}"
+                       th:href="@{/search(searchType=${board.searchType}, searchKeyword=${board.searchKeyword}, page=${board.page1})}"></a>
+                    <a class="page" th:text="${board.page1}" th:unless="${board.page1} != ${board.currentPage}"></a>
+
+                    <a class="none_page" href="home.html" th:text="${board.page2}" th:if="${board.page2} != ${board.currentPage}"
+                       th:href="@{/search(searchType=${board.searchType}, searchKeyword=${board.searchKeyword}, page=${board.page2})}"></a>
+                    <a class="page" th:text="${board.page2}" th:unless="${board.page2} != ${board.currentPage}"></a>
+
+                    <a class="none_page" href="home.html"  th:text="${board.page3}" th:if="${board.page3} != ${board.currentPage}"
+                       th:href="@{/search(searchType=${board.searchType}, searchKeyword=${board.searchKeyword}, page=${board.page3})}"></a>
+                    <a class="page" th:text="${board.page3}" th:unless="${board.page3} != ${board.currentPage}"></a>
+
+                    <a class="none_page" href="home.html" th:text="${board.page4}" th:if="${board.page4} != ${board.currentPage}"
+                       th:href="@{/search(searchType=${board.searchType}, searchKeyword=${board.searchKeyword}, page=${board.page4})}"></a>
+                    <a class="page" th:text="${board.page4}" th:unless="${board.page4} != ${board.currentPage}"></a>
+
+                    <a class="none_page" href="home.html" th:text="${board.page5}" th:if="${board.page5} != ${board.currentPage}"
+                       th:href="@{/search(searchType=${board.searchType}, searchKeyword=${board.searchKeyword}, page=${board.page5})}"></a>
+                    <a class="page" th:text="${board.page5}" th:unless="${board.page5} != ${board.currentPage}"></a>
+                </div>
+                <div id="next" class="pre_next_page">
+                    <a href="home.html" th:href="@{/search(searchType=${board.searchType}, searchKeyword=${board.searchKeyword}, page=${board.page5} + 1)}">다음</a>
                 </div>
             </nav>
 
@@ -58,7 +75,7 @@
                 </div>
             </div>
             <section id="write">
-                <a href="addForm.html" th:href="@{/add}" th:unless="${session.member eq null}">글쓰기</a>
+                <button type="button" th:onclick="|location.href='@{/add}'|" th:unless="${session.member eq null}">글쓰기</button>
             </section>
         </div>
     </main>

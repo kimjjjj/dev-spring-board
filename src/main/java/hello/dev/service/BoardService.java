@@ -262,10 +262,14 @@ public class BoardService {
     }
 
     // 검색
-    public List<Board> search(String searchKeyword, String searchType, String userId) {
+    public List<Board> search(String searchKeyword, String searchType, Integer page, String userId) {
         log.info("<=====BoardService.search=====>");
 
-        List<Board> boards = boardRepository.search(searchKeyword, searchType, userId);
+        // min <= 게시글 수 <= max
+        int max = page * pageLimit;
+        int min = max - (pageLimit - 1);
+
+        List<Board> boards = boardRepository.search(searchKeyword, searchType, min, max, userId);
 
         // 썸네일 작업
         Pattern nonValidPattern = Pattern.compile("(?i)< *[IMG][^\\>]*[src] *= *[\"\']{0,1}([^\"\'\\ >]*)"); // 이미지

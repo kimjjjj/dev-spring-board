@@ -398,7 +398,9 @@ public class BoardController {
     // 검색
     @GetMapping("/search")
     public String search(@hello.dev.argumentresolver.Login Member member
-            , @ModelAttribute Board board, Model model, HttpServletRequest request) {
+            , @ModelAttribute Board board
+            , @RequestParam(required = true, defaultValue = "1") Integer page
+            , Model model, HttpServletRequest request) {
         log.info("<=====BoardController.search=====>");
 
         // 로그인 ID
@@ -427,9 +429,13 @@ public class BoardController {
 
         // 최근방문 게시판 조회
         board = boardService.getCookie(board, request, null);
+
+        // 페이징
+        board = boardService.setPage(board, page);
+
         model.addAttribute("board", board);
 
-        model.addAttribute("boards", boardService.search(board.getSearchKeyword(), board.getSearchType(), userId));
+        model.addAttribute("boards", boardService.search(board.getSearchKeyword(), board.getSearchType(), page, userId));
 
         return "searchForm";
     }

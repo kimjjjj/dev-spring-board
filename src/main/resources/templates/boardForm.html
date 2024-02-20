@@ -8,7 +8,7 @@
             <form class="h2" action="/addFavorite" th:action="@{|/addFavorite/${board.titleCode}|}" method="post">
                 <span th:text="${board.title}"></span>
                 <button type="button" onclick="updateFavorite()" th:if="${session.member ne null}">
-                    <i id="starIcon" class="fa-regular fa-star fa-2x"></i>
+                    <i id="starIcon" class="fa-regular fa-star"></i>
                 </button>
             </form>
             <script th:inline="javascript">
@@ -95,7 +95,10 @@
                 <hr class="hr" th:class="${board.boardCode eq 'notice'} ? hr-notice : 'hr'">
             </section>
 
-            <nav>
+            <nav class="page-div">
+                <div id="previous" class="pre_next_page">
+                    <a href="home.html" th:href="@{'/board/' + ${board.titleCode}(page=${board.page1} - 1)}" th:if="${board.page1} > 5">이전</a>
+                </div>
                 <div id="number">
                     <a class="none_page" href="home.html" th:href="@{'/board/' + ${board.titleCode}(page=${board.page1})}" th:text="${board.page1}" th:if="${board.page1} != ${board.currentPage}"></a>
                     <a class="page" th:text="${board.page1}" th:unless="${board.page1} != ${board.currentPage}"></a>
@@ -112,7 +115,7 @@
                     <a class="none_page" href="home.html" th:href="@{'/board/' + ${board.titleCode}(page=${board.page5})}" th:text="${board.page5}" th:if="${board.page5} != ${board.currentPage}"></a>
                     <a class="page" th:text="${board.page5}" th:unless="${board.page5} != ${board.currentPage}"></a>
                 </div>
-                <div id="next">
+                <div id="next" class="pre_next_page">
                     <a href="home.html" th:href="@{'/board/' + ${board.titleCode}(page=${board.page5} + 1)}">다음</a>
                 </div>
             </nav>
@@ -131,7 +134,8 @@
                 </div>
             </div>
             <section id="write">
-                <a href="addForm.html" th:href="@{/add}" th:unless="${session.member eq null}">글쓰기</a>
+<!--                <a href="addForm.html" th:href="@{/add}" th:unless="${session.member eq null}">글쓰기</a>-->
+                <button type="button" th:onclick="|location.href='@{/add}'|" th:unless="${session.member eq null}">글쓰기</button>
             </section>
         </div>
     </main>

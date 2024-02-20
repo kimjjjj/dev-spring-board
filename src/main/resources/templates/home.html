@@ -25,7 +25,7 @@
                             title="YouTube video player" frameborder="0" allowfullscreen></iframe>
                 </div>
             </section>
-            <h2>침하하</h2>
+            <h2 class="h2">침하하</h2>
             <section th:each="board : ${boards}" th:class="${board.boardCode eq 'notice'} ? board-notice : ''">
                 <a href="postForm.html" th:href="${board.boardCode eq 'notice'} ? @{|/board/notice/${board.seq}|} : @{|/board/chimhaha/${board.seq}|}"
                    th:if="${board.blockId eq null}">
@@ -78,7 +78,10 @@
                 <hr class="hr" th:class="${board.boardCode eq 'notice'} ? hr-notice : 'hr'">
             </section>
 
-            <nav>
+            <nav class="page-div">
+                <div id="previous" class="pre_next_page">
+                    <a href="home.html" th:href="@{/(page=${board.page1} - 1)}" th:if="${board.page1} > 5">이전</a>
+                </div>
                 <div id="number">
                     <a class="none_page" href="home.html" th:href="@{/(page=${board.page1})}" th:text="${board.page1}" th:if="${board.page1} != ${board.currentPage}"></a>
                     <a class="page" th:text="${board.page1}" th:unless="${board.page1} != ${board.currentPage}"></a>
@@ -95,7 +98,7 @@
                     <a class="none_page" href="home.html" th:href="@{/(page=${board.page5})}" th:text="${board.page5}" th:if="${board.page5} != ${board.currentPage}"></a>
                     <a class="page" th:text="${board.page5}" th:unless="${board.page5} != ${board.currentPage}"></a>
                 </div>
-                <div id="next">
+                <div id="next" class="pre_next_page">
                     <a href="home.html" th:href="@{/(page=${board.page5} + 1)}">다음</a>
                 </div>
             </nav>
@@ -114,7 +117,7 @@
                 </div>
             </div>
             <section id="write">
-                <a href="addForm.html" th:href="@{/add}" th:unless="${session.member eq null}">글쓰기</a>
+                <button type="button" th:onclick="|location.href='@{/add}'|" th:unless="${session.member eq null}">글쓰기</button>
             </section>
         </div>
     </main>

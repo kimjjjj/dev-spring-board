@@ -5,7 +5,7 @@
 <th:block layout:fragment="content">
     <main id="post-main">
         <div class="content-box">
-            <div>
+            <div class="post-div">
                 <section class="post-head">
                     <div class="post-txt-title bold">
                         <span class="txtCategory post-txtCategory"><a href="" th:text="${board.boardName}"></a></span>
@@ -110,40 +110,90 @@
                     <div class="tag" th:text="'태그 : ' + ${board.tag}" th:if="${board.blockId eq null} and ${board.tag ne null} and ${board.tag ne ''}"></div>
                 </section>
                 <section>
-                    <div class="post-like" th:if="${board.blockId eq null}">
-                        <form id="post-form" action="/${board.seq}/like" th:action="@{|/${board.seq}/like|}" method="post">
-                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
-<!--                                <button class="like" type="button" onclick="updateLike()" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">-->
-                            <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">
-                                침하하<br>😂
-                            </button>
-                        </form>
-                        <form action th:action>
-                            <button class="like" type="button" th:if="${member.userId} == ${board.insId}">
-                                침하하 불가<br>😐
-                            </button>
-                        </form>
-                        <form action="/${board.seq}/cancel" th:action="@{|/${board.seq}/cancel|}" method="post">
-                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
-                            <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and ${session.member ne null} and ${board.cnt ne 0}">
-                                침하하 취소<br>🤣
-                            </button>
-                        </form>
+<!--                    <div class="post-like" th:if="${board.blockId eq null}">-->
+<!--                        <form class="aaa" id="post-form" action="/${board.seq}/like" th:action="@{|/${board.seq}/like|}" method="post">-->
+<!--                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">-->
+<!--                            <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">-->
+<!--                                침하하<br>😂-->
+<!--                            </button>-->
+<!--                        </form>-->
+<!--                        <form class="aaa" action th:action>-->
+<!--                            <button class="like" type="button" th:if="${member.userId} == ${board.insId}">-->
+<!--                                침하하 불가<br>😐-->
+<!--                            </button>-->
+<!--                        </form>-->
+<!--                        <form class="aaa" action="/${board.seq}/cancel" th:action="@{|/${board.seq}/cancel|}" method="post">-->
+<!--                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">-->
+<!--                            <button class="like" type="submit" th:if="${member.userId} != ${board.insId} and ${session.member ne null} and ${board.cnt ne 0}">-->
+<!--                                침하하 취소<br>🤣-->
+<!--                            </button>-->
+<!--                        </form>-->
 
-                        <form action="/${board.seq}/scrapSave" th:action="@{|/${board.seq}/scrapSave|}" method="post">
+<!--                        <form class="aaa" action="/${board.seq}/scrapSave" th:action="@{|/${board.seq}/scrapSave|}" method="post">-->
+<!--                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">-->
+<!--                            <button class="scrap" type="submit" th:if="${session.member eq null} or ${board.scrapCnt eq 0}">-->
+<!--                                스크랩<br>-->
+<!--                                <i class="fa-regular fa-bookmark"></i>-->
+<!--                            </button>-->
+<!--                        </form>-->
+<!--                        <form class="aaa" action="/${board.seq}/scrapCancel" th:action="@{|/${board.seq}/scrapCancel|}" method="post">-->
+<!--                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">-->
+<!--                            <button class="scrap" type="submit" th:if="${session.member ne null} and ${board.scrapCnt ne 0}">-->
+<!--                                스크랩 취소<br>-->
+<!--                                <i class="fa-solid fa-bookmark"></i>-->
+<!--                            </button>-->
+<!--                        </form>-->
+<!--                    </div>-->
+                    <div class="post-like" th:if="${board.blockId eq null}">
+                        <form id="like-scrap-form" action th:action method="post">
                             <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
-                            <button class="scrap" type="submit" th:if="${session.member eq null} or ${board.scrapCnt eq 0}">
-                                스크랩<br>
-                                <i class="fa-regular fa-bookmark"></i>
-                            </button>
+                            <div class="like-div">
+                                <button class="like" type="submit" onclick="fnLike()"
+                                        th:if="${member.userId} != ${board.insId} and (${session.member eq null} or ${board.cnt eq 0})">
+                                    침하하<br>😂
+                                </button>
+                                <button class="like" type="button" th:if="${member.userId} == ${board.insId}">
+                                    침하하 불가<br>😐
+                                </button>
+                                <button class="like" type="submit" onclick="fnCancel()"
+                                        th:if="${member.userId} != ${board.insId} and ${session.member ne null} and ${board.cnt ne 0}">
+                                    침하하 취소<br>🤣
+                                </button>
+                            </div>
+                            <div class="scrap-div">
+                                <button type="submit" onclick="fnScrapSave()"
+                                        th:if="${session.member eq null} or ${board.scrapCnt eq 0}">
+                                    스크랩<br>
+                                    <i class="fa-regular fa-bookmark"></i>
+                                </button>
+                                <button type="submit" onclick="fnScrapCancel()"
+                                        th:if="${session.member ne null} and ${board.scrapCnt ne 0}">
+                                    스크랩 취소<br>
+                                    <i class="fa-solid fa-bookmark"></i>
+                                </button>
+                            </div>
                         </form>
-                        <form action="/${board.seq}/scrapCancel" th:action="@{|/${board.seq}/scrapCancel|}" method="post">
-                            <input name="titleCode" th:value="${board.titleCode}" type="text" style="display:none">
-                            <button class="scrap" type="submit" th:if="${session.member ne null} and ${board.scrapCnt ne 0}">
-                                스크랩 취소<br>
-                                <i class="fa-solid fa-bookmark"></i>
-                            </button>
-                        </form>
+                        <script>
+                            // 침하하
+                            function fnLike() {
+                                $('#like-scrap-form').attr('action', '/[[${board.seq}]]/like').submit();
+                            }
+
+                            // 침하하 취소
+                            function fnCancel() {
+                                $('#like-scrap-form').attr('action', '/[[${board.seq}]]/cancel').submit();
+                            }
+
+                            // 스크랩
+                            function fnScrapSave() {
+                                $('#like-scrap-form').attr('action', '/[[${board.seq}]]/scrapSave').submit();
+                            }
+
+                            // 스크랩 취소
+                            function fnScrapCancel() {
+                                $('#like-scrap-form').attr('action', '/[[${board.seq}]]/scrapCancel').submit();
+                            }
+                        </script>
                     </div>
                     <div class="post-list">
                         <div class="left"><button th:onclick="'location.href=\'' + @{${board.beforeSeq}} + '\''" type="button" th:if="${board.beforeSeq ne 0}">&lt;이전 글</button></div>
@@ -152,7 +202,7 @@
                     </div>
                 </section>
 
-                <h2>댓글</h2>
+                <h2 class="h2">댓글</h2>
                 <section th:each="comment : ${comments}">
                     <div class="comment-all-div">
                         <div class="comment-div">
@@ -276,19 +326,35 @@
 <script>
     <!-- 게시글 신고/수정/차단/삭제/공유 박스를 브라우저 크기가 변해도 유지 하도록 -->
     const mainRight = document.querySelector('.board-state>ul');
-    mainRight.style.left = `${385 + (window.innerWidth / 2)}px`;
+    fnBoardState();
     window.addEventListener('resize', () => {
-        mainRight.style.left = `${385 + (window.innerWidth / 2)}px`;
+        fnBoardState();
     });
 
-    <!-- 댓글 신고/수정/차단/삭제/공유 박스를 브라우저 크기가 변해도 유지 하도록 -->
-    for(var i=1; i<=document.getElementsByClassName('comment-state').length; i++) {
-        var commentRight = document.querySelector('#comment' + i + '>ul');
-        commentRight.style.left = `${375 + (window.innerWidth / 2)}px`;
-        window.addEventListener('resize', () => {
-            commentRight.style.left = `${375 + (window.innerWidth / 2)}px`;
-        });
+    function fnBoardState() {
+        const target = document.querySelector('.fa-ellipsis-vertical');
+        const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
+        const relativeLeft = clientRect.left; // Viewport의 시작지점을 기준으로한 상대좌표 Y 값.
+        mainRight.style.left = relativeLeft-90 + 'px';
     }
+    <!------------------------------------------------------------------->
+
+    <!-- 댓글 신고/수정/차단/삭제/공유 박스를 브라우저 크기가 변해도 유지 하도록 -->
+    fnCommentState();
+    window.addEventListener('resize', () => {
+        fnCommentState();
+    });
+
+    function fnCommentState() {
+        for(var i=1; i<=document.getElementsByClassName('comment-state').length; i++) {
+            var commentRight = document.querySelector('#comment' + i + '>ul');
+            const target = document.querySelector('#comment' + i + '> .fa-ellipsis-vertical');
+            const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
+            const relativeLeft = clientRect.left; // Viewport의 시작지점을 기준으로한 상대좌표 Y 값.
+            commentRight.style.left = relativeLeft-90 + 'px';
+        }
+    }
+    <!------------------------------------------------------------------>
 
     <!-- 닉네임 클릭 시 게시글보기/댓글보기 박스 보이기 -->
     const nick = document.querySelector('.nickname');

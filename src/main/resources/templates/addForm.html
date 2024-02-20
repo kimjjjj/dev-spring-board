@@ -5,7 +5,7 @@
 <th:block layout:fragment="content">
     <main id="add-main">
         <div class="content-box">
-            <h2>글쓰기</h2>
+            <h2 class="h2">글쓰기</h2>
             <article>
                 <form id="add-form" th:action="@{|/add|}" th:object="${board}" method="post">
                     <th:block th:replace="common/fragments/addFormCommon :: addFormFragment"></th:block>

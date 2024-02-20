@@ -99,10 +99,10 @@ public class BoardRepository {
     }
 
     // 검색
-    public List<Board> search(String searchKeyword, String searchType, String userId) {
+    public List<Board> search(String searchKeyword, String searchType, Integer min, Integer max, String userId) {
         log.info("<=====BoardRepository.search=====> searchKeyword : {}, searchType : {}", searchKeyword, searchType);
 
-        return boardMapper.search(searchKeyword, searchType, userId);
+        return boardMapper.search(searchKeyword, searchType, min, max, userId);
     }
 
     // 마이페이지 내가 쓴 글 조회
