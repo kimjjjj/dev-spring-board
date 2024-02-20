@@ -29,7 +29,7 @@
 <details>
   <summary>접기/펼치기</summary>
 
-![1](https://github.com/kimjjjj/Algorithm_study/assets/102236761/6ebf44d5-b6ac-494b-b344-8e031294fa0f)
+![1](https://github.com/kimjjjj/Algorithm_study/assets/102236761/e8138dbb-6209-40e1-b135-8aac45fd8934)
 
 </details>
 
@@ -51,7 +51,8 @@
 <details>
   <summary>접기/펼치기</summary>
 
-1. 네이버 로그인 API 개발
+~~1. 네이버 로그인 API 개발~~
+
 2. 반응형으로 변경
 3. 라이트/다크모드 개발
 4. Jpa 개발
@@ -84,5 +85,8 @@
 - 에디터에 유튜브 링크 저장하면 게시글 목록에서 유튜브 썸네일 보이도록 기능 추가
 - mariadb도 사용 가능하도록 추가
 - aws 업로드
+
+2024.02.14
+- 네이버 로그인 API 개발
 
 </details>
