@@ -34,6 +34,54 @@
 </details>
 
 
+## 💻 화면
+<details>
+  <summary>접기/펼치기</summary>
+
+### 메인 화면
+![01](https://github.com/kimjjjj/Algorithm_study/assets/102236761/c1b37323-9c76-4d45-ae1f-eed743b825dc)
+
+### 로그인 화면
+![02](https://github.com/kimjjjj/Algorithm_study/assets/102236761/cef478e1-03fc-443a-ab9c-2c8519495938)
+
+### 회원가입 화면
+![03](https://github.com/kimjjjj/Algorithm_study/assets/102236761/6d55100d-cf10-487f-a78d-fb31bcb3dc6b)
+
+### 네이버 로그인 화면
+![04](https://github.com/kimjjjj/Algorithm_study/assets/102236761/e584ee5e-3477-47f6-9ceb-0fc4a43f45d1)
+
+### 메뉴 선택 화면
+![05](https://github.com/kimjjjj/Algorithm_study/assets/102236761/89869ec3-8dec-4c7c-88b5-4d7da283ebb9)
+
+### 글쓰기 화면
+![06](https://github.com/kimjjjj/Algorithm_study/assets/102236761/fa86633c-026c-450e-844d-26d034926981)
+
+  <details>
+    <summary>이미지 업로드 방법</summary>
+
+#### 이미지 속성 -> 업로드
+![07](https://github.com/kimjjjj/Algorithm_study/assets/102236761/eb8ec19c-b799-4296-810f-2fbfd18c3751)
+
+#### 파일 선택 -> 서버로 전송
+![08](https://github.com/kimjjjj/Algorithm_study/assets/102236761/cf7f9b7e-764f-4c96-b4b0-ec8818d0c1bb)
+
+#### 확인
+![09](https://github.com/kimjjjj/Algorithm_study/assets/102236761/f110e70f-421c-41d9-af2e-f44f9ce19cb0)
+
+  </details>
+
+### 글 검색 화면
+![10](https://github.com/kimjjjj/Algorithm_study/assets/102236761/ba40fa75-e619-4ff2-8ce2-1d5a3bd9ff75)
+
+### 회원 정보 변경 화면
+![11](https://github.com/kimjjjj/Algorithm_study/assets/102236761/7ebcbb08-63dc-4da9-8ae6-0f27799f4fad)
+
+### 내가 쓴 글 화면
+![12](https://github.com/kimjjjj/Algorithm_study/assets/102236761/1c857d68-559a-4eb3-8300-91871a819d42)
+
+</details>
+
+
 ## 💡 오류 해결
 <details>
   <summary>접기/펼치기</summary>
